@@ -198,7 +198,9 @@ public class WizardPlayer {
      */
      public void gainWizardPower( double amount ) {
          double wizardPower = this.wizardBar.getProgress();
-         this.wizardBar.setProgress( wizardPower + amount );
+         double newPower = Math.min( wizardPower + amount, 1 );
+         player.sendMessage( "Gaining " + String.valueOf( amount ) + " Wizard Power." );
+         this.wizardBar.setProgress( newPower );
      }
 
 

@@ -90,7 +90,10 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onPlayerXP( PlayerExpChangeEvent event ) {
-
+        int amount = event.getAmount();
+        WizardPlayer wizardPlayer = wizardry.getWizardPlayer( event.getPlayer().getUniqueId() );
+        wizardPlayer.gainWizardPower( (double)amount / 1000 );
+        wizardPlayer.showWizardBar();
     }
 
 }
