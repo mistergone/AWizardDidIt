@@ -1,12 +1,12 @@
 package me.mistergone.AWizardDidIt.helpers;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
-import me.mistergone.AWizardDidIt.timedTasks.TimedTask;
-import net.minecraft.server.v1_13_R2.BossBattle;
-import net.minecraft.server.v1_13_R2.Scheduler;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.InvalidConfigurationException;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.boss.BossBar;
 import org.bukkit.boss.BarColor;
@@ -14,6 +14,9 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -25,6 +28,8 @@ public class WizardPlayer {
     BossBar wizardBar;
     AWizardDidIt plugin;
     BukkitTask scheduler;
+    File playerDataFile;
+    FileConfiguration playerDataConfig;
 
     public WizardPlayer( Player p ) {
         this.player = p;
@@ -197,8 +202,62 @@ public class WizardPlayer {
      }
 
 
+     public void savePlayerData() {
+         String path = Bukkit.getPluginManager().getPlugin( "AWizardDidIt" ).getDataFolder().toString() + "/players";
+         File filePath = new File( path );
+         String playerName = this.player.getDisplayName();
+         playerDataConfig = new YamlConfiguration();
 
+         if( !filePath.exists() ){
+             Bukkit.broadcastMessage("File path does not exist, creating it...");
+             filePath.mkdirs();
+             try {
+                 filePath.createNewFile();
+             } catch( Exception ex ) {
+                 // Oops?
+             }
+         }
+         Bukkit.broadcastMessage("Got file path, attempting to get file...");
+         playerDataFile = new File(  filePath + "/" + playerName + ".yml");
 
+         if( !playerDataFile.exists() ){
+             Bukkit.broadcastMessage("File doesnt exist, creating it...");
+             try {
+                 playerDataFile.createNewFile();
+                 Bukkit.broadcastMessage("created it!");
+             } catch( IOException ex ) {
 
+             }
+         }
+         if ( playerDataFile.exists() ) {
+             try {
+                 playerDataConfig.createSection("Wizard Power");
+                 playerDataConfig.set("Wizard Power", getWizardPower() );
+                 playerDataConfig.save( playerDataFile );
+             } catch (IOException e) {
+             }
 
+         }
+     }
+
+     public void loadSavedPlayerData() {
+         String path = Bukkit.getPluginManager().getPlugin( "AWizardDidIt" ).getDataFolder().toString()
+                 + "/players/" + player.getDisplayName() + ".yml";
+         System.out.println( "Saving player data..." );
+         File playerDataFile = new File( path );
+         FileConfiguration fileConfiguration = new YamlConfiguration();
+         if ( playerDataFile.exists() ) {
+             try {
+                 System.out.println( "Trying to open player file..." );
+                 fileConfiguration.load( playerDataFile );
+                 String power = fileConfiguration.getString( "Wizard Power");
+                 this.getWizardBar().setProgress( Double.parseDouble( power ) );
+                 System.out.println( "Success!(?)" );
+             } catch( Exception ex ) {
+                 System.out.println( "Exception! " + ex.toString() );
+             }
+         } else {
+             System.out.println( "Player file not found!" );
+         }
+     }
 }

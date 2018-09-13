@@ -76,8 +76,8 @@ public class Wizardry {
         );
     }
 
-    public void removeWizardPlayer( WizardPlayer wizardPlayer ) {
-        this.wizardList.remove( wizardPlayer.getPlayer().getUniqueId() );
+    public void removeWizardPlayer( UUID uuid ) {
+        this.wizardList.remove( uuid );
     }
 
 }

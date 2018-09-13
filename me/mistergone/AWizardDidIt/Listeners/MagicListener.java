@@ -12,11 +12,11 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerMoveEvent;
-import org.bukkit.event.player.PlayerToggleFlightEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
+
+import java.util.UUID;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
@@ -32,6 +32,14 @@ public class MagicListener implements Listener {
     @EventHandler
     public void onPlayerJoin( PlayerJoinEvent event ) {
         wizardry.addWizardPlayer( new WizardPlayer( event.getPlayer() ) );
+        wizardry.getWizardPlayer( event.getPlayer().getUniqueId() ).loadSavedPlayerData();
+    }
+
+    @EventHandler
+    public void onPlayerQuit( PlayerQuitEvent event ) {
+        UUID uuid = event.getPlayer().getUniqueId();
+        wizardry.getWizardPlayer( uuid ).savePlayerData();
+        wizardry.removeWizardPlayer( uuid );
     }
 
     @EventHandler
@@ -78,6 +86,11 @@ public class MagicListener implements Listener {
         if ( event.getPlayer().isOnGround() == true && wizardPlayer.checkSpell( "Cloud Rider (Gliding)" ) ) {
             wizardPlayer.removeSpell( "Cloud Rider (Gliding)" );
         }
+    }
+
+    @EventHandler
+    public void onPlayerXP( PlayerExpChangeEvent event ) {
+
     }
 
 }
