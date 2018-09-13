@@ -21,7 +21,6 @@ public class CloudRider extends MagicSpell {
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer(player.getUniqueId());
                 double wizardPower = wizardPlayer.getWizardBar().getProgress();
-                Bukkit.broadcastMessage(String.valueOf(wizardPower));
 
                 if (player.isOnGround() && wizardPlayer.spendWizardPower( cost ) ) {
                     wizardPlayer.addSpell(spellName);
@@ -65,7 +64,7 @@ public class CloudRider extends MagicSpell {
 
 
                     player.setVelocity(v);
-                    player.sendMessage("Swing your wand again to begin gliding!");
+                    player.sendMessage( ChatColor.DARK_AQUA + "Swing your wand again to begin gliding!");
                     wizardPlayer.showWizardBar();
 
                 } else if (!player.isGliding() && !player.isSwimming() && wizardPlayer.getSpells().contains( spellName )) {

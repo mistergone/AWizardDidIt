@@ -37,7 +37,6 @@ public class MightyLeap extends MagicSpell {
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 double wizardPower = wizardPlayer.getWizardBar().getProgress();
-                Bukkit.broadcastMessage( String.valueOf( wizardPower ) );
 
                 if ( player.isOnGround() && wizardPower >= cost ) {
                     wizardPlayer.addSpell( spellName );

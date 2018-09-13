@@ -199,7 +199,6 @@ public class WizardPlayer {
      public void gainWizardPower( double amount ) {
          double wizardPower = this.wizardBar.getProgress();
          double newPower = Math.min( wizardPower + amount, 1 );
-         player.sendMessage( "Gaining " + String.valueOf( amount ) + " Wizard Power." );
          this.wizardBar.setProgress( newPower );
      }
 
@@ -211,7 +210,7 @@ public class WizardPlayer {
          playerDataConfig = new YamlConfiguration();
 
          if( !filePath.exists() ){
-             Bukkit.broadcastMessage("File path does not exist, creating it...");
+             System.out.println("File path does not exist, creating it...");
              filePath.mkdirs();
              try {
                  filePath.createNewFile();
@@ -219,14 +218,14 @@ public class WizardPlayer {
                  // Oops?
              }
          }
-         Bukkit.broadcastMessage("Got file path, attempting to get file...");
+         System.out.println("Got file path, attempting to get file...");
          playerDataFile = new File(  filePath + "/" + playerName + ".yml");
 
          if( !playerDataFile.exists() ){
-             Bukkit.broadcastMessage("File doesnt exist, creating it...");
+             System.out.println("File doesnt exist, creating it...");
              try {
                  playerDataFile.createNewFile();
-                 Bukkit.broadcastMessage("created it!");
+                 System.out.println("created it!");
              } catch( IOException ex ) {
 
              }

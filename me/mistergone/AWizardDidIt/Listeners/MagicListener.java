@@ -48,8 +48,6 @@ public class MagicListener implements Listener {
             WizardPlayer wizardPlayer = wizardry.getWizardPlayer( event.getEntity().getUniqueId() );
             if ( wizardPlayer.checkSpell("Mighty Leap") ) {
                 double damageCost = event.getDamage() / 2000;
-                Bukkit.broadcastMessage( String.valueOf( event.getDamage() ) + ", " + String.valueOf( damageCost ) + ", "
-                 + String.valueOf( wizardPlayer.getWizardPower() ) );
                 if ( wizardPlayer.spendWizardPower( damageCost ) ) {
                     event.setDamage( 0 );
 
