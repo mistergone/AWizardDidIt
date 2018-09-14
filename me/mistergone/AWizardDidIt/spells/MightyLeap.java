@@ -11,6 +11,7 @@ import org.bukkit.entity.Monster;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
@@ -24,9 +25,9 @@ public class MightyLeap extends MagicSpell {
 
     public MightyLeap() {
         spellName = "Mighty Leap";
-        reagent = Material.SLIME_BALL;
-        cost = .001;
-        double glidingCost = .01;
+        reagents = new ArrayList<String>();
+        reagents.add( "SLIME_BALL" );
+        cost = .002;
 
         spellFunction = new SpellFunction() {
             @Override

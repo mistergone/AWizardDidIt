@@ -1,10 +1,10 @@
 package me.mistergone.AWizardDidIt;
 
-import me.mistergone.AWizardDidIt.helpers.SpellFinder;
-import me.mistergone.AWizardDidIt.helpers.PatternFinder;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.*;
 import me.mistergone.AWizardDidIt.spells.*;
+import org.bukkit.Bukkit;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -13,56 +13,36 @@ import java.util.UUID;
 
 public class Wizardry {
     private static Wizardry wizardry = new Wizardry();
-    private SpellFinder spellFinder;
-    private PatternFinder patternFinder;
     private Map< UUID, WizardPlayer> wizardList;
+    private Map< String, MagicSpell > spellList;
+    private Map< String[], MagicPattern > patternList;
+    Map< String, ToolPattern > loreMap;
 
     private Wizardry() {
-        this.spellFinder = new SpellFinder();
-        this.patternFinder = new PatternFinder();
         this.wizardList = new HashMap< UUID, WizardPlayer >();
+        this.spellList = new HashMap< String, MagicSpell>();
+        this.patternList = new HashMap< String[], MagicPattern>();
+        this.loreMap = new HashMap<>();
+
+        this.addLore();
+        this.addSpells();
+        this.addPatterns();
     }
+
 
     public static Wizardry getWizardry() {
         return wizardry;
     }
 
-    public ArrayList<MagicPattern> getMagicPatterns() {
-        ArrayList<MagicPattern> magicPatterns = new ArrayList<>();
-        magicPatterns.add( new EnchantWand() );
-        magicPatterns.add( new WizardPick() );
-        magicPatterns.add( new WizardShovel() );
-        magicPatterns.add( new WizardAxe() );
-
-        return magicPatterns;
+    public MagicPattern getMagicPattern( String[] needle ) {
+        return patternList.get( needle );
     }
 
-    public PatternFinder getPatternFinder() {
-        return this.patternFinder;
-    }
-
-    public Map< String, MagicSpell > getMagicSpells() {
-        Map< String, MagicSpell > magicSpells = new HashMap<>();
-
-        magicSpells.put( "WHEAT_SEEDS", new GrassCutter() );
-        magicSpells.put( "FIREWORK_STAR", new Incinerate() );
-        magicSpells.put( "FEATHER", new CloudRider() );
-        magicSpells.put( "SLIME_BALL", new MightyLeap() );
-        magicSpells.put( "PHANTOM_MEMBRANE" , new TollOfMadness() );
-
-        return magicSpells;
-    }
-
-    public SpellFinder getSpellFinder() {
-        return this.spellFinder;
+    public MagicSpell getMagicSpell( String reagent ) {
+        return this.spellList.get( reagent );
     }
 
     public ToolPattern getToolByLore( String lore ) {
-        Map< String, ToolPattern > loreMap = new HashMap<>();
-        loreMap.put( "Wizard Pick", new WizardPick() );
-        loreMap.put( "Wizard Shovel", new WizardShovel() );
-        loreMap.put( "Wizard Axe", new WizardAxe() );
-
         return loreMap.get( lore );
     }
 
@@ -79,6 +59,44 @@ public class Wizardry {
 
     public void removeWizardPlayer( UUID uuid ) {
         this.wizardList.remove( uuid );
+    }
+
+    private void addSpells( ) {
+        ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
+        spellRegistry.add( new CloudRider() );
+        spellRegistry.add( new GrassCutter() );
+        spellRegistry.add( new Incinerate() );
+        spellRegistry.add( new MightyLeap() );
+        spellRegistry.add( new RoadToNowhere() );
+        spellRegistry.add( new TollOfMadness() );
+
+        for ( MagicSpell spell : spellRegistry ) {
+            for ( String reagent : spell.reagents ) {
+                this.spellList.put( reagent, spell );
+            }
+        }
+    }
+
+    private void addPatterns( ) {
+        ArrayList<MagicPattern> patternRegistry = new ArrayList<>();
+        patternRegistry.add( new EnchantWand() );
+        patternRegistry.add( new WizardPick() );
+        patternRegistry.add( new WizardShovel() );
+        patternRegistry.add( new WizardAxe() );
+
+        for ( MagicPattern magicPattern : patternRegistry ) {
+            for ( String[] pattern : magicPattern.getPatterns() ) {
+                this.patternList.put( pattern, magicPattern);
+            }
+
+        }
+
+    }
+
+    private void addLore() {
+        this.loreMap.put( "Wizard Pick", new WizardPick() );
+        this.loreMap.put( "Wizard Shovel", new WizardShovel() );
+        this.loreMap.put( "Wizard Axe", new WizardAxe() );
     }
 
 }

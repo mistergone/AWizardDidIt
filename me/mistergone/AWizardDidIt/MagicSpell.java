@@ -2,20 +2,21 @@ package me.mistergone.AWizardDidIt;
 
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+
+import java.util.ArrayList;
 
 public class MagicSpell {
     protected String spellName;
     protected double cost;
-    protected Material reagent;
+    protected ArrayList<String> reagents;
     protected SpellFunction spellFunction;
 
     public String getSpellName() {
         return this.spellName;
     }
 
-    public Material getReagent() {
-        return this.reagent;
+    public ArrayList<String> getReagents() {
+        return this.reagents;
     }
 
     public SpellFunction getSpellFunction() {

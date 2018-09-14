@@ -3,6 +3,7 @@ package me.mistergone.AWizardDidIt.Listeners;
 import me.mistergone.AWizardDidIt.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
@@ -27,6 +28,8 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.UUID;
 
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
+
 public class WandListener implements Listener {
     private Wizardry wizardry;
 
@@ -35,71 +38,75 @@ public class WandListener implements Listener {
     }
 
     @EventHandler(priority=EventPriority.HIGH)
-    public void PlayerInteractEvent(PlayerInteractEvent e){
+    public void PlayerInteractEvent(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         EquipmentSlot h = e.getHand();
 
-        if(  h != null && h == EquipmentSlot.HAND ) {
-            if ( e.getItem() != null && e.getItem().getType() == Material.STICK && e.getItem().getAmount() == 1 ) {
-                MagicWand magicWand = new MagicWand( e.getItem() );
-                WizardPlayer wizardPlayer = wizardry.getWizardPlayer( e.getPlayer().getUniqueId() );
+        if (h != null && h == EquipmentSlot.HAND) {
+            if (e.getItem() != null && e.getItem().getType() == Material.STICK && e.getItem().getAmount() == 1) {
+                MagicWand magicWand = new MagicWand(e.getItem());
+                WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
 
                 // If a stick is used on a chest, it might be a Magic Pattern
-                if ( e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.CHEST ) {
-                    e.setCancelled( true );
+                if (e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.CHEST) {
+                    e.setCancelled(true);
                     Chest chest = (org.bukkit.block.Chest) e.getClickedBlock().getState();
-                    MagicChest magicChest = new MagicChest( chest );
+                    MagicChest magicChest = new MagicChest(chest);
                     String[] pattern = magicChest.getPattern();
 
-                    List<String> list = Arrays.asList( pattern );
+                    List<String> list = Arrays.asList(pattern);
                     if (list.contains("TOOMANY")) {
                         p.sendMessage(ChatColor.RED + "A magic pattern cannot contain stacked items!");
                     }
 
-                    MagicPattern magicPattern = wizardry.getPatternFinder().matchPattern( pattern );
+                    MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
 
                     Boolean wandOrEnchant = magicPattern instanceof EnchantWand || magicWand.isActuallyAWand();
 
                     // Run the MagicFunction
-                    if ( magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant ) {
+                    if (magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant) {
                         try {
                             PatternFunction function = magicPattern.getMagicFunction();
-                            function.setPlayer( p );
-                            function.setMagicWand( magicWand );
-                            function.setMagicChest( magicChest );
+                            function.setPlayer(p);
+                            function.setMagicWand(magicWand);
+                            function.setMagicChest(magicChest);
                             function.call();
-                        } catch( Exception ex ) {
-                            ex.printStackTrace( );
+                        } catch (Exception ex) {
+                            ex.printStackTrace();
                         }
 
-                    } else if ( magicPattern == null ) {
-                        p.sendMessage( ChatColor.RED + "No magic pattern was found inside this chest!" );
-                    } else if ( !magicWand.isActuallyAWand() ) {
-                        p.sendMessage( ChatColor.RED + "You are not wielding a magic wand!" );
+                    } else if (magicPattern == null) {
+                        p.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    } else if (!magicWand.isActuallyAWand()) {
+                        p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                     }
 
-                // If you just wave a magic wand around, magic might happen!
-                } else if ( magicWand.isActuallyAWand() ){
+                    // If you just wave a magic wand around, magic might happen!
+                } else if (magicWand.isActuallyAWand()) {
+
                     ItemStack offItem = p.getInventory().getItemInOffHand();
                     MagicSpell magicSpell = null;
-                    if ( offItem == null || offItem.getType() == Material.AIR ) {
+                    if (offItem == null || offItem.getType() == Material.AIR) {
                         wizardPlayer.showWizardBar();
                     } else {
-                        magicSpell = wizardry.getSpellFinder().matchReagent( offItem.getType().toString() );
-                        if ( magicSpell == null ) {
-                            p.sendMessage( ChatColor.RED + "No spell found for this reagent!" );
-                        } else if ( magicSpell != null && magicSpell.getSpellFunction() != null ) {
+                        magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
+                        if (magicSpell == null) {
+                            p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
+                        } else if (magicSpell != null && magicSpell.getSpellFunction() != null) {
                             try {
                                 SpellFunction function = magicSpell.getSpellFunction();
-                                function.setPlayer( p );
-                                function.setMagicWand( magicWand );
-                                function.setReagent( offItem );
+                                function.setPlayer(p);
+                                function.setClickedBlock(e.getClickedBlock());
+                                function.setMagicWand(magicWand);
+                                function.setReagent(offItem);
                                 function.call();
-                            } catch( Exception ex ) {
-                                ex.printStackTrace( );
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
                             }
 
                         }
+
+
                     }
 
                 }
@@ -107,6 +114,22 @@ public class WandListener implements Listener {
             }
 
         }
+        if (h != null && h == EquipmentSlot.OFF_HAND) {
+            // Prevent the shovel in the OFF_HAND from turning the grass back into a path
+            MagicWand magicWand = new MagicWand(e.getPlayer().getInventory().getItemInMainHand());
+            WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( e.getPlayer().getUniqueId() );
+            if (magicWand.isActuallyAWand()) {
+                ItemStack offItem = p.getInventory().getItemInOffHand();
+                MagicSpell magicSpell = null;
+                magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
+                if ( magicSpell.getSpellName() == "Road to Nowhere" ) {
+                    if ( wizardPlayer.checkSpell( "Road to Nowhere" ) ) {
+                        wizardPlayer.removeSpell( "Road to Nowhere" );
+                        e.setCancelled( true );
+                    }
+                }
+            }
 
+        }
     }
 }

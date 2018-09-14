@@ -7,5 +7,5 @@ import me.mistergone.AWizardDidIt.MagicSpell;
  * A spell that propels the caster through the water and grants a bit of waterbreathing.
  */
 public class HolyDiver extends MagicSpell {
-
+// TODO - Write this spell!
 }

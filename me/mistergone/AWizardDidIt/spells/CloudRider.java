@@ -7,6 +7,8 @@ import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
+import java.util.ArrayList;
+
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 /**
@@ -19,7 +21,8 @@ public class CloudRider extends MagicSpell {
     public CloudRider() {
         spellName = "Cloud Rider";
         cost = .01;
-        reagent = Material.FEATHER;
+        reagents = new ArrayList<String>();
+        reagents.add( "FEATHER" );
 
         spellFunction = new SpellFunction() {
             @Override

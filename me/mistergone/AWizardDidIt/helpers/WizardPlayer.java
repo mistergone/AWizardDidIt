@@ -59,7 +59,6 @@ public class WizardPlayer {
      * @param spell A String that is keyed to the spell
      */
     public Boolean addSpell( String spell) {
-        System.out.println( spell + String.valueOf( this.activeSpells.contains( spell ) ) );
         if ( !this.activeSpells.contains( spell ) ) {
             this.activeSpells.add( spell );
             return true;

@@ -3,9 +3,11 @@ package me.mistergone.AWizardDidIt.spells;
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
-import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -19,6 +21,9 @@ public class GrassCutter extends MagicSpell {
 
     public GrassCutter() {
         spellName = "Grass Cutter";
+        cost = 0;
+        reagents = new ArrayList<String>();
+        reagents.add( "WHEAT_SEEDS" );
 
         spellFunction = new SpellFunction() {
             @Override
