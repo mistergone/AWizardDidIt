@@ -48,6 +48,7 @@ public class Wizardry {
         magicSpells.put( "FIREWORK_STAR", new Incinerate() );
         magicSpells.put( "FEATHER", new CloudRider() );
         magicSpells.put( "SLIME_BALL", new MightyLeap() );
+        magicSpells.put( "PHANTOM_MEMBRANE" , new TollOfMadness() );
 
         return magicSpells;
     }

@@ -9,9 +9,14 @@ import org.bukkit.event.entity.EntityDamageByBlockEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 
+/**
+ * INCINERATE
+ * A spell that causes the target (Monster) to burst into flames
+ */
 public class Incinerate extends MagicSpell {
     public Incinerate() {
         spellName = "Incinerate";
+        cost = .005;
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
@@ -21,11 +26,6 @@ public class Incinerate extends MagicSpell {
                     ent.getWorld().createExplosion( ent.getLocation(), 0, false );
                     ((Monster) ent).setTarget( player );
                     ((Monster) ent).damage( 6 , player );
-
-                    if ( Math.random() < .3 ) {
-                        this.expendReagent();
-                    }
-
                 }
 
 

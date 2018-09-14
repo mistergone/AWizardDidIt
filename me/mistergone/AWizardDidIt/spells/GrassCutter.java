@@ -10,6 +10,11 @@ import org.bukkit.inventory.ItemStack;
 import java.util.ArrayList;
 import java.util.List;
 
+/**
+ * GRASS CUTTER
+ * A spell that cuts the grass. You know, real wizard stuff.
+ */
+
 public class GrassCutter extends MagicSpell {
 
     public GrassCutter() {

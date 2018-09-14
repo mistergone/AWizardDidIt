@@ -14,10 +14,12 @@ import org.bukkit.boss.BarStyle;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
+import javax.sound.midi.SysexMessage;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -27,7 +29,8 @@ public class WizardPlayer {
     Map< String, Long > messageCooldowns;
     BossBar wizardBar;
     AWizardDidIt plugin;
-    BukkitTask scheduler;
+    BukkitTask wizardBarTimer;
+    BukkitTask mightyLeapTimer;
     File playerDataFile;
     FileConfiguration playerDataConfig;
 
@@ -55,8 +58,14 @@ public class WizardPlayer {
      * Adds a spell (String) to the array of activeSpells
      * @param spell A String that is keyed to the spell
      */
-    public void addSpell( String spell) {
-        this.activeSpells.add( spell );
+    public Boolean addSpell( String spell) {
+        System.out.println( spell + String.valueOf( this.activeSpells.contains( spell ) ) );
+        if ( !this.activeSpells.contains( spell ) ) {
+            this.activeSpells.add( spell );
+            return true;
+        } else {
+            return false;
+        }
     }
 
     /**
@@ -146,10 +155,10 @@ public class WizardPlayer {
      */
     public void showWizardBar() {
         this.wizardBar.setVisible( true );
-        if ( this.scheduler != null  ) {
-            this.scheduler.cancel();
+        if ( this.wizardBarTimer != null  ) {
+            this.wizardBarTimer.cancel();
         }
-        this.scheduler = Bukkit.getServer().getScheduler().runTaskLater(
+        this.wizardBarTimer = Bukkit.getServer().getScheduler().runTaskLater(
                 plugin,
                 new Runnable() {
                     @Override
@@ -185,6 +194,7 @@ public class WizardPlayer {
      public Boolean spendWizardPower( double amount) {
          double wizardPower = this.wizardBar.getProgress();
         if ( wizardPower > amount ) {
+            this.showWizardBar();
             this.wizardBar.setProgress( wizardPower - amount );
             return true;
         } else {
@@ -199,9 +209,13 @@ public class WizardPlayer {
      public void gainWizardPower( double amount ) {
          double wizardPower = this.wizardBar.getProgress();
          double newPower = Math.min( wizardPower + amount, 1 );
+         this.showWizardBar();
          this.wizardBar.setProgress( newPower );
+
      }
 
+
+     /*****##### Player File IO #####*****/
 
      public void savePlayerData() {
          String path = Bukkit.getPluginManager().getPlugin( "AWizardDidIt" ).getDataFolder().toString() + "/players";
@@ -261,4 +275,23 @@ public class WizardPlayer {
              System.out.println( "Player file not found!" );
          }
      }
+
+    /**
+     * Remove Mighty Leap's protection after 10 seconds
+     */
+    public void setMightyLeapTimer() {
+        if ( this.mightyLeapTimer != null  ) {
+            this.mightyLeapTimer.cancel();
+        }
+        this.mightyLeapTimer = Bukkit.getServer().getScheduler().runTaskLater(
+                plugin,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        activeSpells.remove( "Mighty Leap" );
+                    }
+                },
+                200
+        );
+    }
 }

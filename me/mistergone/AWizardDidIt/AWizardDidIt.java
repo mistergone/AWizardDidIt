@@ -15,8 +15,8 @@ public class AWizardDidIt extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new ToolListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new MagicListener( Wizardry.getWizardry() ), this);
 
-//        MagicCommands commandHandler = new MagicCommands(this );
-//        getCommand( "wizardry" ).setExecutor( commandHandler );
+        MagicCommands commandHandler = new MagicCommands(this );
+        getCommand( "wizardry" ).setExecutor( commandHandler );
     }
 
     @Override

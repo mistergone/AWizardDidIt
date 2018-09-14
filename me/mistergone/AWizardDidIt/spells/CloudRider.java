@@ -9,6 +9,11 @@ import org.bukkit.util.Vector;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
+/**
+ * CLOUD RIDER
+ * A spell that sends the wizard high into the air, to fly off into the clouds!
+ */
+
 public class CloudRider extends MagicSpell {
 
     public CloudRider() {

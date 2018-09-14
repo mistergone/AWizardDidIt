@@ -4,3 +4,7 @@ author: mistergone
 main: me.mistergone.AWizardDidIt.AWizardDidIt
 api-version: 1.13
 description: A Wizard Did It!
+commands:
+  wizardry:
+    description: Commands for AWizardDidIt
+    usage: /wizardry <options>

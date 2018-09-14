@@ -1,27 +1,23 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.Wizardry;
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.helpers.Targeter;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
-import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Monster;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
-/*
-    Allows the player to make a BIG OL' JUMP!
-    Damage is prevented inside MagicListener
+/**
+ * MIGHTY LEAP
+ * A spell that flings the wizard into the air and protects them from the fall... probably.
  */
 
 public class MightyLeap extends MagicSpell {
@@ -36,11 +32,9 @@ public class MightyLeap extends MagicSpell {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                double wizardPower = wizardPlayer.getWizardBar().getProgress();
 
-                if ( player.isOnGround() && wizardPower >= cost ) {
+                if ( player.isOnGround() && wizardPlayer.spendWizardPower( cost ) ) {
                     wizardPlayer.addSpell( spellName );
-                    wizardPlayer.getWizardBar().setProgress( wizardPower - cost );
 
                     if ( wizardPlayer.checkMsgCooldown( "Magic Leap" ) == false ) {
                         player.sendMessage(ChatColor.DARK_GREEN + "You have invoked Mighty Leap! Safety is not guaranteed!");
@@ -89,10 +83,9 @@ public class MightyLeap extends MagicSpell {
 
                     player.setVelocity(v);
 
-                    wizardPlayer.showWizardBar();
+                    wizardPlayer.setMightyLeapTimer();
                 }
             }
         };
     }
-
 }

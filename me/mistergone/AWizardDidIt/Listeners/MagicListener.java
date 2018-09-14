@@ -2,10 +2,8 @@ package me.mistergone.AWizardDidIt.Listeners;
 
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import net.minecraft.server.v1_13_R2.ItemFood;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -81,7 +79,7 @@ public class MagicListener implements Listener {
     @EventHandler
     public void onPlayerMove( PlayerMoveEvent event ) {
         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() );
-        if ( event.getPlayer().isOnGround() == true && wizardPlayer.checkSpell( "Cloud Rider (Gliding)" ) ) {
+        if ( event.getPlayer().isOnGround() && wizardPlayer.checkSpell( "Cloud Rider (Gliding)" ) ) {
             wizardPlayer.removeSpell( "Cloud Rider (Gliding)" );
         }
     }
@@ -94,4 +92,13 @@ public class MagicListener implements Listener {
         wizardPlayer.showWizardBar();
     }
 
+    @EventHandler
+    public void onConsume( PlayerItemConsumeEvent event ) {
+        // TODO - Make potions and food restore Wizard Power
+//        event.getPlayer().sendMessage( event.getItem().getType().toString() );
+//        if ( event.getItem().getType() == Material.POTION ) {
+//            event.getPlayer().sendMessage( "Twas a potion");
+//            getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( .1 );
+//        }
+    }
 }
