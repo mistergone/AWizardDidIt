@@ -114,22 +114,5 @@ public class WandListener implements Listener {
             }
 
         }
-        if (h != null && h == EquipmentSlot.OFF_HAND) {
-            // Prevent the shovel in the OFF_HAND from turning the grass back into a path
-            MagicWand magicWand = new MagicWand(e.getPlayer().getInventory().getItemInMainHand());
-            WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( e.getPlayer().getUniqueId() );
-            if (magicWand.isActuallyAWand()) {
-                ItemStack offItem = p.getInventory().getItemInOffHand();
-                MagicSpell magicSpell = null;
-                magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
-                if ( magicSpell.getSpellName() == "Road to Nowhere" ) {
-                    if ( wizardPlayer.checkSpell( "Road to Nowhere" ) ) {
-                        wizardPlayer.removeSpell( "Road to Nowhere" );
-                        e.setCancelled( true );
-                    }
-                }
-            }
-
-        }
     }
 }

@@ -28,20 +28,24 @@ public class MagicWand extends ItemStack {
     public Boolean isActuallyAWand() {
         Boolean isStick = wandItem.getType() == Material.STICK;
         int amt = wandItem.getAmount();
-        ItemMeta meta = wandItem.getItemMeta();
-        Boolean hasWandLore = false;
-        if ( meta.getLore() != null && meta.getLore().get(0).equals( "A magic wand!" ) ) {
-            hasWandLore = true;
-        }
-        Boolean hasLocName = false;
-        if ( meta.hasLocalizedName() && meta.getLocalizedName().substring( 1, 10 ).equals( "MAGICWAND" ) ) {
-            hasLocName = true;
-        }
-
-        if ( isStick && amt == 1 && hasWandLore && hasLocName ) {
-            return true;
-        } else {
+        if ( !isStick  || amt > 1 ) {
             return false;
+        } else {
+            ItemMeta meta = wandItem.getItemMeta();
+            Boolean hasWandLore = false;
+            if ( meta.getLore() != null && meta.getLore().get(0).equals( "A magic wand!" ) ) {
+                hasWandLore = true;
+            }
+            Boolean hasLocName = false;
+            if ( meta.hasLocalizedName() && meta.getLocalizedName().substring( 1, 10 ).equals( "MAGICWAND" ) ) {
+                hasLocName = true;
+            }
+
+            if ( hasWandLore && hasLocName ) {
+                return true;
+            } else {
+                return false;
+            }
         }
     }
 

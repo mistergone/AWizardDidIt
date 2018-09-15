@@ -6,22 +6,19 @@ import me.mistergone.AWizardDidIt.spells.*;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class Wizardry {
     private static Wizardry wizardry = new Wizardry();
     private Map< UUID, WizardPlayer> wizardList;
     private Map< String, MagicSpell > spellList;
-    private Map< String[], MagicPattern > patternList;
+    private Map< String, MagicPattern > patternList;
     Map< String, ToolPattern > loreMap;
 
     private Wizardry() {
         this.wizardList = new HashMap< UUID, WizardPlayer >();
         this.spellList = new HashMap< String, MagicSpell>();
-        this.patternList = new HashMap< String[], MagicPattern>();
+        this.patternList = new HashMap< String, MagicPattern>();
         this.loreMap = new HashMap<>();
 
         this.addLore();
@@ -35,7 +32,14 @@ public class Wizardry {
     }
 
     public MagicPattern getMagicPattern( String[] needle ) {
-        return patternList.get( needle );
+        String pattern = new String();
+        for ( int i = 0; i < needle.length; i++ ) {
+            pattern += needle[i];
+            if (i < needle.length - 1) {
+                pattern += ",";
+            }
+        }
+        return patternList.get( pattern );
     }
 
     public MagicSpell getMagicSpell( String reagent ) {
@@ -65,9 +69,11 @@ public class Wizardry {
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
         spellRegistry.add( new CloudRider() );
         spellRegistry.add( new GrassCutter() );
+        spellRegistry.add( new HolyDiver() );
         spellRegistry.add( new Incinerate() );
         spellRegistry.add( new MightyLeap() );
         spellRegistry.add( new RoadToNowhere() );
+        spellRegistry.add( new Thunderhorse() );
         spellRegistry.add( new TollOfMadness() );
 
         for ( MagicSpell spell : spellRegistry ) {
@@ -85,7 +91,14 @@ public class Wizardry {
         patternRegistry.add( new WizardAxe() );
 
         for ( MagicPattern magicPattern : patternRegistry ) {
-            for ( String[] pattern : magicPattern.getPatterns() ) {
+            for ( String[] p : magicPattern.getPatterns() ) {
+                String pattern = new String();
+                for ( int i = 0; i < p.length; i++ ) {
+                    pattern += p[i];
+                    if (i < p.length - 1) {
+                        pattern += ",";
+                    }
+                }
                 this.patternList.put( pattern, magicPattern);
             }
 

@@ -34,11 +34,11 @@ public class RoadToNowhere extends MagicSpell {
                 if ( clickedBlock != null ) {
                     WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                     Block target = player.getWorld().getBlockAt( clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ() );
+
                     if ( clickedBlock.getType() == Material.GRASS_PATH && wizardPlayer.spendWizardPower( cost ) ) {
-                        // This value has to be caught by the PlayerInteractEvent handler or else the shovel in the
-                        // OFF_HAND will turn the grass back into a path
-                        wizardPlayer.addSpell( spellName );
                         target.setType( Material.GRASS_BLOCK );
+                    } else if ( clickedBlock.getType() == Material.GRASS_BLOCK && wizardPlayer.spendWizardPower( cost ) ) {
+                        target.setType( Material.GRASS_PATH );
                     } else if ( clickedBlock.getType() == Material.DIRT && wizardPlayer.spendWizardPower( cost ) ) {
                         target.setType( Material.GRASS_PATH );
                     }

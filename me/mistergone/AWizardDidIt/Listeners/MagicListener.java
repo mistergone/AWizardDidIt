@@ -5,12 +5,16 @@ import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import net.minecraft.server.v1_13_R2.ItemFood;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.*;
+import org.bukkit.event.vehicle.VehicleExitEvent;
 import org.bukkit.scheduler.BukkitTask;
 import org.bukkit.util.Vector;
 
@@ -90,6 +94,18 @@ public class MagicListener implements Listener {
         WizardPlayer wizardPlayer = wizardry.getWizardPlayer( event.getPlayer().getUniqueId() );
         wizardPlayer.gainWizardPower( (double)amount / 1000 );
         wizardPlayer.showWizardBar();
+    }
+
+    @EventHandler
+    public void onDismount( VehicleExitEvent event ) {
+        if ( event.getExited() instanceof Player && event.getVehicle() instanceof SkeletonHorse
+                && event.getVehicle().getCustomName().equals( "Thunderhorse" ) ) {
+            WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getExited().getUniqueId() );
+            if ( wizardPlayer.checkSpell( "Thunderhorse" ) ) {
+                event.getVehicle().remove();
+                wizardPlayer.removeSpell( "Thunderhorse" );
+            }
+        }
     }
 
     @EventHandler

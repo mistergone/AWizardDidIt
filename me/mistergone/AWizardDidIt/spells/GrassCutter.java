@@ -1,13 +1,16 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -28,7 +31,13 @@ public class GrassCutter extends MagicSpell {
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
-                player.sendMessage(ChatColor.DARK_GREEN + "You have invoked " + spellName + "!" );
+                WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
+                if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
+                    player.sendMessage(ChatColor.DARK_GREEN + "You have invoked " + spellName + "!" );
+                    wizardPlayer.addMsgCooldown( spellName, 20 );
+                }
+
+
                 player.playSound( player.getLocation(), Sound.ENTITY_PARROT_IMITATE_ELDER_GUARDIAN, .6F, .02F  );
                 Location loc = player.getLocation();
 
