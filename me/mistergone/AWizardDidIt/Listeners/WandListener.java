@@ -42,7 +42,7 @@ public class WandListener implements Listener {
         Player p = e.getPlayer();
         EquipmentSlot h = e.getHand();
 
-        if (h != null && h == EquipmentSlot.HAND) {
+        if ( h != null && h == EquipmentSlot.HAND ) {
             if (e.getItem() != null && e.getItem().getType() == Material.STICK && e.getItem().getAmount() == 1) {
                 MagicWand magicWand = new MagicWand(e.getItem());
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
@@ -86,13 +86,14 @@ public class WandListener implements Listener {
 
                     ItemStack offItem = p.getInventory().getItemInOffHand();
                     MagicSpell magicSpell = null;
-                    if (offItem == null || offItem.getType() == Material.AIR) {
+                    if ( offItem == null || offItem.getType() == Material.AIR ) {
                         wizardPlayer.showWizardBar();
                     } else {
                         magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                         if (magicSpell == null) {
                             p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
                         } else if (magicSpell != null && magicSpell.getSpellFunction() != null) {
+                            e.setCancelled( true );
                             try {
                                 SpellFunction function = magicSpell.getSpellFunction();
                                 function.setPlayer(p);

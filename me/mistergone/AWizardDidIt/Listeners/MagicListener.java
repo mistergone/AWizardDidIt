@@ -1,12 +1,10 @@
 package me.mistergone.AWizardDidIt.Listeners;
 
+import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import net.minecraft.server.v1_13_R2.ItemFood;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.event.EventHandler;
@@ -15,8 +13,10 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.scheduler.BukkitTask;
-import org.bukkit.util.Vector;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionType;
+
 
 import java.util.UUID;
 
@@ -110,11 +110,28 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onConsume( PlayerItemConsumeEvent event ) {
-        // TODO - Make potions and food restore Wizard Power
-//        event.getPlayer().sendMessage( event.getItem().getType().toString() );
-//        if ( event.getItem().getType() == Material.POTION ) {
-//            event.getPlayer().sendMessage( "Twas a potion");
-//            getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( .1 );
-//        }
+        ItemStack item = event.getItem();
+        ItemStack main = event.getPlayer().getInventory().getItemInMainHand();
+        ItemStack off = event.getPlayer().getInventory().getItemInOffHand();
+
+        // Prevent consumption when wand is out
+        if (  ((org.bukkit.inventory.ItemStack) main).getType() == Material.STICK ) {
+            MagicWand magicWand = new MagicWand( main );
+            Boolean isReagent = getWizardry().getReagentList().contains( off.getType().toString() );
+            if ( magicWand.isActuallyAWand() && isReagent ) {
+                event.setCancelled( true );
+            }
+        }
+
+        // Potions give back Wizard Power
+        if ( item.getType() == Material.POTION && item.getItemMeta() instanceof PotionMeta ) {
+            final PotionMeta meta = (PotionMeta) item.getItemMeta();
+            if ( meta.getBasePotionData().getType() != PotionType.WATER ) {
+                event.getPlayer().sendMessage( "Gaining Wizard Power..." );
+                getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( .1 );
+            }
+
+
+        }
     }
 }

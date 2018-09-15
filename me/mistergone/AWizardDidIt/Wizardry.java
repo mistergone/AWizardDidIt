@@ -1,5 +1,6 @@
 package me.mistergone.AWizardDidIt;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.*;
 import me.mistergone.AWizardDidIt.spells.*;
@@ -13,6 +14,7 @@ public class Wizardry {
     private Map< UUID, WizardPlayer> wizardList;
     private Map< String, MagicSpell > spellList;
     private Map< String, MagicPattern > patternList;
+    private ArrayList<String> reagentList;
     Map< String, ToolPattern > loreMap;
 
     private Wizardry() {
@@ -20,6 +22,7 @@ public class Wizardry {
         this.spellList = new HashMap< String, MagicSpell>();
         this.patternList = new HashMap< String, MagicPattern>();
         this.loreMap = new HashMap<>();
+        this.reagentList = new ArrayList<>();
 
         this.addLore();
         this.addSpells();
@@ -44,6 +47,10 @@ public class Wizardry {
 
     public MagicSpell getMagicSpell( String reagent ) {
         return this.spellList.get( reagent );
+    }
+
+    public ArrayList<String> getReagentList() {
+        return this.reagentList;
     }
 
     public ToolPattern getToolByLore( String lore ) {
@@ -79,6 +86,7 @@ public class Wizardry {
         for ( MagicSpell spell : spellRegistry ) {
             for ( String reagent : spell.reagents ) {
                 this.spellList.put( reagent, spell );
+                this.reagentList.add( reagent );
             }
         }
     }
@@ -89,6 +97,7 @@ public class Wizardry {
         patternRegistry.add( new WizardPick() );
         patternRegistry.add( new WizardShovel() );
         patternRegistry.add( new WizardAxe() );
+        patternRegistry.add( new WizardHoe() );
 
         for ( MagicPattern magicPattern : patternRegistry ) {
             for ( String[] p : magicPattern.getPatterns() ) {
@@ -110,6 +119,7 @@ public class Wizardry {
         this.loreMap.put( "Wizard Pick", new WizardPick() );
         this.loreMap.put( "Wizard Shovel", new WizardShovel() );
         this.loreMap.put( "Wizard Axe", new WizardAxe() );
+        this.loreMap.put( "Wizard Hoe", new WizardHoe() );
     }
 
 }
