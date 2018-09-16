@@ -4,7 +4,14 @@ import me.mistergone.AWizardDidIt.Listeners.MagicListener;
 import me.mistergone.AWizardDidIt.Listeners.ToolListener;
 import me.mistergone.AWizardDidIt.Listeners.WandListener;
 import me.mistergone.AWizardDidIt.helpers.MagicCommands;
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
+
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class AWizardDidIt extends JavaPlugin{
 
@@ -22,5 +29,10 @@ public class AWizardDidIt extends JavaPlugin{
     @Override
     public void onDisable(){
         //Fired when the server stops and disables all plugins
+        HashMap<UUID, WizardPlayer> wizardList = new HashMap<>();
+        for ( WizardPlayer wizardPlayer: wizardList.values() ) {
+            wizardPlayer.savePlayerData();
+        }
+
     }
 }
