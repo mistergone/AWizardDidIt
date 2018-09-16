@@ -32,7 +32,7 @@ public class Thunderhorse extends MagicSpell {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 if ( wizardPlayer.spendWizardPower( cost ) ) {
                     if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                        player.sendMessage(ChatColor.DARK_PURPLE + "You have summoned forth the Thunderhose!");
+                        player.sendMessage(ChatColor.DARK_PURPLE + "You have summoned forth the Thunderhorse!");
                         wizardPlayer.addMsgCooldown( spellName, 30 );
                     }
 
