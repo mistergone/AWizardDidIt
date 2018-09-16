@@ -5,14 +5,9 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class MagicWand extends ItemStack {
-    protected ItemStack wandItem;
+public class MagicWand {
 
-    public MagicWand( ItemStack wand ) {
-        this.wandItem = wand;
-    }
-
-    public Boolean isJustAStick() {
+    public static Boolean isJustAStick( ItemStack wandItem) {
         Boolean isStick = wandItem.getType() == Material.STICK;
         int amt = wandItem.getAmount();
         ItemMeta meta = wandItem.getItemMeta();
@@ -25,7 +20,7 @@ public class MagicWand extends ItemStack {
         }
     }
 
-    public Boolean isActuallyAWand() {
+    public static Boolean isActuallyAWand( ItemStack wandItem ) {
         Boolean isStick = wandItem.getType() == Material.STICK;
         int amt = wandItem.getAmount();
         if ( !isStick  || amt > 1 ) {
@@ -47,14 +42,6 @@ public class MagicWand extends ItemStack {
                 return false;
             }
         }
-    }
-
-    public ItemStack getMagicWand() {
-        return this.wandItem;
-    }
-
-    public int getMagicWandLevel() {
-        return 0;
     }
 
 }

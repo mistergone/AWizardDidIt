@@ -43,9 +43,10 @@ public class WandListener implements Listener {
         EquipmentSlot h = e.getHand();
 
         if ( h != null && h == EquipmentSlot.HAND ) {
-            if (e.getItem() != null && e.getItem().getType() == Material.STICK && e.getItem().getAmount() == 1) {
-                MagicWand magicWand = new MagicWand(e.getItem());
+            ItemStack main =  e.getItem();
+            if ( main != null &&  main.getType() == Material.STICK &&  main.getAmount() == 1) {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
+
 
                 // If a stick is used on a chest, it might be a Magic Pattern
                 if (e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.CHEST) {
@@ -61,14 +62,14 @@ public class WandListener implements Listener {
 
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
 
-                    Boolean wandOrEnchant = magicPattern instanceof EnchantWand || magicWand.isActuallyAWand();
+                    Boolean wandOrEnchant = magicPattern instanceof EnchantWand || MagicWand.isActuallyAWand(  main );
 
                     // Run the MagicFunction
                     if (magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant) {
                         try {
                             PatternFunction function = magicPattern.getMagicFunction();
                             function.setPlayer(p);
-                            function.setMagicWand(magicWand);
+                            function.setMagicWand(  main );
                             function.setMagicChest(magicChest);
                             function.call();
                         } catch (Exception ex) {
@@ -77,12 +78,12 @@ public class WandListener implements Listener {
 
                     } else if (magicPattern == null) {
                         p.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
-                    } else if (!magicWand.isActuallyAWand()) {
+                    } else if ( MagicWand.isActuallyAWand(  main ) ) {
                         p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                     }
 
                     // If you just wave a magic wand around, magic might happen!
-                } else if (magicWand.isActuallyAWand()) {
+                } else if ( MagicWand.isActuallyAWand( main )) {
 
                     ItemStack offItem = p.getInventory().getItemInOffHand();
                     MagicSpell magicSpell = null;
@@ -98,7 +99,8 @@ public class WandListener implements Listener {
                                 SpellFunction function = magicSpell.getSpellFunction();
                                 function.setPlayer(p);
                                 function.setClickedBlock(e.getClickedBlock());
-                                function.setMagicWand(magicWand);
+                                function.setEvent( e );
+                                function.setMagicWand( main );
                                 function.setReagent(offItem);
                                 function.call();
                             } catch (Exception ex) {

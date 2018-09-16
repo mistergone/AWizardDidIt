@@ -5,16 +5,25 @@ import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import net.minecraft.server.v1_13_R2.ItemFood;
 import org.bukkit.*;
+import org.bukkit.entity.Horse;
 import org.bukkit.entity.Player;
 import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
+import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryInteractEvent;
+import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.inventory.HorseInventory;
+import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
 
@@ -116,9 +125,8 @@ public class MagicListener implements Listener {
 
         // Prevent consumption when wand is out
         if (  ((org.bukkit.inventory.ItemStack) main).getType() == Material.STICK ) {
-            MagicWand magicWand = new MagicWand( main );
             Boolean isReagent = getWizardry().getReagentList().contains( off.getType().toString() );
-            if ( magicWand.isActuallyAWand() && isReagent ) {
+            if ( MagicWand.isActuallyAWand( main ) && isReagent ) {
                 event.setCancelled( true );
             }
         }
@@ -130,8 +138,48 @@ public class MagicListener implements Listener {
                 event.getPlayer().sendMessage( "Gaining Wizard Power..." );
                 getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( .1 );
             }
-
-
         }
+
+        // Poison Potatoes give back 100  Wizard Power!
+        if ( item.getType() == Material.POISONOUS_POTATO ) {
+            WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() );
+            wizardPlayer.gainWizardPower( .1 );
+        }
+    }
+
+    @EventHandler
+    public void onFoodChange( FoodLevelChangeEvent event ) {
+        if ( event.getEntity() instanceof Player ) {
+            Player p = (Player) event.getEntity();
+            int foodChange = event.getFoodLevel() - p.getFoodLevel();
+            if ( foodChange > 0 ) {
+                WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
+                wizardPlayer.gainWizardPower( (double) foodChange / 500 );
+            }
+        }
+
+    }
+
+    @EventHandler
+    public void onInventoryInteractEvent( InventoryClickEvent event ) {
+        if ( event.getWhoClicked() instanceof  Player ) {
+            Player p = (Player )event.getWhoClicked();
+            WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
+
+            // Did you try to take Thunderhorse's saddle?!?!
+            InventoryHolder holder = event.getClickedInventory().getHolder();
+            Boolean isThunderhorse = holder instanceof SkeletonHorse &&  ((SkeletonHorse) holder).getName().equals( "Thunderhorse" );
+            Boolean hasThunderhorse = wizardPlayer.checkSpell( "Thunderhorse" );
+            Boolean clickedSaddle = event.getCurrentItem().getType() == Material.SADDLE;
+            if ( isThunderhorse && hasThunderhorse && clickedSaddle ) {
+                event.setCancelled( true );
+                p.sendMessage( ChatColor.DARK_RED + "You dare touch the saddle of Thunderhorse?!?!? Suffer the curse of darkness!");
+                PotionEffect curse = new PotionEffect( PotionEffectType.BLINDNESS, 200, 1 );
+                p.addPotionEffect( curse );
+            }
+        }
+
+
+
     }
 }

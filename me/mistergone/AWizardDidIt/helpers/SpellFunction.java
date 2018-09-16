@@ -2,11 +2,13 @@ package me.mistergone.AWizardDidIt.helpers;
 
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class SpellFunction extends MagicFunction {
     public ItemStack reagent;
     public Block clickedBlock;
+    public PlayerInteractEvent event;
 
     public Boolean expendReagent() {
         ItemStack offhand = player.getInventory().getItemInOffHand();
@@ -29,5 +31,10 @@ public class SpellFunction extends MagicFunction {
     public void setClickedBlock( Block block) {
         this.clickedBlock = block;
     }
+
+    public void setEvent( PlayerInteractEvent event ) {
+        this.event = event;
+    }
+
 
 }

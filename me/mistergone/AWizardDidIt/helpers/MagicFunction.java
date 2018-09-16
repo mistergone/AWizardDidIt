@@ -10,7 +10,7 @@ import java.util.concurrent.Callable;
 
 public class MagicFunction implements Callable<Boolean> {
     public Player player;
-    public MagicWand magicWand;
+    public ItemStack magicWand;
 
     public MagicFunction(){
         super();
@@ -20,7 +20,7 @@ public class MagicFunction implements Callable<Boolean> {
         this.player = player;
     }
 
-    public void setMagicWand( MagicWand magicWand ) {
+    public void setMagicWand( ItemStack magicWand ) {
         this.magicWand = magicWand;
     }
 

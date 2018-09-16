@@ -9,6 +9,7 @@ import org.bukkit.inventory.ItemStack;
 public class ToolFunction extends PatternFunction {
     public ItemStack tool;
     public ToolFunction toolFunction;
+    public ToolFunction secondaryFunction;
     public BlockBreakEvent blockBreakEvent;
     public PlayerInteractEvent playerInteractEvent;
 

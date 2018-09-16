@@ -46,7 +46,7 @@ public class MagicCommands implements CommandExecutor {
                         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
                         double wizardPower = wizardPlayer.getWizardPower();
                         getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
-                        p.sendMessage( "You have " + String.valueOf( Math.floor( wizardPower * 1000 ) )
+                        p.sendMessage( "You have " + String.valueOf( (int) Math.floor( wizardPower * 1000 ) )
                                 +  " points of Wizard Power.");
                         if ( wizardPlayer.getSpells().size() > 0 ) {
                             for ( String spell: wizardPlayer.getSpells() ) {

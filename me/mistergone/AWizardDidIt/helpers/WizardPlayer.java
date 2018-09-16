@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.helpers;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
 import org.bukkit.Bukkit;
+import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.InvalidConfigurationException;
@@ -33,6 +34,7 @@ public class WizardPlayer {
     BukkitTask mightyLeapTimer;
     File playerDataFile;
     FileConfiguration playerDataConfig;
+    BlockFace lastFaceToolClicked;
 
     public WizardPlayer( Player p ) {
         this.player = p;
@@ -292,5 +294,19 @@ public class WizardPlayer {
                 },
                 200
         );
+    }
+
+    /**
+     * Set the last block face clicked by a tool
+     */
+    public void setLastFaceClicked( BlockFace face ) {
+        this.lastFaceToolClicked = face;
+    }
+
+    /**
+     * Get the last block face clicked by a tool
+     */
+    public BlockFace getLastFaceClicked() {
+        return this.lastFaceToolClicked;
     }
 }

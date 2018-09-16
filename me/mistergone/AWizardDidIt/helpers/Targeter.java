@@ -5,6 +5,7 @@ import org.bukkit.util.Vector;
 import org.bukkit.entity.Entity;
 
 public class Targeter {
+    // TODO - Rewrite this whole thing so it's more relevant to this plugin
 
     public static Player getTargetPlayer(final Player player) {
         return getTarget(player, player.getWorld().getPlayers());

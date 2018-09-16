@@ -124,7 +124,7 @@ public class WizardHoe extends ToolPattern {
                                 }
                             }
 
-                            if ( belowAir && isFarmland && hasItems ) {
+                            if ( belowAir && isFarmland && hasItems && wizardPlayer.spendWizardPower( .001 ) ) {
                                 block.getRelative( BlockFace.UP ).setType( crops.get( offHand.getType() ) ) ;
                                 if ( offHand.getAmount() > 1 ) {
                                     offHand.setAmount( offHand.getAmount() - 1 );
@@ -132,9 +132,8 @@ public class WizardHoe extends ToolPattern {
                                     player.getInventory().setItemInOffHand( null );
                                 }
                             } else if ( !hasItems && isFarmland ) {
-
                                 break;
-                            } else if ( isCrop ) {
+                            } else if ( isCrop && wizardPlayer.spendWizardPower( .001 ) ) {
                                 block.breakNaturally();
                             }
 

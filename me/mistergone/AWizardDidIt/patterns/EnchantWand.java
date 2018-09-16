@@ -33,19 +33,18 @@ public class EnchantWand extends MagicPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run( ) {
-                if ( magicWand.isJustAStick() ) {
-                    ItemStack wandItem = magicWand.getMagicWand();
+                if ( MagicWand.isJustAStick( magicWand ) ) {
                     player.sendMessage(ChatColor.BLUE + "I see you have a taste for magic!");
 
-                    wandItem.addUnsafeEnchantment( Enchantment.MENDING, 0 );
-                    ItemMeta meta = wandItem.getItemMeta();
+                    magicWand.addUnsafeEnchantment( Enchantment.MENDING, 0 );
+                    ItemMeta meta = magicWand.getItemMeta();
                     meta.addItemFlags( ItemFlag.HIDE_ENCHANTS );
                     ArrayList<String> lore = new ArrayList<String>();
                     lore.add( "A magic wand!" );
                     meta.setLore( lore );
                     meta.setDisplayName( "Magic Wand" );
                     meta.setLocalizedName( "0MAGICWAND" + UUID.randomUUID().toString() );
-                    wandItem.setItemMeta( meta );
+                    magicWand.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "Your stick has been turned into a magic wand!");
 
                     magicChest.clearPattern( );
