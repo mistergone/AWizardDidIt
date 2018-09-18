@@ -34,9 +34,9 @@ public class MagicCommands implements CommandExecutor {
                 } else if ( args[0].equalsIgnoreCase( "mywizardpower" ) ) {
                     if ( sender instanceof Player ) {
                         Player p = (Player) sender;
-                        double wizardPower = getWizardry().getWizardPlayer( p.getUniqueId() ).getWizardPower();
+                        int wizardPower = getWizardry().getWizardPlayer( p.getUniqueId() ).getWizardPower();
                         getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
-                        p.sendMessage( "You have " + String.valueOf( Math.floor( wizardPower * 1000 ) )
+                        p.sendMessage( "You have " + String.valueOf( wizardPower  )
                                 +  " points of Wizard Power.");
                         return true;
                     }
@@ -44,9 +44,9 @@ public class MagicCommands implements CommandExecutor {
                     if ( sender instanceof Player ) {
                         Player p = (Player) sender;
                         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
-                        double wizardPower = wizardPlayer.getWizardPower();
+                        int wizardPower = wizardPlayer.getWizardPower();
                         getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
-                        p.sendMessage( "You have " + String.valueOf( (int) Math.floor( wizardPower * 1000 ) )
+                        p.sendMessage( "You have " + String.valueOf( wizardPower )
                                 +  " points of Wizard Power.");
                         if ( wizardPlayer.getSpells().size() > 0 ) {
                             for ( String spell: wizardPlayer.getSpells() ) {
@@ -58,20 +58,42 @@ public class MagicCommands implements CommandExecutor {
                     }
                 }
             } else if ( args.length == 2 ) {
-                if ( args[0].equalsIgnoreCase( "getWizardPower") ) {
-                    Player p = this.plugin.getServer().getPlayer( args[1] );
-                    if ( !sender.isOp() ) {
-                        sender.sendMessage( "This command is for ops only.");
+                if (args[0].equalsIgnoreCase("getWizardPower") || args[0].equalsIgnoreCase("getwp")) {
+
+                    Player p = this.plugin.getServer().getPlayer(args[1]);
+                    if (!sender.isOp()) {
+                        sender.sendMessage("This command is for ops only.");
                         return true;
                     }
-                    if ( p == null ) {
-                        sender.sendMessage( "No such player!" );
+                    if (p == null) {
+                        sender.sendMessage("No such player!");
                         return true;
                     }
-                    double wizardPower = getWizardry().getWizardPlayer( p.getUniqueId() ).getWizardPower();
-                    p.sendMessage( p.getDisplayName() + " has " + String.valueOf( Math.floor( wizardPower * 1000 ) )
-                            +  " points of Wizard Power.");
+                    int wizardPower = getWizardry().getWizardPlayer(p.getUniqueId()).getWizardPower();
+                    sender.sendMessage(p.getDisplayName() + " has " + String.valueOf( wizardPower )
+                            + " points of Wizard Power.");
                     return true;
+                }
+            } else if ( args.length == 3 ) {
+                if ( args[0].equalsIgnoreCase( "setWizardPower") || args[0].equalsIgnoreCase( "setwp" ) ) {
+                    Player p = this.plugin.getServer().getPlayer(args[1]);
+                    if ( isInteger( args[2] ) && p != null ) {
+                        WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
+                        Integer amount = Integer.valueOf( args[2] );
+                        wizardPlayer.setWizardPower( amount );
+                        int wizardPower = getWizardry().getWizardPlayer(p.getUniqueId()).getWizardPower();
+                        sender.sendMessage(p.getDisplayName() + " has " + String.valueOf( wizardPower )
+                                + " points of Wizard Power.");
+                        return true;
+                    } else {
+                        if ( p == null ) {
+                            sender.sendMessage( "No such player!" );
+                            return true;
+                        } else {
+                            sender.sendMessage( "Third argument is not an Integer." );
+                            return true;
+                        }
+                    }
                 }
             } else {
                 sender.sendMessage("Invalid argument count.");
@@ -79,5 +101,15 @@ public class MagicCommands implements CommandExecutor {
             }
         }
         return false; // if false is returned, the help for the command stated in the plugin.yml will be displayed to the player
+    }
+
+    private Boolean isInteger( String string ) {
+        Boolean isInteger = false;
+        try {
+            Integer.parseInt( string );
+            isInteger = true;
+        } catch( Exception ex ) {
+        }
+        return isInteger;
     }
 }

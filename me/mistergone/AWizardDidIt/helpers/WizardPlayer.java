@@ -31,10 +31,11 @@ public class WizardPlayer {
     BossBar wizardBar;
     AWizardDidIt plugin;
     BukkitTask wizardBarTimer;
-    BukkitTask mightyLeapTimer;
+    HashMap< String, BukkitTask > spellTimers;
     File playerDataFile;
     FileConfiguration playerDataConfig;
     BlockFace lastFaceToolClicked;
+    int wizardPower;
 
     public WizardPlayer( Player p ) {
         this.player = p;
@@ -43,6 +44,7 @@ public class WizardPlayer {
         this.wizardBar = Bukkit.createBossBar( "Wizard Power", BarColor.BLUE, BarStyle.SEGMENTED_20 );
         this.wizardBar.addPlayer( this.player );
         this.wizardBar.setVisible( false );
+        this.spellTimers = new HashMap<>();
         this.plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
     }
 
@@ -155,6 +157,7 @@ public class WizardPlayer {
      * Shows the Wizard Power BossBar for 5 seconds
      */
     public void showWizardBar() {
+        resetWizardBar();
         this.wizardBar.setVisible( true );
         if ( this.wizardBarTimer != null  ) {
             this.wizardBarTimer.cancel();
@@ -175,16 +178,16 @@ public class WizardPlayer {
      * Get the Wizard Power BossBar
      * @return the Wizard Power BossBar
      */
-    public BossBar getWizardBar() {
-        return this.wizardBar;
+    public void resetWizardBar() {
+        this.wizardBar.setProgress( (double)this.wizardPower/1000 );
     }
 
     /**
      * Get the player's current Wizard Power
      * @return the player's current Wizard Power
      */
-     public double getWizardPower() {
-        return this.wizardBar.getProgress();
+     public int getWizardPower() {
+        return this.wizardPower;
      }
 
     /**
@@ -192,33 +195,40 @@ public class WizardPlayer {
      * @param amount The amount of wizard power to try to spend
      * @return
      */
-     public Boolean spendWizardPower( double amount) {
-         double wizardPower = this.wizardBar.getProgress();
-        if ( wizardPower > amount ) {
-            this.showWizardBar();
-            this.wizardBar.setProgress( wizardPower - amount );
-            return true;
-        } else {
-            return false;
-        }
+     public Boolean spendWizardPower( int amount) {
+         if ( wizardPower > amount ) {
+             wizardPower = Math.max( 0, wizardPower - amount );
+             showWizardBar();
+             return true;
+         } else {
+             return false;
+         }
      }
 
     /**
      * Add the amount to current Wizard Power
      * @param amount The amount of Wizard Power to add
      */
-     public void gainWizardPower( double amount ) {
-         double wizardPower = this.wizardBar.getProgress();
-         double newPower = Math.min( wizardPower + amount, 1 );
-         this.showWizardBar();
-         this.wizardBar.setProgress( newPower );
-
+     public void gainWizardPower( int amount ) {
+         wizardPower = Math.min( 1000, wizardPower + amount );
+         showWizardBar();
      }
 
+    /**
+     * Set current Wizard Power to specified amount
+     * @param amount The amount at which to set Wizard Power
+     */
+    public void setWizardPower( double amount ) {
+        wizardPower = (int)Math.max( 0, Math.min( 1000, amount ) );
+        this.showWizardBar();
+    }
 
      /*****##### Player File IO #####*****/
 
-     public void savePlayerData() {
+    /**
+     * Saves WizardPlayer data to file
+     */
+    public void savePlayerData() {
          String path = Bukkit.getPluginManager().getPlugin( "AWizardDidIt" ).getDataFolder().toString() + "/players";
          File filePath = new File( path );
          String playerName = this.player.getDisplayName();
@@ -256,7 +266,10 @@ public class WizardPlayer {
          }
      }
 
-     public void loadSavedPlayerData() {
+    /**
+     * Load saved WizardPlayer data from file
+     */
+    public void loadSavedPlayerData() {
          String path = Bukkit.getPluginManager().getPlugin( "AWizardDidIt" ).getDataFolder().toString()
                  + "/players/" + player.getDisplayName() + ".yml";
          System.out.println( "Saving player data..." );
@@ -267,7 +280,11 @@ public class WizardPlayer {
                  System.out.println( "Trying to open player file..." );
                  fileConfiguration.load( playerDataFile );
                  String power = fileConfiguration.getString( "Wizard Power");
-                 this.getWizardBar().setProgress( Double.parseDouble( power ) );
+                 this.wizardPower = 1000;
+                 try {
+                     this.wizardPower = Integer.parseInt( power );
+                 } catch( Exception ex ) {
+                 }
                  System.out.println( "Success!(?)" );
              } catch( Exception ex ) {
                  System.out.println( "Exception! " + ex.toString() );
@@ -278,22 +295,26 @@ public class WizardPlayer {
      }
 
     /**
-     * Remove Mighty Leap's protection after 10 seconds
+     * Remove a spellTimer after a set time
+     * @param spellName Name of spell to be removed from activeSpells
+     * @param timer Ticks to wait to remove it
      */
-    public void setMightyLeapTimer() {
-        if ( this.mightyLeapTimer != null  ) {
-            this.mightyLeapTimer.cancel();
+    public void setSpellTimer( String spellName, int timer ) {
+        if ( this.spellTimers.get( spellName ) != null  ) {
+            this.spellTimers.get( spellName ).cancel();
         }
-        this.mightyLeapTimer = Bukkit.getServer().getScheduler().runTaskLater(
+
+        BukkitTask task = Bukkit.getServer().getScheduler().runTaskLater(
                 plugin,
                 new Runnable() {
                     @Override
                     public void run() {
-                        activeSpells.remove( "Mighty Leap" );
+                        activeSpells.remove( spellName );
                     }
                 },
-                200
+                timer
         );
+        this.spellTimers.put( spellName, task );
     }
 
     /**

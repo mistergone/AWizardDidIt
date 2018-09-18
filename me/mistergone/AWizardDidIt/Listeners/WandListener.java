@@ -3,11 +3,14 @@ package me.mistergone.AWizardDidIt.Listeners;
 import me.mistergone.AWizardDidIt.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
+import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
@@ -62,14 +65,14 @@ public class WandListener implements Listener {
 
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
 
-                    Boolean wandOrEnchant = magicPattern instanceof EnchantWand || MagicWand.isActuallyAWand(  main );
+                    Boolean wandOrEnchant = magicPattern instanceof EnchantWand || MagicWand.isActuallyAWand(main);
 
                     // Run the MagicFunction
                     if (magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant) {
                         try {
                             PatternFunction function = magicPattern.getMagicFunction();
                             function.setPlayer(p);
-                            function.setMagicWand(  main );
+                            function.setMagicWand(main);
                             function.setMagicChest(magicChest);
                             function.call();
                         } catch (Exception ex) {
@@ -78,22 +81,41 @@ public class WandListener implements Listener {
 
                     } else if (magicPattern == null) {
                         p.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
-                    } else if ( MagicWand.isActuallyAWand(  main ) ) {
+                    } else if (MagicWand.isActuallyAWand(main)) {
                         p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                     }
 
-                    // If you just wave a magic wand around, magic might happen!
-                } else if ( MagicWand.isActuallyAWand( main )) {
+                } else if ( e.getClickedBlock()!= null && e.getClickedBlock().getType() == Material.WALL_SIGN ) {
+                    // Signs might do cool stuff
+                    Block b = e.getClickedBlock();
+                    BlockState state = b.getState();
+                    Sign sign = (Sign)state;
+                    Bukkit.broadcastMessage( sign.getLine(0 ) );
 
+
+                } else if ( MagicWand.isActuallyAWand( main )) {
+                    // If you just wave a magic wand around, magic might happen!
                     ItemStack offItem = p.getInventory().getItemInOffHand();
                     MagicSpell magicSpell = null;
+
+
                     if ( offItem == null || offItem.getType() == Material.AIR ) {
                         wizardPlayer.showWizardBar();
                     } else {
                         magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                         if (magicSpell == null) {
-                            p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
-                        } else if (magicSpell != null && magicSpell.getSpellFunction() != null) {
+                            // If there's Wizard Food in the off hand, eat it!
+                            if ( WizardFood.isWizardFood( offItem ) ){
+                                WizardFood.eatWizardFood( offItem, wizardPlayer );
+                                if ( offItem.getAmount() > 1 ) {
+                                    offItem.setAmount( offItem.getAmount() - 1 );
+                                } else if ( offItem.getAmount() == 1 ) {
+                                    p.getInventory().setItemInOffHand( null );
+                                }
+                            } else {
+                                p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
+                            }
+                        } else if ( magicSpell != null && magicSpell.getSpellFunction() != null ) {
                             e.setCancelled( true );
                             try {
                                 SpellFunction function = magicSpell.getSpellFunction();

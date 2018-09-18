@@ -78,6 +78,7 @@ public class Wizardry {
         spellRegistry.add( new FreezeOver() );
         spellRegistry.add( new GrassCutter() );
         spellRegistry.add( new HolyDiver() );
+        spellRegistry.add( new HungerForPower() );
         spellRegistry.add( new Incinerate() );
         spellRegistry.add( new MightyLeap() );
         spellRegistry.add( new RoadToNowhere() );
@@ -95,10 +96,11 @@ public class Wizardry {
     private void addPatterns( ) {
         ArrayList<MagicPattern> patternRegistry = new ArrayList<>();
         patternRegistry.add( new EnchantWand() );
-        patternRegistry.add( new WizardPick() );
-        patternRegistry.add( new WizardShovel() );
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardHoe() );
+        patternRegistry.add( new WizardFood() );
+        patternRegistry.add( new WizardPick() );
+        patternRegistry.add( new WizardShovel() );
 
         for ( MagicPattern magicPattern : patternRegistry ) {
             for ( String[] p : magicPattern.getPatterns() ) {

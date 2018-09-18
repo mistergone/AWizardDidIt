@@ -26,7 +26,7 @@ public class HolyDiver extends MagicSpell {
         spellName = "Mighty Leap";
         reagents = new ArrayList<String>();
         reagents.add( "TROPICAL_FISH" );
-        cost = .005;
+        cost = 5;
 
         spellFunction = new SpellFunction() {
           @Override

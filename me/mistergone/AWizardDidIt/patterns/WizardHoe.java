@@ -30,27 +30,28 @@ public class WizardHoe extends ToolPattern {
     public WizardHoe() {
         patternName = "Wizard Hoe";
         patterns =  new ArrayList<String[]>();
+        toolCost = 1;
 
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "WOODEN_HOE", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "WOODEN_HOE", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "STONE_HOE", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "STONE_HOE", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "IRON_HOE", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "IRON_HOE", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "GOLDEN_HOE", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GOLDEN_HOE", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "DIAMOND_HOE", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "DIAMOND_HOE", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         patternFunction = new PatternFunction() {
             @Override
@@ -112,7 +113,9 @@ public class WizardHoe extends ToolPattern {
                         offHand = player.getInventory().getItemInOffHand();
                         Boolean isCrop = crops.values().contains( block.getType() );
                         Boolean isFarmland = block.getType() == Material.FARMLAND;
-                        if ( isFarmland || isCrop ) {
+                        if ( ( isFarmland || isCrop ) && wizardPlayer.spendWizardPower( toolCost ) ) {
+                            // TODO - Rewrite so it collects block first, so we can check total blocks about to be affected
+                            // TODO - No cost if less than 3 blocks are affected
                             Boolean belowAir = block.getRelative( BlockFace.UP ).getType() == Material.AIR;
                             Boolean belowCrop = crops.values().contains( block.getRelative( BlockFace.UP ).getType() );
                             Boolean hasItems = offHand.getType() != Material.AIR;
@@ -124,7 +127,7 @@ public class WizardHoe extends ToolPattern {
                                 }
                             }
 
-                            if ( belowAir && isFarmland && hasItems && wizardPlayer.spendWizardPower( .001 ) ) {
+                            if ( belowAir && isFarmland && hasItems ) {
                                 block.getRelative( BlockFace.UP ).setType( crops.get( offHand.getType() ) ) ;
                                 if ( offHand.getAmount() > 1 ) {
                                     offHand.setAmount( offHand.getAmount() - 1 );
@@ -133,7 +136,7 @@ public class WizardHoe extends ToolPattern {
                                 }
                             } else if ( !hasItems && isFarmland ) {
                                 break;
-                            } else if ( isCrop && wizardPlayer.spendWizardPower( .001 ) ) {
+                            } else if ( isCrop ) {
                                 block.breakNaturally();
                             }
 

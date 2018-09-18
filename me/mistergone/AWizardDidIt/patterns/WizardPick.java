@@ -23,28 +23,30 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 public class WizardPick extends ToolPattern {
 
     public WizardPick() {
+        patternName = "Wizard Pick";
         patterns =  new ArrayList<String[]>();
+        toolCost = 1;
 
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                "REDSTONE", "WOODEN_PICKAXE", "REDSTONE",
-                "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "WOODEN_PICKAXE", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                "REDSTONE", "STONE_PICKAXE", "REDSTONE",
-                "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "STONE_PICKAXE", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                "REDSTONE", "IRON_PICKAXE", "REDSTONE",
-                "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "IRON_PICKAXE", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                "REDSTONE", "GOLDEN_PICKAXE", "REDSTONE",
-                "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "GOLDEN_PICKAXE", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                "REDSTONE", "DIAMOND_PICKAXE", "REDSTONE",
-                "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "DIAMOND_PICKAXE", "GLOWSTONE_DUST",
+                "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         patternFunction = new PatternFunction() {
             @Override
@@ -102,15 +104,20 @@ public class WizardPick extends ToolPattern {
 
                     Material brokenMat = blockBreakEvent.getBlock().getType();
                     Location loc = blockBreakEvent.getBlock().getLocation();
-
-                    for (Block b : blockBox) {
-                        Boolean sameType = b.getType() == brokenMat;
-                        Boolean digType = stoneTypes.contains(b.getType()) && stoneTypes.contains(brokenMat);
-                        // Let the tool break the original b
-                        if ((sameType || digType) && !b.equals(firstBlock)) {
-                            b.breakNaturally(player.getInventory().getItemInMainHand());
+                    if ( blockBox.size() < 4 || wizardPlayer.spendWizardPower( toolCost ) ) {
+                        for (Block b : blockBox) {
+                            Boolean sameType = b.getType() == brokenMat;
+                            Boolean digType = stoneTypes.contains(b.getType()) && stoneTypes.contains(brokenMat);
+                            // Let the tool break the original block
+                            if ((sameType || digType) && !b.equals(firstBlock) ) {
+                                b.breakNaturally(player.getInventory().getItemInMainHand());
+                            }
                         }
+                    } else {
+                        player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                     }
+
+
                 }
             }
         };

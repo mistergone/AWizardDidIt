@@ -26,7 +26,7 @@ public class RoadToNowhere extends MagicSpell {
         reagents.add( "IRON_SHOVEL" );
         reagents.add( "GOLDEN_SHOVEL" );
         reagents.add( "DIAMOND_SHOVEL" );
-        cost = .001;
+        cost = 1;
 
         spellFunction = new SpellFunction() {
             @Override

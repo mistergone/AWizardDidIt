@@ -26,9 +26,9 @@ public class EnchantWand extends MagicPattern {
 
         patterns =  new ArrayList<String[]>();
         patterns.add( new String[]
-                { "REDSTONE", "NONE", "REDSTONE",
-                "NONE", "REDSTONE", "NONE",
-                "REDSTONE", "NONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "NONE", "GLOWSTONE_DUST",
+                "NONE", "GLOWSTONE_DUST", "NONE",
+                "GLOWSTONE_DUST", "NONE", "GLOWSTONE_DUST" } );
 
         patternFunction = new PatternFunction() {
             @Override

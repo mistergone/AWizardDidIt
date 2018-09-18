@@ -45,7 +45,12 @@ public class MagicChest {
     public void clearPattern( ) {
         int[] slots = { 0, 1, 2, 9, 10, 11, 18, 19, 20 };
         for ( int slot: slots ) {
-            chest.getBlockInventory().setItem( slot, null );
+            ItemStack item = chest.getBlockInventory().getItem( slot );
+            if ( item.getAmount() > 1 ) {
+                item.setAmount( item.getAmount() - 1 );
+            } else if ( item.getAmount() == 1 ) {
+                chest.getBlockInventory().setItem( slot, null );
+            }
         }
     }
 
@@ -62,7 +67,12 @@ public class MagicChest {
             }
         }
         for ( int slot: slots ) {
-            chest.getBlockInventory().setItem( slot, null );
+            ItemStack item = chest.getBlockInventory().getContents()[slot];
+            if ( item.getAmount() > 1 ) {
+                item.setAmount( item.getAmount() - 1 );
+            } else if ( item.getAmount() == 1 ) {
+                chest.getBlockInventory().setItem( slot, null );
+            }
         }
     }
 
@@ -74,12 +84,6 @@ public class MagicChest {
         } else {
             mat = slot.getType().toString();
         }
-        int amt = stuff[index].getAmount();
-
-        if ( amt > 1 ) {
-            return "TOO MANY!";
-        }
-
         return mat;
     }
 }

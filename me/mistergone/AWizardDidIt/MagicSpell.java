@@ -7,9 +7,10 @@ import java.util.ArrayList;
 
 public class MagicSpell {
     protected String spellName;
-    protected double cost;
+    protected int cost;
     protected ArrayList<String> reagents;
     protected SpellFunction spellFunction;
+
 
     public String getSpellName() {
         return this.spellName;

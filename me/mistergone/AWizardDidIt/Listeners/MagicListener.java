@@ -3,16 +3,16 @@ package me.mistergone.AWizardDidIt.Listeners;
 import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import net.minecraft.server.v1_13_R2.ItemFood;
 import org.bukkit.*;
-import org.bukkit.entity.Horse;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.SkeletonHorse;
+import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
+import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryInteractEvent;
 import org.bukkit.event.inventory.InventoryPickupItemEvent;
@@ -58,7 +58,7 @@ public class MagicListener implements Listener {
         if ( event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL ) {
             WizardPlayer wizardPlayer = wizardry.getWizardPlayer( event.getEntity().getUniqueId() );
             if ( wizardPlayer.checkSpell("Mighty Leap") ) {
-                double damageCost = event.getDamage() / 2000;
+                int damageCost = (int)Math.floor( event.getDamage() / 2 );
                 if ( wizardPlayer.spendWizardPower( damageCost ) ) {
                     event.setDamage( 0 );
 
@@ -101,7 +101,7 @@ public class MagicListener implements Listener {
     public void onPlayerXP( PlayerExpChangeEvent event ) {
         int amount = event.getAmount();
         WizardPlayer wizardPlayer = wizardry.getWizardPlayer( event.getPlayer().getUniqueId() );
-        wizardPlayer.gainWizardPower( (double)amount / 1000 );
+        wizardPlayer.gainWizardPower( amount );
         wizardPlayer.showWizardBar();
     }
 
@@ -124,26 +124,33 @@ public class MagicListener implements Listener {
         ItemStack off = event.getPlayer().getInventory().getItemInOffHand();
 
         // Prevent consumption when wand is out
-        if (  ((org.bukkit.inventory.ItemStack) main).getType() == Material.STICK ) {
+        if ( main.getType() == Material.STICK ) {
             Boolean isReagent = getWizardry().getReagentList().contains( off.getType().toString() );
-            if ( MagicWand.isActuallyAWand( main ) && isReagent ) {
+            Boolean isWand = MagicWand.isActuallyAWand( main );
+            if ( isWand && isReagent ) {
                 event.setCancelled( true );
+            } else if ( isWand && WizardFood.isWizardFood( off ) ) {
+                off.setAmount( off.getAmount() - 1 );
+                WizardFood.eatWizardFood( off, getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ) );
             }
         }
+
+        // Check for Wizard Food
+        WizardFood.eatWizardFood( event.getItem(), getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ) );
 
         // Potions give back Wizard Power
         if ( item.getType() == Material.POTION && item.getItemMeta() instanceof PotionMeta ) {
             final PotionMeta meta = (PotionMeta) item.getItemMeta();
             if ( meta.getBasePotionData().getType() != PotionType.WATER ) {
                 event.getPlayer().sendMessage( "Gaining Wizard Power..." );
-                getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( .1 );
+                getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( 50 );
             }
         }
 
         // Poison Potatoes give back 100  Wizard Power!
         if ( item.getType() == Material.POISONOUS_POTATO ) {
             WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() );
-            wizardPlayer.gainWizardPower( .1 );
+            wizardPlayer.gainWizardPower( 100 );
         }
     }
 
@@ -154,7 +161,7 @@ public class MagicListener implements Listener {
             int foodChange = event.getFoodLevel() - p.getFoodLevel();
             if ( foodChange > 0 ) {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
-                wizardPlayer.gainWizardPower( (double) foodChange / 500 );
+                wizardPlayer.gainWizardPower( foodChange * 2 );
             }
         }
 
@@ -162,7 +169,7 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onInventoryInteractEvent( InventoryClickEvent event ) {
-        if ( event.getWhoClicked() instanceof  Player ) {
+        if ( event.getWhoClicked() instanceof  Player && event.getClickedInventory() != null ) {
             Player p = (Player )event.getWhoClicked();
             WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
 
@@ -178,8 +185,22 @@ public class MagicListener implements Listener {
                 p.addPotionEffect( curse );
             }
         }
-
-
-
     }
+
+
+    @EventHandler
+    public void onProjectileHit(ProjectileHitEvent event ) {
+        Entity entity = event.getEntity();
+
+        if ( entity instanceof SmallFireball && entity.getCustomName().equals( "Incinerate Projectile" ) ) {
+            if ( event.getHitEntity() != null && event.getHitEntity() instanceof LivingEntity ) {
+                event.getHitEntity().setFireTicks( 60 );
+                ((LivingEntity) event.getHitEntity()).damage( 15 );
+            } else if ( event.getHitBlock() != null ) {
+
+            }
+            entity.getWorld().createExplosion( entity.getLocation(), 0, false );
+        }
+    }
+
 }

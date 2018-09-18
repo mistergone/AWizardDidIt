@@ -23,28 +23,30 @@ import java.util.List;
 
 public class WizardShovel extends ToolPattern {
     public WizardShovel() {
+        patternName = "Wizard Shovel";
         patterns =  new ArrayList<String[]>();
+        toolCost = 1;
 
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "WOODEN_SHOVEL", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "WOODEN_SHOVEL", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "STONE_SHOVEL", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "STONE_SHOVEL", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "IRON_SHOVEL", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "IRON_SHOVEL", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "GOLDEN_SHOVEL", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GOLDEN_SHOVEL", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         patterns.add( new String[]
-                { "REDSTONE", "REDSTONE", "REDSTONE",
-                        "REDSTONE", "DIAMOND_SHOVEL", "REDSTONE",
-                        "REDSTONE", "REDSTONE", "REDSTONE" } );
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "DIAMOND_SHOVEL", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         patternFunction = new PatternFunction() {
             @Override
@@ -99,13 +101,18 @@ public class WizardShovel extends ToolPattern {
                     }
 
                     Material brokenMat = firstBlock.getType();
-
-                    for ( Block b : blockBox ) {
-                        Boolean dirtMatch = dirtTypes.contains( b.getType()) && dirtTypes.contains( brokenMat );
-                        if ( ( b.getType() == brokenMat || dirtMatch ) && !b.equals( firstBlock )  ) {
-                            b.breakNaturally(player.getInventory().getItemInMainHand());
+                    if ( blockBox.size() < 4 || wizardPlayer.spendWizardPower( toolCost ) ) {
+                        for ( Block b : blockBox ) {
+                            Boolean dirtMatch = dirtTypes.contains( b.getType()) && dirtTypes.contains( brokenMat );
+                            if ( ( b.getType() == brokenMat || dirtMatch ) && !b.equals( firstBlock ) ) {
+                                b.breakNaturally(player.getInventory().getItemInMainHand());
+                            }
                         }
+                    } else {
+                        player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                     }
+
+
                 }
             }
         };

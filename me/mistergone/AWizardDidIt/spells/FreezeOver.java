@@ -18,7 +18,7 @@ import java.util.ArrayList;
 public class FreezeOver extends MagicSpell {
     public FreezeOver() {
         spellName = "Freeze Over";
-        cost = .005;
+        cost = 5;
         reagents = new ArrayList<String>();
         reagents.add( "SNOWBALL" );
 

@@ -20,7 +20,7 @@ public class CloudRider extends MagicSpell {
 
     public CloudRider() {
         spellName = "Cloud Rider";
-        cost = .01;
+        cost = 10;
         reagents = new ArrayList<String>();
         reagents.add( "FEATHER" );
 
@@ -28,7 +28,6 @@ public class CloudRider extends MagicSpell {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer(player.getUniqueId());
-                double wizardPower = wizardPlayer.getWizardBar().getProgress();
 
                 if (player.isOnGround() && wizardPlayer.spendWizardPower( cost ) ) {
                     wizardPlayer.addSpell(spellName);
@@ -73,7 +72,6 @@ public class CloudRider extends MagicSpell {
 
                     player.setVelocity(v);
                     player.sendMessage( ChatColor.DARK_AQUA + "Swing your wand again to begin gliding!");
-                    wizardPlayer.showWizardBar();
 
                 } else if (!player.isGliding() && !player.isSwimming() && wizardPlayer.getSpells().contains( spellName )) {
                     player.setGliding(true);

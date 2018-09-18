@@ -27,7 +27,7 @@ public class MightyLeap extends MagicSpell {
         spellName = "Mighty Leap";
         reagents = new ArrayList<String>();
         reagents.add( "SLIME_BALL" );
-        cost = .002;
+        cost = 5;
 
         spellFunction = new SpellFunction() {
             @Override
@@ -84,7 +84,7 @@ public class MightyLeap extends MagicSpell {
 
                     player.setVelocity(v);
 
-                    wizardPlayer.setMightyLeapTimer();
+                    wizardPlayer.setSpellTimer( spellName, 200 );
                 }
             }
         };
