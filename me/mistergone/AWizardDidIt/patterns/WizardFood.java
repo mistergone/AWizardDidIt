@@ -79,7 +79,7 @@ public class WizardFood extends MagicPattern {
                 lore.add( "Restores 300 Wizard Points." );
                 lore.add( "Tastes bad.");
                 wizardFood.setType( Material.PUMPKIN_PIE );
-                wizardFood.setAmount( 1 );
+                wizardFood.setAmount( 3 );
             } else if ( center.getType() == Material.TROPICAL_FISH ) {
                 foodName = "Spectral Sushi";
                 lore.add( "Restores 75 Wizard Points." );
