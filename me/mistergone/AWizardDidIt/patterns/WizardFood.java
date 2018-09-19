@@ -65,7 +65,7 @@ public class WizardFood extends MagicPattern {
             if ( center.getType() == Material.COCOA_BEANS ) {
                 expCost = 0;
                 foodName = "Cockatrice Cookies";
-                lore.add( "Restores 20 Wizard Points" );
+                lore.add( "Restores 50 Wizard Points" );
                 wizardFood.setType( Material.COOKIE );
                 wizardFood.setAmount( 8 );
             } else if ( center.getType() == Material.CHICKEN ) {
@@ -76,13 +76,13 @@ public class WizardFood extends MagicPattern {
                 wizardFood.setAmount( 1 );
             } else if ( center.getType() == Material.ROTTEN_FLESH ) {
                 foodName = "Putrescent Pie";
-                lore.add( "Restores 150 Wizard Points." );
+                lore.add( "Restores 300 Wizard Points." );
                 lore.add( "Tastes bad.");
                 wizardFood.setType( Material.PUMPKIN_PIE );
                 wizardFood.setAmount( 1 );
             } else if ( center.getType() == Material.TROPICAL_FISH ) {
                 foodName = "Spectral Sushi";
-                lore.add( "Restores 25 Wizard Points." );
+                lore.add( "Restores 75 Wizard Points." );
                 lore.add( "Some side-effects.");
                 wizardFood.setType( Material.TROPICAL_FISH );
                 wizardFood.setAmount( 5 );
