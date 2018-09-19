@@ -77,6 +77,10 @@ public class MagicCommands implements CommandExecutor {
             } else if ( args.length == 3 ) {
                 if ( args[0].equalsIgnoreCase( "setWizardPower") || args[0].equalsIgnoreCase( "setwp" ) ) {
                     Player p = this.plugin.getServer().getPlayer(args[1]);
+                    if (!sender.isOp()) {
+                        sender.sendMessage("This command is for ops only.");
+                        return true;
+                    }
                     if ( isInteger( args[2] ) && p != null ) {
                         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
                         Integer amount = Integer.valueOf( args[2] );

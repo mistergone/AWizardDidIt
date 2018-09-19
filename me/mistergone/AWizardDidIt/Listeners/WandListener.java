@@ -85,12 +85,11 @@ public class WandListener implements Listener {
                         p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                     }
 
-                } else if ( e.getClickedBlock()!= null && e.getClickedBlock().getType() == Material.WALL_SIGN ) {
-                    // Signs might do cool stuff
-                    Block b = e.getClickedBlock();
-                    BlockState state = b.getState();
-                    Sign sign = (Sign)state;
-                    Bukkit.broadcastMessage( sign.getLine(0 ) );
+//                } else if ( e.getClickedBlock()!= null && e.getClickedBlock().getType() == Material.WALL_SIGN ) {
+//                    // Signs might do cool stuff
+//                    Block b = e.getClickedBlock();
+//                    BlockState state = b.getState();
+//                    Sign sign = (Sign)state;
 
 
                 } else if ( MagicWand.isActuallyAWand( main )) {

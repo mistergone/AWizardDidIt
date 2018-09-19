@@ -22,14 +22,14 @@ public class HungerForPower extends MagicSpell {
         spellName = "Hunger for Power";
         cost = 0;
         reagents = new ArrayList<String>();
-        reagents.add( "FURNACE" );
-        reagents.add( "CRAFTING_TABLE" );
+        reagents.add( "ROTTEN_FLESH" );
+        reagents.add( "BONE" );
 
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer(player.getUniqueId());
-                if ( reagent.getType() == Material.CRAFTING_TABLE ) {
+                if ( reagent.getType() == Material.BONE ) {
                     if ( !wizardPlayer.checkSpell( spellName + "(Exp)" ) ) {
                         player.sendMessage(ChatColor.YELLOW + "You have invoked " + spellName
                                 + "! If you wish to trade 50 Experience Points for 50 Wizard Points, swing your wand again!");
@@ -43,7 +43,7 @@ public class HungerForPower extends MagicSpell {
                         }
                         wizardPlayer.removeSpell( spellName + "(Exp)");
                     }
-                } else if ( reagent.getType() == Material.FURNACE ) {
+                } else if ( reagent.getType() == Material.ROTTEN_FLESH ) {
                     if ( !wizardPlayer.checkSpell( spellName + "(Health)" ) ) {
                         player.sendMessage(ChatColor.YELLOW + "You have invoked " + spellName
                                 + "! If you wish to trade 1 Heart of Health for 50 Wizard Points, swing your wand again!");

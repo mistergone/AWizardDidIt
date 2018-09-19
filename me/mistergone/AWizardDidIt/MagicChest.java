@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
@@ -44,13 +45,17 @@ public class MagicChest {
 
     public void clearPattern( ) {
         int[] slots = { 0, 1, 2, 9, 10, 11, 18, 19, 20 };
+
         for ( int slot: slots ) {
             ItemStack item = chest.getBlockInventory().getItem( slot );
-            if ( item.getAmount() > 1 ) {
-                item.setAmount( item.getAmount() - 1 );
-            } else if ( item.getAmount() == 1 ) {
-                chest.getBlockInventory().setItem( slot, null );
+            if (item != null) {
+                if ( item.getAmount() > 1 ) {
+                    item.setAmount( item.getAmount() - 1 );
+                } else if ( item.getAmount() == 1 ) {
+                    chest.getBlockInventory().setItem( slot, null );
+                }
             }
+
         }
     }
 
@@ -68,11 +73,14 @@ public class MagicChest {
         }
         for ( int slot: slots ) {
             ItemStack item = chest.getBlockInventory().getContents()[slot];
-            if ( item.getAmount() > 1 ) {
-                item.setAmount( item.getAmount() - 1 );
-            } else if ( item.getAmount() == 1 ) {
-                chest.getBlockInventory().setItem( slot, null );
+            if ( item != null ) {
+                if ( item.getAmount() > 1 ) {
+                    item.setAmount( item.getAmount() - 1 );
+                } else if ( item.getAmount() == 1 ) {
+                    chest.getBlockInventory().setItem( slot, null );
+                }
             }
+
         }
     }
 
