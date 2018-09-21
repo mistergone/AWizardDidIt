@@ -75,6 +75,19 @@ public class BlockBoxer {
         return blockBox;
     }
 
+    public static ArrayList<Block> getBoxByDimensions( Block block, int xSize, int ySize, int zSize) {
+        ArrayList<Block> blockBox = new ArrayList<>();
+        Location loc = block.getLocation();
+        for ( int x = loc.getBlockX() - xSize; x <= loc.getBlockX() + xSize; x++  ) {
+            for ( int y = loc.getBlockY() - ySize; y <= loc.getBlockY() + ySize; y++ ) {
+                for ( int z = loc.getBlockZ() - zSize; z <= loc.getBlockZ() + zSize; z++ ) {
+                    blockBox.add( loc.getWorld().getBlockAt( x, y, z ) );
+                }
+            }
+        }
+        return blockBox;
+    }
+
     public static final BlockFace[] axes = {  BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST  };
 
     public static BlockFace yawToFace( float yaw ) {

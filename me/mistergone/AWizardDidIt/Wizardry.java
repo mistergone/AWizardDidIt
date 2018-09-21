@@ -97,6 +97,8 @@ public class Wizardry {
     private void addPatterns( ) {
         ArrayList<MagicPattern> patternRegistry = new ArrayList<>();
         patternRegistry.add( new EnchantWand() );
+        patternRegistry.add( new FontOfPower() );
+        patternRegistry.add( new SortingChest() );
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardHoe() );
         patternRegistry.add( new WizardFood() );
