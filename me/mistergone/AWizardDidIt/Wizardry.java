@@ -82,6 +82,7 @@ public class Wizardry {
         spellRegistry.add( new Incinerate() );
         spellRegistry.add( new MightyLeap() );
         spellRegistry.add( new RoadToNowhere() );
+        spellRegistry.add( new RusalkasTouch() );
         spellRegistry.add( new Thunderhorse() );
         spellRegistry.add( new TollOfMadness() );
 

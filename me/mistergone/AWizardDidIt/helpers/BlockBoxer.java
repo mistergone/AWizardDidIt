@@ -74,4 +74,18 @@ public class BlockBoxer {
         }
         return blockBox;
     }
+
+    public static final BlockFace[] axes = {  BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST  };
+
+    public static BlockFace yawToFace( float yaw ) {
+        if ( yaw > 315 || yaw < 45 ) {
+            return BlockFace.SOUTH;
+        } else {
+            yaw -= 45F;
+            return axes[(int)(Math.floor( yaw / 90F))];
+        }
+
+
+    }
+
 }

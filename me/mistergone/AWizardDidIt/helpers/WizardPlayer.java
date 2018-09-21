@@ -197,7 +197,7 @@ public class WizardPlayer {
      */
      public Boolean spendWizardPower( int amount) {
          if ( wizardPower > amount ) {
-             wizardPower = Math.max( 0, wizardPower - amount );
+             wizardPower -= amount;
              showWizardBar();
              return true;
          } else {

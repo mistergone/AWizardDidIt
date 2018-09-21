@@ -1,4 +1,6 @@
 package me.mistergone.AWizardDidIt.patterns;
+import com.mysql.fabric.xmlrpc.base.Array;
+import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
@@ -6,9 +8,14 @@ import me.mistergone.AWizardDidIt.helpers.ToolFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.data.type.Leaves;
+import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
+import org.bukkit.scheduler.BukkitTask;
+
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
+import static org.bukkit.Bukkit.getServer;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -71,41 +78,87 @@ public class WizardAxe extends ToolPattern {
                     // TODO - Collect blocks first, then determine cost
                     // TODO - When tree felling, decay leaves in a larger radius if those leaves are far from a log
                     WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                    if ( wizardPlayer.spendWizardPower( toolCost ) ) {
-                        player.playSound( player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, .3F, 2F  );
-                        Material choppedType = blockBreakEvent.getBlock().getType();
-                        String leafString = choppedType.toString().substring( 0, choppedType.toString().length() -4 ) + "_LEAVES";
-                        Material leafType = Material.valueOf( leafString );
-                        ArrayList<Block> blocks = new ArrayList<>();
-                        Block firstBlock = blockBreakEvent.getBlock();
-                        blocks.add( firstBlock );
-                        for (int i = 0; i < 250 && i <= blocks.size(); i++) {
-                            Block b = blocks.get(i);
-                            Location loc = b.getLocation();
-                            // Let the tool break the first block
-                            if ( !b.equals( firstBlock ) ) {
-                                b.breakNaturally(player.getInventory().getItemInMainHand());
-                            }
-                            for (int x = loc.getBlockX() - 1; x <= loc.getBlockX() + 1; x++) {
-                                for (int y = loc.getBlockY(); y <= loc.getBlockY() + 1; y++) {
-                                    for (int z = loc.getBlockZ() - 1; z <= loc.getBlockZ() + 1; z++) {
-                                        Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
-                                        if (blockCheck.getType() == choppedType && !blocks.contains(blockCheck) ) {
-                                            blocks.add(blockCheck);
-                                        } else if ( blockCheck.getType() == leafType  ) {
-                                            blockCheck.breakNaturally();
+                    Material choppedType = blockBreakEvent.getBlock().getType();
+
+                    if ( Tag.LOGS.isTagged( choppedType ) ) {
+                        if ( wizardPlayer.spendWizardPower( toolCost ) ) {
+                            String leafString = choppedType.toString().substring( 0, choppedType.toString().length() -4 ) + "_LEAVES";
+                            Material leafType = Material.valueOf( leafString );
+                            ArrayList<Block> blocks = new ArrayList<>();
+                            ArrayList<Block> leaves = new ArrayList<>();
+                            Block firstBlock = blockBreakEvent.getBlock();
+                            player.playSound( player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, .3F, 2F  );
+                            blocks.add( firstBlock );
+
+                            for (int i = 0; i < 1000 && i < blocks.size(); i++) {
+                                Block b = blocks.get(i);
+                                Location loc = b.getLocation();
+
+                                // Let the tool break the first block
+                                if ( !b.equals( firstBlock ) ) {
+                                    b.breakNaturally(player.getInventory().getItemInMainHand());
+                                }
+
+                                for (int x = loc.getBlockX() - 1; x <= loc.getBlockX() + 1; x++) {
+                                    for (int y = loc.getBlockY() - 1; y <= loc.getBlockY() + 1; y++) {
+                                        for (int z = loc.getBlockZ() - 1; z <= loc.getBlockZ() + 1; z++) {
+                                            Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
+                                            if (blockCheck.getType() == choppedType && !blocks.contains(blockCheck) ) {
+                                                blocks.add( blockCheck );
+                                            } else if ( blockCheck.getType() == leafType  ) {
+                                                leaves.add( blockCheck );
+                                            }
                                         }
                                     }
                                 }
                             }
+
+                            Bukkit.getServer().getScheduler().runTaskLater(
+                                (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt"),
+                                new Runnable() {
+                                    @Override
+                                    public void run() {
+                                        removeLeaves( leaves );
+                                    }
+                                },
+                                20
+                            );
+
+
+                        } else {
+                            player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                         }
-                    } else {
-                        player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                     }
+
+
 
 
                 }
             }
         };
     }
+
+    private void removeLeaves( ArrayList<Block> leaves ) {
+        Material leafType = leaves.get( 0 ).getType();
+        for ( int i = 0; i < 2000 && i < leaves.size(); i++ ) {
+            Block b = leaves.get( i );
+            Location loc = b.getLocation();
+            b.breakNaturally();
+
+            for (int x = loc.getBlockX() - 1; x <= loc.getBlockX() + 1; x++) {
+                for (int y = loc.getBlockY() - 1; y <= loc.getBlockY() + 1; y++) {
+                    for (int z = loc.getBlockZ() - 1; z <= loc.getBlockZ() + 1; z++) {
+                        Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
+                        if ( blockCheck.getType() == leafType ) {
+                            Leaves data = (Leaves)blockCheck.getBlockData();
+                            if ( data.isPersistent() ) continue;
+                            if ( data.getDistance() < 5 ) continue;
+                            leaves.add( blockCheck );
+                        }
+                    }
+                }
+            }
+        }
+    }
+
 }
