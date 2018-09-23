@@ -7,6 +7,7 @@ import net.minecraft.server.v1_13_R2.ItemFood;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -35,10 +36,8 @@ public class SortingChest extends MagicPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
-                Location loc = magicChest.getChest().getLocation();
                 HashMap<Material, Chest> chestIndex = new HashMap<>();
                 // create the chestIndex
-//                ArrayList<Block> blocks = BlockBoxer.getBoxByDimensions( magicChest.getChest().getBlock(), 20, 10, 20 );
                 List<Entity> entities = player.getNearbyEntities( 20, 10, 20 );
                 for ( Entity e : entities ) {
                     if ( e instanceof ItemFrame ) {
@@ -50,27 +49,48 @@ public class SortingChest extends MagicPattern {
                     }
                 }
 
-
+                int movedItems = 0;
+                int leftoverItems = 0;
+                int failedMoves = 0;
                 for ( int i = 3; i <= 26; i ++ ) {
+
                     ItemStack item = magicChest.getChest().getBlockInventory().getContents()[i];
                     if ( item != null && chestIndex.keySet().contains( item.getType() ) ) {
                         Chest chest = chestIndex.get( item.getType() );
                         Inventory inv = chest.getInventory();
+                        int startingAmt = item.getAmount();
                         HashMap<Integer, ItemStack> leftovers = inv.addItem( item );
                         if ( leftovers.size() > 0 ) {
                             ItemStack left = leftovers.get(0);
+                            if ( left.getAmount() == startingAmt ) {
+                                failedMoves++;
+                            } else {
+                                leftoverItems++;
+                                movedItems++;
+                            }
                             item.setAmount( left.getAmount() );
                         } else {
                             magicChest.getChest().getBlockInventory().setItem( i, null );
+                            movedItems++;
                         }
-
                     }
 
                     if ( i == 8 || i == 17 ) {
                         i += 3;
                     }
                 }
+                if ( movedItems > 0 || failedMoves > 0 ) {
+                    player.playSound( player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 3F, 2F );
+                    player.sendMessage( "You have invoked " + patternName + "!" );
+                    String message = "";
+                    if ( movedItems > 0 ) message += String.valueOf( movedItems) + " item stack(s) were moved. ";
+                    if ( leftoverItems > 0 ) message += String.valueOf( leftoverItems ) + " item stack(s) had leftover items." ;
+                    if ( failedMoves > 0 ) message += String.valueOf( failedMoves ) + " item stack(s) could not be moved.";
+                    player.sendMessage( message );
+                }
             }
+
+
         };
 
     }

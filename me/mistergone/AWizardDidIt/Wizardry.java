@@ -80,6 +80,7 @@ public class Wizardry {
         spellRegistry.add( new HolyDiver() );
         spellRegistry.add( new HungerForPower() );
         spellRegistry.add( new Incinerate() );
+        spellRegistry.add( new LampLighter() );
         spellRegistry.add( new MightyLeap() );
         spellRegistry.add( new RoadToNowhere() );
         spellRegistry.add( new RusalkasTouch() );

@@ -23,7 +23,6 @@ public class EnchantWand extends MagicPattern {
 
     public EnchantWand() {
         patternName = "Enchant Wand";
-
         patterns =  new ArrayList<String[]>();
         patterns.add( new String[]
                 { "GLOWSTONE_DUST", "NONE", "GLOWSTONE_DUST",

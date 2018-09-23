@@ -108,6 +108,7 @@ public class MagicListener implements Listener {
     @EventHandler
     public void onDismount( VehicleExitEvent event ) {
         if ( event.getExited() instanceof Player && event.getVehicle() instanceof SkeletonHorse
+                && event.getVehicle().getCustomName() != null
                 && event.getVehicle().getCustomName().equals( "Thunderhorse" ) ) {
             WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getExited().getUniqueId() );
             if ( wizardPlayer.checkSpell( "Thunderhorse" ) ) {
