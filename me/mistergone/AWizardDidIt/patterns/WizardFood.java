@@ -33,19 +33,19 @@ public class WizardFood extends MagicPattern {
         patterns = new ArrayList<String[]>();
         // Cockatrice Cookie
         patterns.add( new String[]
-                { "GLOWSTONE_DUST", "EGG", "GLOWSTONE_DUST",
-                "WHEAT", "COCOA_BEANS", "WHEAT",
-                "SUGAR", "FEATHER", "SUGAR"} );
+                { "COOKIE", "GLOWSTONE_DUST", "COOKIE",
+                "COOKIE", "GLOWSTONE_DUST", "COOKIE",
+                "NONE", "FEATHER", "NONE"} );
         // Chicken Soup of Souls
         patterns.add( new String[]
-                { "SPIDER_EYE", "NETHER_WART", "SPIDER_EYE",
+                { "CHICKEN", "BLAZE_POWDER", "CHICKEN",
                 "BLAZE_POWDER", "CHICKEN", "BLAZE_POWDER",
                 "GLOWSTONE_DUST", "BOWL", "GLOWSTONE_DUST" } );
         // Putrescent Pie
         patterns.add( new String[]
                 { "NETHER_WART", "NETHER_WART", "NETHER_WART",
-                "EGG", "ROTTEN_FLESH", "EGG",
-                "SUGAR", "GLOWSTONE_DUST", "SUGAR" } );
+                "ROTTEN_FLESH", "ROTTEN_FLESH", "ROTTEN_FLESH",
+                "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         // Spectral Sushi
         patterns.add( new String[]
                 { "NONE", "NONE", "NONE",
@@ -67,9 +67,9 @@ public class WizardFood extends MagicPattern {
                 foodName = "Cockatrice Cookies";
                 lore.add( "Restores 50 Wizard Points" );
                 wizardFood.setType( Material.COOKIE );
-                wizardFood.setAmount( 8 );
+                wizardFood.setAmount( 4 );
             } else if ( center.getType() == Material.CHICKEN ) {
-                expCost = 100;
+                expCost = 200;
                 foodName = "Chicken Soup of Souls";
                 lore.add( "Restores 1000 Wizard Points");
                 wizardFood.setType( Material.BEETROOT_SOUP );
@@ -82,7 +82,7 @@ public class WizardFood extends MagicPattern {
                 wizardFood.setAmount( 3 );
             } else if ( center.getType() == Material.TROPICAL_FISH ) {
                 foodName = "Spectral Sushi";
-                lore.add( "Restores 75 Wizard Points." );
+                lore.add( "Restores 100 Wizard Points." );
                 lore.add( "Some side-effects.");
                 wizardFood.setType( Material.TROPICAL_FISH );
                 wizardFood.setAmount( 5 );
@@ -138,12 +138,12 @@ public class WizardFood extends MagicPattern {
                 wizardPlayer.getPlayer().addPotionEffect( poison );
                 wizardPlayer.getPlayer().addPotionEffect( hunger );
             } else if ( foodName.equals( "Spectral Sushi" ) ) {
-                wizardPlayer.gainWizardPower( 75 );
+                wizardPlayer.gainWizardPower( 100 );
                 ArrayList<PotionEffect> effects = new ArrayList<>();
                 effects.add( new PotionEffect( PotionEffectType.CONFUSION, 200, 1 ) );
                 effects.add( new PotionEffect( PotionEffectType.LEVITATION, 200, 1 ) );
-                effects.add( new PotionEffect( PotionEffectType.SLOW_DIGGING, 600, 4 ) );
-                effects.add( new PotionEffect( PotionEffectType.WEAKNESS, 600, 2 ) );
+                effects.add( new PotionEffect( PotionEffectType.SLOW_DIGGING, 1200, 4 ) );
+                effects.add( new PotionEffect( PotionEffectType.WEAKNESS, 1200, 2 ) );
 
                 // Apply some random effects!
                 int count = (int)Math.floor( Math.random() * 2 ) + 1;

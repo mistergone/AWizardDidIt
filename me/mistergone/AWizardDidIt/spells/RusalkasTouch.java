@@ -3,12 +3,16 @@ package me.mistergone.AWizardDidIt.spells;
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import java.util.ArrayList;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 /**
  * Rusalka's Touch
@@ -27,6 +31,7 @@ public class RusalkasTouch extends MagicSpell {
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
+                WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 if ( reagent.getType() == Material.BUCKET ) {
                     // Remove water!
                     Block targetBlock = player.getTargetBlock( null, 10 );
@@ -60,6 +65,11 @@ public class RusalkasTouch extends MagicSpell {
                     }
 
                 }
+                if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
+                    player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
+                    wizardPlayer.addMsgCooldown( spellName, 30 );
+                }
+
 
             }
         };

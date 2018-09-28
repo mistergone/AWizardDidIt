@@ -3,6 +3,7 @@ package me.mistergone.AWizardDidIt.spells;
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,13 +12,14 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 import java.util.ArrayList;
 
 public class LayerLayer extends MagicSpell {
 
     public LayerLayer() {
-        spellName = "Cloud Rider";
+        spellName = "Layer Layer";
         cost = 0;
         reagents = new ArrayList<String>();
         reagents.add( "COBBLESTONE_SLAB" );
@@ -29,6 +31,7 @@ public class LayerLayer extends MagicSpell {
                 int layerSlot = player.getInventory().getHeldItemSlot() + 1;
                 ItemStack layerItem = player.getInventory().getItem( layerSlot );
                 Material layerType = layerItem.getType();
+                WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 if ( layerItem == null || layerSlot > 8 ) {
                     player.sendMessage( ChatColor.DARK_PURPLE + "Layer-Layer could not be invoked because no item was found in the slot to the right of your Magic Wand.");
                     return;
@@ -69,6 +72,11 @@ public class LayerLayer extends MagicSpell {
                                 } else if ( layerItem.getAmount() == 1 ) {
                                     player.getInventory().setItem( layerSlot, null );
                                 }
+                            }
+
+                            if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
+                                player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
+                                wizardPlayer.addMsgCooldown( spellName, 30 );
                             }
                         } else {
                             return;

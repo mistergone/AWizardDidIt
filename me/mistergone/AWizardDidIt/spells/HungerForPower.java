@@ -46,13 +46,13 @@ public class HungerForPower extends MagicSpell {
                 } else if ( reagent.getType() == Material.ROTTEN_FLESH ) {
                     if ( !wizardPlayer.checkSpell( spellName + "(Health)" ) ) {
                         player.sendMessage(ChatColor.YELLOW + "You have invoked " + spellName
-                                + "! If you wish to trade 1 Heart of Health for 20 Wizard Points, swing your wand again!");
+                                + "! If you wish to trade 1 Heart of Health for 25 Wizard Points, swing your wand again!");
                         wizardPlayer.addSpell( spellName + "(Health)" );
                         wizardPlayer.setSpellTimer( spellName + "(Health)", 100 );
                     } else {
                         if ( player.getHealth() > 2 ) {
                             player.damage( 2 );
-                            wizardPlayer.gainWizardPower( 20 );
+                            wizardPlayer.gainWizardPower( 25 );
                         } else {
                             player.sendMessage( ChatColor.RED + "You do not have sufficient Health!");
                         }
