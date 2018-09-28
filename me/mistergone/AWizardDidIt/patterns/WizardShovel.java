@@ -94,18 +94,16 @@ public class WizardShovel extends ToolPattern {
                     }
 
                     Material brokenMat = firstBlock.getType();
-                    if ( blockBox.size() < 4 || wizardPlayer.spendToolUse( toolCost ) ) {
-                        for ( Block b : blockBox ) {
-                            Boolean dirtMatch = dirtTypes.contains( b.getType()) && dirtTypes.contains( brokenMat );
-                            if ( ( b.getType() == brokenMat || dirtMatch ) && !b.equals( firstBlock ) ) {
+                    for ( Block b : blockBox ) {
+                        Boolean dirtMatch = dirtTypes.contains( b.getType()) && dirtTypes.contains( brokenMat );
+                        if ( ( b.getType() == brokenMat || dirtMatch ) && !b.equals( firstBlock ) ) {
+                            if ( wizardPlayer.spendToolUse( toolCost ) ) {
                                 b.breakNaturally(player.getInventory().getItemInMainHand());
+                            } else {
+                                player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                             }
                         }
-                    } else {
-                        player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                     }
-
-
                 }
             }
         };

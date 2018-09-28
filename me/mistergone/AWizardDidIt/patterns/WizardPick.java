@@ -101,17 +101,17 @@ public class WizardPick extends ToolPattern {
 
                     Material brokenMat = blockBreakEvent.getBlock().getType();
                     Location loc = blockBreakEvent.getBlock().getLocation();
-                    if ( blockBox.size() < 4 || wizardPlayer.spendToolUse( toolCost ) ) {
-                        for (Block b : blockBox) {
-                            Boolean sameType = b.getType() == brokenMat;
-                            Boolean digType = stoneTypes.contains(b.getType()) && stoneTypes.contains(brokenMat);
-                            // Let the tool break the original block
-                            if ((sameType || digType) && !b.equals(firstBlock) ) {
-                                b.breakNaturally(player.getInventory().getItemInMainHand());
+                    for (Block b : blockBox) {
+                        Boolean sameType = b.getType() == brokenMat;
+                        Boolean digType = stoneTypes.contains(b.getType()) && stoneTypes.contains(brokenMat);
+                        // Let the tool break the original block
+                        if ((sameType || digType) && !b.equals(firstBlock) ) {
+                            if ( wizardPlayer.spendToolUse( toolCost ) ) {
+                                b.breakNaturally( player.getInventory().getItemInMainHand() );
+                            } else {
+                                player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                             }
                         }
-                    } else {
-                        player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
                     }
 
 

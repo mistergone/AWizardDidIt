@@ -48,6 +48,7 @@ public class MagicCommands implements CommandExecutor {
                         getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
                         p.sendMessage( "You have " + String.valueOf( wizardPower )
                                 +  " points of Wizard Power.");
+                        // TODO - Add tooluses to the printout? Maybe?
                         if ( wizardPlayer.getSpells().size() > 0 ) {
                             for ( String spell: wizardPlayer.getSpells() ) {
                                 p.sendMessage( "You are under the effect of the spell " + ChatColor.GOLD

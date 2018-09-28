@@ -24,7 +24,7 @@ public class WizardAxe extends ToolPattern {
     public WizardAxe() {
         patternName = "Wizard Axe";
         patterns =  new ArrayList<String[]>();
-        toolCost = 1;
+        toolCost = 10;
 
         patterns.add( new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",

@@ -53,6 +53,7 @@ public class WizardPlayer {
         this.spellTimers = new HashMap<>();
         this.plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
         this.lastSaved = System.currentTimeMillis();
+        this.wizardToolUses = 0;
     }
 
     /**
@@ -222,12 +223,12 @@ public class WizardPlayer {
      public Boolean spendToolUse( int amount ) {
          if ( this.wizardToolUses <= 0 ) {
              if ( spendWizardPower( 1 ) ) {
-                 this.wizardToolUses = 10;
+                 this.wizardToolUses = 100;
              } else {
                  return false;
              }
          }
-         this.wizardToolUses--;
+         this.wizardToolUses -= amount;
          return true;
      }
 

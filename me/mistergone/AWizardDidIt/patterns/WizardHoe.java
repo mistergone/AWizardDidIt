@@ -101,8 +101,6 @@ public class WizardHoe extends ToolPattern {
                         Boolean isCrop = crops.values().contains( block.getType() );
                         Boolean isFarmland = block.getType() == Material.FARMLAND;
                         if ( ( isFarmland || isCrop ) && wizardPlayer.spendToolUse( toolCost ) ) {
-                            // TODO - Rewrite so it collects block first, so we can check total blocks about to be affected
-                            // TODO - No cost if less than 3 blocks are affected
                             Boolean belowAir = block.getRelative( BlockFace.UP ).getType() == Material.AIR;
                             Boolean belowCrop = crops.values().contains( block.getRelative( BlockFace.UP ).getType() );
                             Boolean hasItems = offHand.getType() != Material.AIR;

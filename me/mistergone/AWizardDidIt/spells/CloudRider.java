@@ -4,6 +4,8 @@ import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -28,13 +30,16 @@ public class CloudRider extends MagicSpell {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer(player.getUniqueId());
+                Block feet = player.getWorld().getBlockAt( player.getLocation() );
+                Block head = player.getWorld().getBlockAt( player.getLocation() ).getRelative( BlockFace.UP );
+                Boolean isFloating = feet.getType() == Material.WATER && head.getType() == Material.AIR;
 
-                if (player.isOnGround() && wizardPlayer.spendWizardPower( cost ) ) {
+                if ( ( player.isOnGround() || isFloating ) && wizardPlayer.spendWizardPower( cost ) ) {
                     wizardPlayer.addSpell(spellName);
 
-                    if (wizardPlayer.checkMsgCooldown(spellName) == false) {
+                    if ( wizardPlayer.checkMsgCooldown(spellName) == false ) {
                         player.sendMessage(ChatColor.AQUA + "You have invoked Cloud Rider!");
-                        wizardPlayer.addMsgCooldown(spellName, 20);
+                        wizardPlayer.addMsgCooldown(spellName, 30);
                     }
 
                     player.playSound(player.getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 1.2F, 1.2F);
