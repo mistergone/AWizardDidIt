@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt;
 
 import me.mistergone.AWizardDidIt.Listeners.MagicListener;
+import me.mistergone.AWizardDidIt.Listeners.SignListener;
 import me.mistergone.AWizardDidIt.Listeners.ToolListener;
 import me.mistergone.AWizardDidIt.Listeners.WandListener;
 import me.mistergone.AWizardDidIt.helpers.MagicCommands;
@@ -21,6 +22,7 @@ public class AWizardDidIt extends JavaPlugin{
         getServer().getPluginManager().registerEvents(new WandListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new ToolListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new MagicListener( Wizardry.getWizardry() ), this);
+        getServer().getPluginManager().registerEvents(new SignListener( Wizardry.getWizardry() ), this);
 
         MagicCommands commandHandler = new MagicCommands(this );
         getCommand( "wizardry" ).setExecutor( commandHandler );
@@ -29,7 +31,7 @@ public class AWizardDidIt extends JavaPlugin{
     @Override
     public void onDisable(){
         //Fired when the server stops and disables all plugins
-        HashMap<UUID, WizardPlayer> wizardList = new HashMap<>();
+        Map<UUID, WizardPlayer> wizardList = Wizardry.getWizardry().getWizardList();
         for ( WizardPlayer wizardPlayer: wizardList.values() ) {
             wizardPlayer.savePlayerData();
         }

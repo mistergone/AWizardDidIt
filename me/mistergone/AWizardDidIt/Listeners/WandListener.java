@@ -4,9 +4,7 @@ import me.mistergone.AWizardDidIt.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
@@ -23,7 +21,6 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.Material;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
@@ -96,7 +93,6 @@ public class WandListener implements Listener {
                     // If you just wave a magic wand around, magic might happen!
                     ItemStack offItem = p.getInventory().getItemInOffHand();
                     MagicSpell magicSpell = null;
-
 
                     if ( offItem == null || offItem.getType() == Material.AIR ) {
                         wizardPlayer.showWizardBar();

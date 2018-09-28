@@ -2,6 +2,8 @@ package me.mistergone.AWizardDidIt;
 
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import org.bukkit.Material;
+import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
 
@@ -10,7 +12,6 @@ public class MagicSpell {
     protected int cost;
     protected ArrayList<String> reagents;
     protected SpellFunction spellFunction;
-
 
     public String getSpellName() {
         return this.spellName;
@@ -23,5 +24,6 @@ public class MagicSpell {
     public SpellFunction getSpellFunction() {
         return this.spellFunction;
     }
+
 
 }

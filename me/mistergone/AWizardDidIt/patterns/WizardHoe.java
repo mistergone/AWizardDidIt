@@ -1,17 +1,14 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.ToolPattern;
+import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.ToolFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Item;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
@@ -81,7 +78,7 @@ public class WizardHoe extends ToolPattern {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 Map<Material, Material> crops = new HashMap<>();
                 crops.put( Material.CARROT, Material.CARROTS );
-                crops.put( Material.POTATO, Material.POTATOES);
+                crops.put( Material.POTATO, Material.POTATOES );
                 crops.put( Material.WHEAT_SEEDS, Material.WHEAT );
                 crops.put( Material.BEETROOT_SEEDS, Material.BEETROOTS );
 
@@ -96,24 +93,14 @@ public class WizardHoe extends ToolPattern {
                         player.sendMessage(ChatColor.AQUA + "You have invoked Wizard Hoe!");
                         wizardPlayer.addMsgCooldown( patternName, 30);
                     }
-                    int yaw = Math.abs( Math.round( player.getLocation().getYaw() ) );
-                    BlockFace newFace;
-                    if ( yaw <= 45 || yaw >= 315 ) {
-                        newFace = BlockFace.SOUTH;
-                    } else if ( yaw > 45 && yaw < 135 ) {
-                        newFace = BlockFace.EAST;
-                    } else if ( yaw >=135 && yaw < 225 ) {
-                        newFace = BlockFace.NORTH;
-                    } else {
-                        newFace = BlockFace.WEST;
-                    }
+                    BlockFace newFace = BlockManager.yawToFace( player.getEyeLocation().getYaw() );
 
                     Block block = playerInteractEvent.getClickedBlock();
                     for ( int i = 0; i <= 20; i++ ) {
                         offHand = player.getInventory().getItemInOffHand();
                         Boolean isCrop = crops.values().contains( block.getType() );
                         Boolean isFarmland = block.getType() == Material.FARMLAND;
-                        if ( ( isFarmland || isCrop ) && wizardPlayer.spendWizardPower( toolCost ) ) {
+                        if ( ( isFarmland || isCrop ) && wizardPlayer.spendToolUse( toolCost ) ) {
                             // TODO - Rewrite so it collects block first, so we can check total blocks about to be affected
                             // TODO - No cost if less than 3 blocks are affected
                             Boolean belowAir = block.getRelative( BlockFace.UP ).getType() == Material.AIR;

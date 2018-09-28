@@ -81,7 +81,7 @@ public class WizardAxe extends ToolPattern {
                     Material choppedType = blockBreakEvent.getBlock().getType();
 
                     if ( Tag.LOGS.isTagged( choppedType ) ) {
-                        if ( wizardPlayer.spendWizardPower( toolCost ) ) {
+                        if ( wizardPlayer.spendToolUse( toolCost ) ) {
                             String leafString = choppedType.toString().substring( 0, choppedType.toString().length() -4 ) + "_LEAVES";
                             Material leafType = Material.valueOf( leafString );
                             ArrayList<Block> blocks = new ArrayList<>();
@@ -139,6 +139,7 @@ public class WizardAxe extends ToolPattern {
     }
 
     private void removeLeaves( ArrayList<Block> leaves ) {
+        if ( leaves  == null || leaves.size() == 0 ) return;
         Material leafType = leaves.get( 0 ).getType();
         for ( int i = 0; i < 2000 && i < leaves.size(); i++ ) {
             Block b = leaves.get( i );

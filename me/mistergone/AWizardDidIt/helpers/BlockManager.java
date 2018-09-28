@@ -3,13 +3,16 @@ package me.mistergone.AWizardDidIt.helpers;
 import com.mysql.fabric.xmlrpc.base.Array;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
-public class BlockBoxer {
-    // BlockBoxer is a set of methods for making a "box" of Blocks, which is an ArrayList
+public class BlockManager {
+    // BlockManager is a set of methods for making a "box" of Blocks, which is an ArrayList
     // that represents a rectangular prism of Blocks in the World
 
     /**
@@ -88,17 +91,28 @@ public class BlockBoxer {
         return blockBox;
     }
 
-    public static final BlockFace[] axes = {  BlockFace.WEST, BlockFace.NORTH, BlockFace.EAST  };
-
     public static BlockFace yawToFace( float yaw ) {
-        if ( yaw > 315 || yaw < 45 ) {
+        double angle = Math.round( yaw );
+        // Turn the angle if it's less than zero
+        if ( angle < 0 ) angle += 360;
+        if ( angle > 315 || angle <= 45 ) {
             return BlockFace.SOUTH;
+        } else if ( angle > 45 && angle <= 135 ) {
+            return BlockFace.WEST;
+        } else if ( angle > 135 && angle <= 225 ) {
+            return BlockFace.NORTH;
         } else {
-            yaw -= 45F;
-            return axes[(int)(Math.floor( yaw / 90F))];
+            return BlockFace.EAST;
         }
-
-
     }
+
+    public static String locToString( Location loc ) {
+        String str = loc.getBlockX() + ", "
+                + loc.getBlockY() + ", "
+                + loc.getBlockZ();
+        return str;
+    }
+
+    public static List<Material> airTypes = new ArrayList<Material>( Arrays.asList( Material.AIR, Material.CAVE_AIR ) );
 
 }

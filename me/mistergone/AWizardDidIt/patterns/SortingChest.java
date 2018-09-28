@@ -1,24 +1,17 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.MagicPattern;
-import me.mistergone.AWizardDidIt.helpers.BlockBoxer;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
-import net.minecraft.server.v1_13_R2.ItemFood;
-import org.bukkit.Bukkit;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.block.DoubleChest;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;

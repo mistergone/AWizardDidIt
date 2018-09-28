@@ -1,10 +1,9 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.BlockBoxer;
+import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -12,7 +11,6 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
-import javax.swing.*;
 import java.util.ArrayList;
 
 public class FreezeOver extends MagicSpell {
@@ -34,7 +32,7 @@ public class FreezeOver extends MagicSpell {
 
                 if ( targetBlock.getType() == Material.WATER ) {
                     if ( targetBlock.getRelative( BlockFace.UP ).getType() == Material.AIR ) {
-                        blockBox = BlockBoxer.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
+                        blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
                         for ( Block block : blockBox ) {
                             if ( block.getType() == Material.WATER && !block.equals( feet ) && !block.equals( head ) ) {
                                 block.setType( Material.ICE );

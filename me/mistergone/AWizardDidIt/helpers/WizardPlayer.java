@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt.helpers;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
+import me.mistergone.AWizardDidIt.patterns.UnseenArchitect;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarColor;
@@ -28,24 +29,30 @@ public class WizardPlayer {
     Player player;
     ArrayList<String> activeSpells;
     Map< String, Long > messageCooldowns;
+    Map< String, Long > spellCooldowns;
     BossBar wizardBar;
     AWizardDidIt plugin;
     BukkitTask wizardBarTimer;
+    UnseenAssistant unseenAssistant;
     HashMap< String, BukkitTask > spellTimers;
-    File playerDataFile;
-    FileConfiguration playerDataConfig;
     BlockFace lastFaceToolClicked;
+    int wizardToolUses; // TODO - Charge the player 1 WP for 10 Wizard Tool uses
+    long lastSaved;
+
     int wizardPower;
 
     public WizardPlayer( Player p ) {
         this.player = p;
         this.activeSpells = new ArrayList<>();
+        this.spellCooldowns = new HashMap<>();
         this.messageCooldowns = new HashMap<>();
+        this.unseenAssistant = new UnseenAssistant( this );
         this.wizardBar = Bukkit.createBossBar( "Wizard Power", BarColor.BLUE, BarStyle.SEGMENTED_20 );
         this.wizardBar.addPlayer( this.player );
         this.wizardBar.setVisible( false );
         this.spellTimers = new HashMap<>();
         this.plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
+        this.lastSaved = System.currentTimeMillis();
     }
 
     /**
@@ -199,10 +206,29 @@ public class WizardPlayer {
          if ( wizardPower > amount ) {
              wizardPower -= amount;
              showWizardBar();
+             checkLastSave();
              return true;
          } else {
+             checkLastSave();
              return false;
          }
+     }
+
+    /**
+     * Try to spend specified Wizard Tool Uses, return whether it was ultimately successful.
+     * @param amount
+     * @return
+     */
+     public Boolean spendToolUse( int amount ) {
+         if ( this.wizardToolUses <= 0 ) {
+             if ( spendWizardPower( 1 ) ) {
+                 this.wizardToolUses = 10;
+             } else {
+                 return false;
+             }
+         }
+         this.wizardToolUses--;
+         return true;
      }
 
     /**
@@ -212,6 +238,17 @@ public class WizardPlayer {
      public void gainWizardPower( int amount ) {
          wizardPower = Math.min( 1000, wizardPower + amount );
          showWizardBar();
+     }
+
+    /**
+     * Check when the player was last saved. If it was a while, save their data.
+     */
+    public void checkLastSave() {
+         long now = System.currentTimeMillis();
+         // If it was more than 5 minutes ago, save the data.
+         if ( now > ( this.lastSaved + 1000 * 60 * 5 ) ) {
+             this.savePlayerData();
+         }
      }
 
     /**
@@ -229,69 +266,59 @@ public class WizardPlayer {
      * Saves WizardPlayer data to file
      */
     public void savePlayerData() {
-         String path = Bukkit.getPluginManager().getPlugin( "AWizardDidIt" ).getDataFolder().toString() + "/players";
-         File filePath = new File( path );
-         String playerName = this.player.getDisplayName();
-         playerDataConfig = new YamlConfiguration();
+        File path = WizardryData.openWizardryFolder( "/players" );
+        String fileName = player.getDisplayName() + ".yml";
+        File playerDataFile = WizardryData.openWizardryFile( path, fileName );
+        FileConfiguration playerDataConfig;
+        if ( !playerDataFile.exists() ) {
+            playerDataFile = WizardryData.createWizardryFile( path, fileName );
+            playerDataConfig = new YamlConfiguration();
+            try {
+                playerDataConfig.createSection("Wizard Power");
+            } catch (Exception ex) {
+                ex.printStackTrace();
+            }
+        } else {
+            playerDataConfig = YamlConfiguration.loadConfiguration( playerDataFile );
+        }
 
-         if( !filePath.exists() ){
-             System.out.println("File path does not exist, creating it...");
-             filePath.mkdirs();
-             try {
-                 filePath.createNewFile();
-             } catch( Exception ex ) {
-                 // Oops?
-             }
-         }
-         System.out.println("Got file path, attempting to get file...");
-         playerDataFile = new File(  filePath + "/" + playerName + ".yml");
-
-         if( !playerDataFile.exists() ){
-             System.out.println("File doesnt exist, creating it...");
-             try {
-                 playerDataFile.createNewFile();
-                 System.out.println("created it!");
-             } catch( IOException ex ) {
-
-             }
-         }
-         if ( playerDataFile.exists() ) {
-             try {
-                 playerDataConfig.createSection("Wizard Power");
-                 playerDataConfig.set("Wizard Power", getWizardPower() );
-                 playerDataConfig.save( playerDataFile );
-             } catch (IOException e) {
-             }
-
-         }
-     }
+         // Write data to file
+        try {
+            playerDataConfig.set("Wizard Power", getWizardPower() );
+            playerDataConfig.save( playerDataFile );
+        } catch (Exception ex) {
+            ex.printStackTrace();
+        }
+    }
 
     /**
      * Load saved WizardPlayer data from file
      */
     public void loadSavedPlayerData() {
-         String path = Bukkit.getPluginManager().getPlugin( "AWizardDidIt" ).getDataFolder().toString()
-                 + "/players/" + player.getDisplayName() + ".yml";
-         System.out.println( "Saving player data..." );
-         File playerDataFile = new File( path );
-         FileConfiguration fileConfiguration = new YamlConfiguration();
-         if ( playerDataFile.exists() ) {
-             try {
-                 System.out.println( "Trying to open player file..." );
-                 fileConfiguration.load( playerDataFile );
-                 String power = fileConfiguration.getString( "Wizard Power");
-                 this.wizardPower = 1000;
-                 try {
-                     this.wizardPower = Integer.parseInt( power );
-                 } catch( Exception ex ) {
-                 }
-                 System.out.println( "Success!(?)" );
-             } catch( Exception ex ) {
-                 System.out.println( "Exception! " + ex.toString() );
-             }
-         } else {
-             System.out.println( "Player file not found!" );
-         }
+        File path = WizardryData.openWizardryFolder( "/players" );
+        String fileName = player.getDisplayName() + ".yml";
+        File playerDataFile = WizardryData.openWizardryFile( path, fileName );
+        FileConfiguration fileConfiguration = new YamlConfiguration();
+        this.wizardPower = 1000;
+
+        System.out.println( "Saving player data..." );
+
+        if ( !playerDataFile.exists() ) {
+            playerDataFile = WizardryData.createWizardryFile( path, fileName );
+            this.savePlayerData();
+        } else {
+            try {
+                fileConfiguration.load( playerDataFile );
+                String power = fileConfiguration.getString( "Wizard Power");
+                try {
+                    this.wizardPower = Integer.parseInt( power );
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            } catch (Exception e ) {
+                e.printStackTrace();
+            }
+        }
      }
 
     /**
@@ -329,5 +356,9 @@ public class WizardPlayer {
      */
     public BlockFace getLastFaceClicked() {
         return this.lastFaceToolClicked;
+    }
+
+    public UnseenAssistant getUnseenAssistant() {
+        return this.unseenAssistant;
     }
 }

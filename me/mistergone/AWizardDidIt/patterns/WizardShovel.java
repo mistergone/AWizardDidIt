@@ -1,23 +1,17 @@
 package me.mistergone.AWizardDidIt.patterns;
-import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.ToolPattern;
-import me.mistergone.AWizardDidIt.Wizardry;
-import me.mistergone.AWizardDidIt.helpers.BlockBoxer;
+import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.ToolFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -53,9 +47,8 @@ public class WizardShovel extends ToolPattern {
             public void run() {
                 ItemStack shovel = magicChest.getChest().getBlockInventory().getItem( 10 );
                 ItemMeta meta = shovel.getItemMeta();
-                // TODO - Remove this legacy support for updating the old name, "Magic Shovel"
                 List<String> loreCheck = meta.getLore();
-                if ( meta.getLore() == null || ( loreCheck != null && loreCheck.get(0).equals( "Magic Shovel" )  )) {
+                if ( meta.getLore() == null ) {
                     ArrayList<String> lore = new ArrayList<String>();
                     lore.add( "Wizard Shovel" );
                     meta.setLore( lore );
@@ -89,19 +82,19 @@ public class WizardShovel extends ToolPattern {
                     // Get the tool lore
                     List<String> lore = tool.getItemMeta().getLore();
                     if ( lore.size() == 1 || lore.get( 1 ).equals( "Mode: 3x3 (Centered)" ) ) {
-                        blockBox = BlockBoxer.getCubeByRadius( firstBlock, 1 );
+                        blockBox = BlockManager.getCubeByRadius( firstBlock, 1 );
                     } else if ( lore.get( 1 ).equals( "Mode: 1x1" ) ) {
                         blockBox.add( firstBlock );
                     } else if ( lore.get( 1 ).equals( "Mode: 1x3 (Facing)" ) ) {
-                        blockBox = BlockBoxer.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 1 );
+                        blockBox = BlockManager.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 1 );
                     } else if ( lore.get( 1 ).equals( "Mode: 2x3 (Facing)" ) ) {
-                        blockBox = BlockBoxer.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 2 );
+                        blockBox = BlockManager.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 2 );
                     } else if ( lore.get( 1 ).equals( "Mode: 3x3 (Facing)" ) ) {
-                        blockBox = BlockBoxer.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 3 );
+                        blockBox = BlockManager.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 3 );
                     }
 
                     Material brokenMat = firstBlock.getType();
-                    if ( blockBox.size() < 4 || wizardPlayer.spendWizardPower( toolCost ) ) {
+                    if ( blockBox.size() < 4 || wizardPlayer.spendToolUse( toolCost ) ) {
                         for ( Block b : blockBox ) {
                             Boolean dirtMatch = dirtTypes.contains( b.getType()) && dirtTypes.contains( brokenMat );
                             if ( ( b.getType() == brokenMat || dirtMatch ) && !b.equals( firstBlock ) ) {

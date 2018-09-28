@@ -1,7 +1,6 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.BlockBoxer;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import org.bukkit.Location;
 import org.bukkit.Material;

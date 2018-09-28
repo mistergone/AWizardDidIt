@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt;
 
 import com.mysql.fabric.xmlrpc.base.Array;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import me.mistergone.AWizardDidIt.helpers.WizardryData;
 import me.mistergone.AWizardDidIt.patterns.*;
 import me.mistergone.AWizardDidIt.spells.*;
 import org.bukkit.Bukkit;
@@ -23,7 +24,6 @@ public class Wizardry {
         this.patternList = new HashMap< String, MagicPattern>();
         this.loreMap = new HashMap<>();
         this.reagentList = new ArrayList<>();
-
         this.addLore();
         this.addSpells();
         this.addPatterns();
@@ -72,6 +72,10 @@ public class Wizardry {
         this.wizardList.remove( uuid );
     }
 
+    public Map<UUID, WizardPlayer> getWizardList() {
+        return this.wizardList;
+    }
+
     private void addSpells( ) {
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
         spellRegistry.add( new CloudRider() );
@@ -81,6 +85,7 @@ public class Wizardry {
         spellRegistry.add( new HungerForPower() );
         spellRegistry.add( new Incinerate() );
         spellRegistry.add( new LampLighter() );
+        spellRegistry.add( new LayerLayer() );
         spellRegistry.add( new MightyLeap() );
         spellRegistry.add( new RoadToNowhere() );
         spellRegistry.add( new RusalkasTouch() );
@@ -100,6 +105,7 @@ public class Wizardry {
         patternRegistry.add( new EnchantWand() );
         patternRegistry.add( new FontOfPower() );
         patternRegistry.add( new SortingChest() );
+        patternRegistry.add( new UnseenArchitect() );
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardHoe() );
         patternRegistry.add( new WizardFood() );
