@@ -162,7 +162,7 @@ public class MagicListener implements Listener {
             int foodChange = event.getFoodLevel() - p.getFoodLevel();
             if ( foodChange > 0 ) {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
-                wizardPlayer.gainWizardPower( foodChange * 5 );
+                wizardPlayer.gainWizardPower( foodChange * 3 );
             }
         }
 

@@ -48,7 +48,7 @@ public class MagicChest {
 
         for ( int slot: slots ) {
             ItemStack item = chest.getBlockInventory().getItem( slot );
-            if (item != null) {
+            if ( item != null ) {
                 if ( item.getAmount() > 1 ) {
                     item.setAmount( item.getAmount() - 1 );
                 } else if ( item.getAmount() == 1 ) {

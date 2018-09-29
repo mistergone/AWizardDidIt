@@ -55,11 +55,6 @@ public class WandListener implements Listener {
                     MagicChest magicChest = new MagicChest(chest);
                     String[] pattern = magicChest.getPattern();
 
-                    List<String> list = Arrays.asList(pattern);
-                    if (list.contains("TOOMANY")) {
-                        p.sendMessage(ChatColor.RED + "A magic pattern cannot contain stacked items!");
-                    }
-
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
 
                     Boolean wandOrEnchant = magicPattern instanceof EnchantWand || MagicWand.isActuallyAWand(main);

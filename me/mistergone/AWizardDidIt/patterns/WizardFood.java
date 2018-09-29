@@ -33,9 +33,9 @@ public class WizardFood extends MagicPattern {
         patterns = new ArrayList<String[]>();
         // Cockatrice Cookie
         patterns.add( new String[]
-                { "COOKIE", "GLOWSTONE_DUST", "COOKIE",
-                "COOKIE", "GLOWSTONE_DUST", "COOKIE",
-                "NONE", "FEATHER", "NONE"} );
+                { "NONE", "COOKIE", "NONE",
+                "COOKIE", "COOKIE", "COOKIE",
+                "GLOWSTONE_DUST", "FEATHER", "GLOWSTONE_DUST" } );
         // Chicken Soup of Souls
         patterns.add( new String[]
                 { "CHICKEN", "BLAZE_POWDER", "CHICKEN",
@@ -43,7 +43,7 @@ public class WizardFood extends MagicPattern {
                 "GLOWSTONE_DUST", "BOWL", "GLOWSTONE_DUST" } );
         // Putrescent Pie
         patterns.add( new String[]
-                { "NETHER_WART", "NETHER_WART", "NETHER_WART",
+                { "SPIDER_EYE", "SPIDER_EYE", "SPIDER_EYE",
                 "ROTTEN_FLESH", "ROTTEN_FLESH", "ROTTEN_FLESH",
                 "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
         // Spectral Sushi
@@ -62,7 +62,7 @@ public class WizardFood extends MagicPattern {
             WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
             ArrayList<String> lore = new ArrayList<String>();
             String foodName = "ERROR";
-            if ( center.getType() == Material.COCOA_BEANS ) {
+            if ( center.getType() == Material.COOKIE ) {
                 expCost = 0;
                 foodName = "Cockatrice Cookies";
                 lore.add( "Restores 50 Wizard Points" );
@@ -96,8 +96,8 @@ public class WizardFood extends MagicPattern {
                 wizardFood.setItemMeta( meta );
                 wizardFood.addUnsafeEnchantment( Enchantment.MENDING, 1 );
                 player.getWorld().dropItem( player.getLocation(), wizardFood );
-                player.sendMessage( ChatColor.GOLD + "You have created Wizard Food in the form of "
-                        + foodName + ".");
+                player.sendMessage( ChatColor.GOLD + "You have created the Wizard Food, \""
+                        + foodName + "\".");
                 magicChest.clearPattern();
             } else {
                 player.sendMessage( ChatColor.RED + "You do not have sufficient Experience Points to create this Wizard Food recipe.");
