@@ -36,7 +36,8 @@ public class WizardPlayer {
     UnseenAssistant unseenAssistant;
     HashMap< String, BukkitTask > spellTimers;
     BlockFace lastFaceToolClicked;
-    int wizardToolUses; // TODO - Charge the player 1 WP for 10 Wizard Tool uses
+    int wizardToolUses;
+    int unseenEnergy;
     long lastSaved;
 
     int wizardPower;
@@ -223,7 +224,7 @@ public class WizardPlayer {
      public Boolean spendToolUse( int amount ) {
          if ( this.wizardToolUses <= 0 ) {
              if ( spendWizardPower( 1 ) ) {
-                 this.wizardToolUses = 100;
+                 this.wizardToolUses += 100;
              } else {
                  return false;
              }
@@ -242,17 +243,6 @@ public class WizardPlayer {
      }
 
     /**
-     * Check when the player was last saved. If it was a while, save their data.
-     */
-    public void checkLastSave() {
-         long now = System.currentTimeMillis();
-         // If it was more than 5 minutes ago, save the data.
-         if ( now > ( this.lastSaved + 1000 * 60 * 5 ) ) {
-             this.savePlayerData();
-         }
-     }
-
-    /**
      * Set current Wizard Power to specified amount
      * @param amount The amount at which to set Wizard Power
      */
@@ -261,7 +251,20 @@ public class WizardPlayer {
         this.showWizardBar();
     }
 
+
      /*****##### Player File IO #####*****/
+
+
+    /**
+     * Check when the player was last saved. If it was a while, save their data.
+     */
+    public void checkLastSave() {
+        long now = System.currentTimeMillis();
+        // If it was more than 5 minutes ago, save the data.
+        if ( now > ( this.lastSaved + 1000 * 60 * 5 ) ) {
+            this.savePlayerData();
+        }
+    }
 
     /**
      * Saves WizardPlayer data to file
@@ -359,7 +362,26 @@ public class WizardPlayer {
         return this.lastFaceToolClicked;
     }
 
+
+    /*****##### UNSEEN ASSISTANT STUFF #####*****/
     public UnseenAssistant getUnseenAssistant() {
         return this.unseenAssistant;
+    }
+
+    /**
+     * Try to spend "Unseen Energy", return whether it was ultimately successful.
+     * @param amount
+     * @return
+     */
+    public Boolean spendUnseenEnergy( int amount ) {
+        if ( this.unseenEnergy <= 0 ) {
+            if ( spendWizardPower( 1 ) ) {
+                this.unseenEnergy += 100;
+            } else {
+                return false;
+            }
+        }
+        this.unseenEnergy -= amount;
+        return true;
     }
 }

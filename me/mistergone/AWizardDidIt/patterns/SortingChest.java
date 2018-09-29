@@ -19,6 +19,7 @@ import java.util.List;
 public class SortingChest extends MagicPattern {
     public SortingChest() {
         patternName = "Sorting Chest";
+        // TODO - Implement a WP cost!
 
         patterns =  new ArrayList<String[]>();
         patterns.add( new String[]

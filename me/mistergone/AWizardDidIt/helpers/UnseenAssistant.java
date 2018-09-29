@@ -25,7 +25,6 @@ public class UnseenAssistant {
     private HashMap<String, Integer> bounds;
     private Location origin;
     private Location currentLoc;
-    private int count;
     private Chest chest;
     private ArrayList<Material> notFound;
     private ArrayList<Material> airTypes = new ArrayList<>();
@@ -89,60 +88,62 @@ public class UnseenAssistant {
         int y = block.getY();
         int z = block.getZ();
 
-        // TODO - Change cost to 1 WP per 100 blocks placed/removed. No cost for blocks that already match
-        // TODO - Charge 1 WP for 100 block credits, spend block credits. Charge again on a new loop, if below 100 credits.
 
-        if ( wizardPlayer.spendWizardPower( 1 ) ) {
-            for ( int i = 0; i < 100; i ++ ) {
-                // Get block at currentLoc
-                block = origin.getWorld().getBlockAt( x, y, z );
+        for ( int i = 0; i < 100; i ++ ) {
+            // Get block at currentLoc
+            block = origin.getWorld().getBlockAt( x, y, z );
 
-                // Handle the cloning
-                Block clone = block.getWorld().getBlockAt(origin).getRelative(x - bounds.get("xMin"), y - bounds.get("yMin"), z - bounds.get("zMin"));
+            // Handle the cloning
+            Block clone = block.getWorld().getBlockAt(origin).getRelative(x - bounds.get("xMin"), y - bounds.get("yMin"), z - bounds.get("zMin"));
 
-                // If they're not already the same type and they are solid, attempt to clone
-                if (clone.getType() != block.getType() && block.getType().isSolid()) {
-                    ItemStack item = new ItemStack(block.getType(), 1);
-                    HashMap<Integer, ItemStack> notRemoved = chest.getInventory().removeItem(item);
-                    if (notRemoved.size() > 0) {
-                        if (!notFound.contains(item.getType())) {
-                            wizardPlayer.getPlayer().sendMessage("Unseen Architect could not find " + item.getType().toString());
-                            notFound.add(item.getType());
-                        }
-                    } else {
-                        clone.setType(block.getType());
+            // If they're not already the same type and they are solid, attempt to clone
+            if (clone.getType() != block.getType() && block.getType().isSolid()) {
+                ItemStack item = new ItemStack(block.getType(), 1);
+                HashMap<Integer, ItemStack> notRemoved = chest.getInventory().removeItem(item);
+                if (notRemoved.size() > 0) {
+                    if (!notFound.contains(item.getType())) {
+                        wizardPlayer.getPlayer().sendMessage("Unseen Architect could not find " + item.getType().toString());
+                        notFound.add(item.getType());
                     }
-
-                } else if (airTypes.contains(block.getType()) && !airTypes.contains(clone.getType())) {
-                    clone.breakNaturally();
+                } else {
+                    if ( wizardPlayer.spendUnseenEnergy( 1 ) ) {
+                        clone.setType(block.getType());
+                    } else {
+                        wizardPlayer.getPlayer().sendMessage(ChatColor.RED + "You do not have sufficient Wizard Power to empower your Unseen Assistant for this task!");
+                    }
                 }
 
-                // Move currentLoc
-                Boolean atXMax = ( x == bounds.get( "xMax") );
-                Boolean atYMax = ( y == bounds.get( "yMax") );
-                Boolean atZMax = ( z == bounds.get( "zMax") );
-                if ( atXMax && atYMax && atZMax ) {
-                    wizardPlayer.getPlayer().sendMessage( ChatColor.GOLD + "Your Unseen Assistant has finished the architecture project, \"" + currentProject + "\"." );
-                    Bukkit.getScheduler().cancelTask( currentTask );
-                    currentProject = null;
-                    isWorking = null;
-                    break;
-                } else if ( atZMax && atYMax ) {
-                    y = bounds.get( "yMin" );
-                    z = bounds.get( "zMin" );
-                    x++;
-                } else if ( atZMax ) {
-                    z = bounds.get( "zMin" );
-                    y++;
+            } else if (airTypes.contains(block.getType()) && !airTypes.contains(clone.getType())) {
+                if ( wizardPlayer.spendUnseenEnergy( 1 ) ) {
+                    clone.breakNaturally();
                 } else {
-                    z++;
+                    wizardPlayer.getPlayer().sendMessage(ChatColor.RED + "You do not have sufficient Wizard Power to empower your Unseen Assistant for this task!");
                 }
             }
 
-            currentLoc = block.getLocation();
-        } else {
-            wizardPlayer.getPlayer().sendMessage(ChatColor.RED + "You do not have sufficient Wizard Power to summon your Unseen Assistant for this task!");
+            // Move currentLoc
+            Boolean atXMax = ( x == bounds.get( "xMax") );
+            Boolean atYMax = ( y == bounds.get( "yMax") );
+            Boolean atZMax = ( z == bounds.get( "zMax") );
+            if ( atXMax && atYMax && atZMax ) {
+                wizardPlayer.getPlayer().sendMessage( ChatColor.GOLD + "Your Unseen Assistant has finished the architecture project, \"" + currentProject + "\"." );
+                Bukkit.getScheduler().cancelTask( currentTask );
+                currentProject = null;
+                isWorking = null;
+                break;
+            } else if ( atZMax && atYMax ) {
+                y = bounds.get( "yMin" );
+                z = bounds.get( "zMin" );
+                x++;
+            } else if ( atZMax ) {
+                z = bounds.get( "zMin" );
+                y++;
+            } else {
+                z++;
+            }
         }
+
+        currentLoc = block.getLocation();
 
     }
 
