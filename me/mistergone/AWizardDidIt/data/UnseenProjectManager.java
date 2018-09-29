@@ -78,7 +78,7 @@ public class UnseenProjectManager {
     }
 
     public Boolean checkProjectExists( Player p, String name ) {
-        String projectKey = makeProjectString( p, name );
+        String projectKey = makeProjectString( p, name.toLowerCase() );
         return unseenProjectList.containsKey( projectKey );
     }
 
@@ -171,7 +171,7 @@ public class UnseenProjectManager {
     }
 
     public String makeProjectString(Player p, String name ) {
-        return p.getName() + ":" + name;
+        return p.getName() + ":" + name.toLowerCase();
     }
 
 

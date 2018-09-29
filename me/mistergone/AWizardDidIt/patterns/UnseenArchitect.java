@@ -45,7 +45,7 @@ public class UnseenArchitect extends MagicPattern {
                     Sign sign = (Sign) up.getState();
                     String[] lines = sign.getLines();
                     Boolean isUA = lines[0].equals(signTitle);
-                    String projectName = ChatColor.stripColor( lines[1] );
+                    String projectName = ChatColor.stripColor( lines[1] ).toLowerCase();
                     String command = ChatColor.stripColor(lines[2]);
                     Boolean exists = lines[1] != null && getUnseenPM().checkProjectExists( player, projectName );
                     Boolean isClone = command.substring( 0, 5 ).equalsIgnoreCase("clone");

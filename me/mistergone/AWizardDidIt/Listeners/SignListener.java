@@ -54,7 +54,7 @@ public class SignListener implements Listener {
                         e.setCancelled(true);
                         return;
                     }
-                    String projectName = ChatColor.stripColor( lines[1] );
+                    String projectName = ChatColor.stripColor( lines[1] ).toLowerCase();
                     if ( lines[1] != null && getUnseenPM().checkProjectExists( p, projectName ) ) {
                         Location[] points = getUnseenPM().getProjectPoints( p, projectName );
                         String command = ChatColor.stripColor( lines[2] );
