@@ -1,8 +1,8 @@
 package me.mistergone.AWizardDidIt.helpers;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.util.Vector;
-import org.bukkit.entity.Entity;
 
 public class Targeter {
     // TODO - Rewrite this whole thing so it's more relevant to this plugin

@@ -4,17 +4,16 @@ import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 import java.util.ArrayList;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class LayerLayer extends MagicSpell {
 

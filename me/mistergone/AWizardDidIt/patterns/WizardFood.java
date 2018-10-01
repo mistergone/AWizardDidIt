@@ -1,16 +1,12 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import me.mistergone.AWizardDidIt.MagicChest;
 import me.mistergone.AWizardDidIt.MagicPattern;
-import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.helpers.ExpManager;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
@@ -18,13 +14,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import javax.swing.text.PlainDocument;
-
-import static java.lang.Math.random;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
-
 import java.util.ArrayList;
-import java.util.UUID;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class WizardFood extends MagicPattern {
     public WizardFood() {

@@ -1,7 +1,6 @@
 package me.mistergone.AWizardDidIt.patterns;
-import com.mysql.fabric.xmlrpc.base.Array;
+
 import me.mistergone.AWizardDidIt.AWizardDidIt;
-import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.ToolFunction;
@@ -9,16 +8,13 @@ import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.data.type.Leaves;
-import org.bukkit.event.block.LeavesDecayEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
-
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
-import static org.bukkit.Bukkit.getServer;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class WizardAxe extends ToolPattern {
     public WizardAxe() {

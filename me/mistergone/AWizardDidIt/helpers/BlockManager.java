@@ -1,7 +1,5 @@
 package me.mistergone.AWizardDidIt.helpers;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

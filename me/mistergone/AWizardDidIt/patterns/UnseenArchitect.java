@@ -2,8 +2,9 @@ package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.Listeners.SignListener;
 import me.mistergone.AWizardDidIt.MagicPattern;
-import me.mistergone.AWizardDidIt.helpers.*;
-import org.bukkit.Bukkit;
+import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;

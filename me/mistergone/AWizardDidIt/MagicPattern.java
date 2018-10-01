@@ -1,6 +1,5 @@
 package me.mistergone.AWizardDidIt;
 
-import me.mistergone.AWizardDidIt.helpers.MagicFunction;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 
 import java.util.ArrayList;

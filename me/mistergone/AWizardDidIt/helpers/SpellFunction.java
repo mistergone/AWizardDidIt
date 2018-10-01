@@ -1,6 +1,5 @@
 package me.mistergone.AWizardDidIt.helpers;
 
-import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;

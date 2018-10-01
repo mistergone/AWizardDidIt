@@ -1,4 +1,5 @@
 package me.mistergone.AWizardDidIt.patterns;
+
 import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
@@ -10,10 +11,11 @@ import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class WizardShovel extends ToolPattern {
     public WizardShovel() {

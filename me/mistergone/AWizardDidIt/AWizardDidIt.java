@@ -8,11 +8,8 @@ import me.mistergone.AWizardDidIt.helpers.MagicCommands;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
-
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class AWizardDidIt extends JavaPlugin{
 

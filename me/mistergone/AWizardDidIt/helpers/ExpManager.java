@@ -1,11 +1,6 @@
 package me.mistergone.AWizardDidIt.helpers;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.scheduler.BukkitTask;
-
-import java.util.ArrayList;
-import java.util.HashMap;
 
 public class ExpManager {
     private static final int[] levels = new int[] {

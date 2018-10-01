@@ -1,18 +1,18 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.Sound;
-import org.bukkit.entity.*;
+import org.bukkit.entity.EntityType;
+import org.bukkit.entity.SkeletonHorse;
 import org.bukkit.inventory.ItemStack;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 import java.util.ArrayList;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 /**
  * THUNDERHORSE

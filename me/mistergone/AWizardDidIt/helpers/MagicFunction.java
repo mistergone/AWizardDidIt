@@ -1,8 +1,5 @@
 package me.mistergone.AWizardDidIt.helpers;
 
-import me.mistergone.AWizardDidIt.MagicChest;
-import me.mistergone.AWizardDidIt.MagicWand;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 

@@ -11,12 +11,13 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 /**
  * MAGIC HOE

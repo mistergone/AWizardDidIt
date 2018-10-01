@@ -3,14 +3,11 @@ package me.mistergone.AWizardDidIt.helpers;
 // This Class exists mostly to debug stuff
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
-import me.mistergone.AWizardDidIt.MagicSpell;
 import org.bukkit.ChatColor;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
-
-import java.util.UUID;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 

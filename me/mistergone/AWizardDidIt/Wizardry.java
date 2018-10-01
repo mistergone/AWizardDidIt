@@ -1,14 +1,13 @@
 package me.mistergone.AWizardDidIt;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import me.mistergone.AWizardDidIt.helpers.WizardryData;
 import me.mistergone.AWizardDidIt.patterns.*;
 import me.mistergone.AWizardDidIt.spells.*;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.UUID;
 
 public class Wizardry {
     private static Wizardry wizardry = new Wizardry();

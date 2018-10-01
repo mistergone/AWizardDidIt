@@ -4,8 +4,8 @@ import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
-import net.minecraft.server.v1_13_R2.ItemFood;
-import org.bukkit.*;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -14,18 +14,14 @@ import org.bukkit.event.entity.EntityToggleGlideEvent;
 import org.bukkit.event.entity.FoodLevelChangeEvent;
 import org.bukkit.event.entity.ProjectileHitEvent;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.inventory.InventoryInteractEvent;
-import org.bukkit.event.inventory.InventoryPickupItemEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.inventory.HorseInventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-
 
 import java.util.UUID;
 

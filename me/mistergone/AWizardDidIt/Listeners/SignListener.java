@@ -1,11 +1,7 @@
 package me.mistergone.AWizardDidIt.Listeners;
 
-import me.mistergone.AWizardDidIt.ToolPattern;
 import me.mistergone.AWizardDidIt.Wizardry;
-import me.mistergone.AWizardDidIt.data.UnseenProjectManager;
-import me.mistergone.AWizardDidIt.helpers.ToolFunction;
 import me.mistergone.AWizardDidIt.patterns.UnseenArchitect;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -17,11 +13,8 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
-import org.bukkit.scheduler.BukkitTask;
 
 import static me.mistergone.AWizardDidIt.data.UnseenProjectManager.getUnseenPM;
-
-import java.util.List;
 
 public class SignListener implements Listener {
     private Wizardry wizardry;

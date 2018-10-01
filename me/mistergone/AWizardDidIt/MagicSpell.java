@@ -1,9 +1,6 @@
 package me.mistergone.AWizardDidIt;
 
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
-import org.bukkit.Material;
-import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 
 import java.util.ArrayList;
 

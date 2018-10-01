@@ -1,34 +1,21 @@
 package me.mistergone.AWizardDidIt.Listeners;
 
 import me.mistergone.AWizardDidIt.*;
-import me.mistergone.AWizardDidIt.helpers.*;
+import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
-import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
+import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
-import org.bukkit.enchantments.Enchantment;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Monster;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.UUID;
-
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class WandListener implements Listener {
     private Wizardry wizardry;

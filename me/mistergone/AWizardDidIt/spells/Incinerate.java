@@ -2,14 +2,8 @@ package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
-import me.mistergone.AWizardDidIt.helpers.Targeter;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Material;
-import org.bukkit.block.data.type.Fire;
-import org.bukkit.entity.*;
-import org.bukkit.event.entity.EntityDamageByBlockEvent;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.entity.SmallFireball;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 

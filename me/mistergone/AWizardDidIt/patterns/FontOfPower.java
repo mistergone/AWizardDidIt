@@ -5,9 +5,9 @@ import me.mistergone.AWizardDidIt.helpers.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
-
 import java.util.ArrayList;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class FontOfPower extends MagicPattern {
     public FontOfPower() {

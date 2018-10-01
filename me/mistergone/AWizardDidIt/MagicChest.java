@@ -1,16 +1,10 @@
 package me.mistergone.AWizardDidIt;
 
-import org.apache.commons.lang.ArrayUtils;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.scheduler.BukkitTask;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
 
 public class MagicChest {

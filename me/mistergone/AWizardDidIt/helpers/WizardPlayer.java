@@ -1,27 +1,18 @@
 package me.mistergone.AWizardDidIt.helpers;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
-import me.mistergone.AWizardDidIt.patterns.UnseenArchitect;
 import org.bukkit.Bukkit;
 import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
-import org.bukkit.configuration.InvalidConfigurationException;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.boss.BossBar;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
-import org.bukkit.scheduler.BukkitScheduler;
 import org.bukkit.scheduler.BukkitTask;
 
-import javax.sound.midi.SysexMessage;
 import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 

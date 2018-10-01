@@ -2,7 +2,6 @@ package me.mistergone.AWizardDidIt;
 
 import me.mistergone.AWizardDidIt.helpers.ToolFunction;
 
-import javax.tools.Tool;
 import java.util.List;
 
 public class ToolPattern extends MagicPattern {

@@ -4,9 +4,6 @@ import me.mistergone.AWizardDidIt.ToolPattern;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.ToolFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,10 +12,10 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
-import java.util.ArrayList;
 import java.util.List;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class ToolListener implements Listener {
     private Wizardry wizardry;

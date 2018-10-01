@@ -9,9 +9,10 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 import java.util.ArrayList;
+
+import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class FreezeOver extends MagicSpell {
     public FreezeOver() {

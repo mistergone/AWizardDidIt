@@ -1,23 +1,15 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import com.mojang.brigadier.exceptions.Dynamic3CommandExceptionType;
-import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.MagicWand;
-import me.mistergone.AWizardDidIt.helpers.MagicFunction;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
 import java.util.UUID;
-import java.util.function.Function;
-
-import static sun.misc.PostVMInitHook.run;
 
 public class EnchantWand extends MagicPattern {
 

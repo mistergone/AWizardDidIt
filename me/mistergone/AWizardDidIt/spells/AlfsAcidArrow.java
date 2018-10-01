@@ -1,7 +1,6 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
-import org.bukkit.util.Vector;
 
 public class AlfsAcidArrow extends MagicSpell {
 
