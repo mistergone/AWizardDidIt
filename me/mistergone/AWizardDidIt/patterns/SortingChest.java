@@ -46,9 +46,10 @@ public class SortingChest extends MagicPattern {
                 int movedItems = 0;
                 int leftoverItems = 0;
                 int failedMoves = 0;
-                for ( int i = 3; i <= 26; i ++ ) {
+                Inventory chestInv = magicChest.getChest().getInventory();
+                for ( int i = 3; i < chestInv.getSize(); i ++ ) {
 
-                    ItemStack item = magicChest.getChest().getBlockInventory().getContents()[i];
+                    ItemStack item = chestInv.getContents()[i];
                     if ( item != null && chestIndex.keySet().contains( item.getType() ) ) {
                         Chest chest = chestIndex.get( item.getType() );
                         Inventory inv = chest.getInventory();
@@ -64,7 +65,7 @@ public class SortingChest extends MagicPattern {
                             }
                             item.setAmount( left.getAmount() );
                         } else {
-                            magicChest.getChest().getBlockInventory().setItem( i, null );
+                            magicChest.getChest().getInventory().setItem( i, null );
                             movedItems++;
                         }
                     }
