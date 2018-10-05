@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 
@@ -26,6 +27,7 @@ public class FontOfPower extends MagicPattern {
               if ( wizardPlayer.getWizardPower() < 1000 ) {
                   wizardPlayer.gainWizardPower( 100 );
                   player.sendMessage( ChatColor.GOLD + "You have invoked Font of Power, regaining 100 Wizard Power!");
+                  SpecialEffects.magicChest(magicChest.getChest().getLocation() );
                   magicChest.clearPattern();
               } else {
                   player.sendMessage( ChatColor.GOLD + "You have invoked Font of Power, but your Wizard Power is full!");

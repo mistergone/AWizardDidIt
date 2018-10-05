@@ -77,6 +77,7 @@ public class Wizardry {
 
     private void addSpells( ) {
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
+        spellRegistry.add( new CharmVillager() );
         spellRegistry.add( new CloudRider() );
         spellRegistry.add( new FreezeOver() );
         spellRegistry.add( new GrassCutter() );

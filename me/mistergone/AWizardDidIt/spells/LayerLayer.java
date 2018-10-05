@@ -2,8 +2,10 @@ package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,6 +25,8 @@ public class LayerLayer extends MagicSpell {
         reagents = new ArrayList<String>();
         reagents.add( "COBBLESTONE_SLAB" );
         reagents.add( "SANDSTONE_SLAB" );
+        reagents.add( "COBBLESTONE_WALL" );
+        reagents.add( "STONE_SLAB");
 
         spellFunction = new SpellFunction() {
             @Override
@@ -43,10 +47,40 @@ public class LayerLayer extends MagicSpell {
                     Location loc = player.getLocation();
                     ArrayList<Block> blockBox = new ArrayList<>();
                     BlockFace facing = BlockManager.yawToFace( loc.getYaw() );
-                    Block targetBlock = clickedBlock.getRelative( facing, 2 );
-                    blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
                     Boolean replaceAll = reagent.getType() == Material.COBBLESTONE_SLAB;
+                    Boolean silkTouch = false;
 
+                    // Define the blockBox
+                    if ( reagent.getType() == Material.COBBLESTONE_WALL ) {
+                        Block targetBlock = clickedBlock.getRelative(BlockFace.UP, 2);
+                        // If you didn't click the top face, then the clicked block is the bottom row
+                        if ( event.getBlockFace() != BlockFace.UP ) {
+                            targetBlock = clickedBlock.getRelative( BlockFace.UP, 1 );
+                        }
+                        if (reagent.getAmount() == 1) {
+                            blockBox.add( targetBlock.getRelative( BlockFace.DOWN ) );
+                            blockBox.add( targetBlock);
+                            blockBox.add( targetBlock.getRelative( BlockFace.UP ) );
+                        } else {
+                            blockBox = BlockManager.getSquareBoxFromFace(targetBlock, facing, 3, 1);
+                        }
+                        replaceAll = true;
+                    } else if ( reagent.getType() ==  Material.STONE_SLAB ){
+                        blockBox.add( clickedBlock );
+                        replaceAll = true;
+                        silkTouch = true;
+                    } else {
+                        Block targetBlock = clickedBlock.getRelative( facing, 2 );
+                        if ( reagent.getAmount() == 1 ) {
+                            blockBox.add( clickedBlock.getRelative( facing, 1 ) );
+                            blockBox.add( targetBlock );
+                            blockBox.add( targetBlock.getRelative( facing, 1 ) );
+                        } else {
+                            blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
+                        }
+                    }
+
+                    // Handle the blockBox
                     for ( Block b : blockBox ) {
                         // Check if player ran out of layerItem
                         if ( b != null && player.getInventory().getItem( layerSlot ).getType() != Material.AIR ) {
@@ -54,7 +88,16 @@ public class LayerLayer extends MagicSpell {
                             Boolean sameType = layerType == b.getType();
                             if ( replaceAll  ) {
                                 if ( !sameType ) {
-                                    b.breakNaturally();
+                                    if ( !silkTouch ) {
+                                        b.breakNaturally();
+                                    } else {
+                                        if ( BlockManager.silkyPickTypes.contains( b.getType() ) ) {
+                                            ItemStack drop = new ItemStack( b.getType() );
+                                            loc.getWorld().dropItem( loc, drop );
+                                        } else {
+                                            b.breakNaturally();
+                                        }
+                                    }
                                     b.setType( layerType );
                                     // Reduce stack
                                     if ( layerItem.getAmount() > 1 ) {
@@ -73,6 +116,7 @@ public class LayerLayer extends MagicSpell {
                                 }
                             }
 
+                            SpecialEffects.magicPoof( clickedBlock.getLocation() );
                             if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
                                 player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
                                 wizardPlayer.addMsgCooldown( spellName, 30 );

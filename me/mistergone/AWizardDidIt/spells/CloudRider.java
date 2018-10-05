@@ -24,7 +24,7 @@ public class CloudRider extends MagicSpell {
 
     public CloudRider() {
         spellName = "Cloud Rider";
-        cost = 10;
+        cost = 25;
         reagents = new ArrayList<String>();
         reagents.add( "FEATHER" );
 

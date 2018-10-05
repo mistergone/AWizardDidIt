@@ -3,6 +3,7 @@ package me.mistergone.AWizardDidIt.patterns;
 import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.ToolFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
@@ -56,6 +57,7 @@ public class WizardAxe extends ToolPattern {
                     meta.setLore( lore );
                     axe.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "This axe has been empowered!" );
+                    SpecialEffects.enchantEffect( magicChest.getChest().getLocation() );
 
                     int[] skipCenter = { 10 };
                     magicChest.clearPattern( skipCenter );

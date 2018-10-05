@@ -3,7 +3,10 @@ package me.mistergone.AWizardDidIt.patterns;
 import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
+import org.bukkit.Particle;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -37,7 +40,8 @@ public class EnchantWand extends MagicPattern {
                     meta.setLocalizedName( "0MAGICWAND" + UUID.randomUUID().toString() );
                     magicWand.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "Your stick has been turned into a magic wand!");
-
+                    Location loc = magicChest.getChest().getLocation().add( 0, 1, 0 );
+                    SpecialEffects.magicChest( loc );
                     magicChest.clearPattern( );
 
                 } else {

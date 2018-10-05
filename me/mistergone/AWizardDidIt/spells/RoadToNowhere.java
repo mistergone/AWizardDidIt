@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.Material;
@@ -36,10 +37,13 @@ public class RoadToNowhere extends MagicSpell {
 
                     if ( clickedBlock.getType() == Material.GRASS_PATH && wizardPlayer.spendWizardPower( cost ) ) {
                         target.setType( Material.GRASS_BLOCK );
+                        SpecialEffects.magicPoof( clickedBlock.getLocation() );
                     } else if ( clickedBlock.getType() == Material.GRASS_BLOCK && wizardPlayer.spendWizardPower( cost ) ) {
                         target.setType( Material.GRASS_PATH );
+                        SpecialEffects.magicPoof( clickedBlock.getLocation() );
                     } else if ( clickedBlock.getType() == Material.DIRT && wizardPlayer.spendWizardPower( cost ) ) {
                         target.setType( Material.GRASS_PATH );
+                        SpecialEffects.magicPoof( clickedBlock.getLocation() );
                     }
                 }
             }

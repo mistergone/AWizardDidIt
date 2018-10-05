@@ -1,10 +1,7 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.ToolPattern;
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
-import me.mistergone.AWizardDidIt.helpers.ToolFunction;
-import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -64,6 +61,7 @@ public class WizardHoe extends ToolPattern {
                     meta.setLore( lore );
                     hoe.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "This hoe has been empowered!" );
+                    SpecialEffects.enchantEffect( magicChest.getChest().getLocation() );
 
                     int[] skipCenter = { 10 };
                     magicChest.clearPattern( skipCenter );

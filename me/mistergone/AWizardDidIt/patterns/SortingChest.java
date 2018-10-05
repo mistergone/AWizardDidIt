@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
@@ -32,6 +33,7 @@ public class SortingChest extends MagicPattern {
             public void run() {
                 HashMap<Material, Chest> chestIndex = new HashMap<>();
                 // create the chestIndex
+                SpecialEffects.portalCollapse( magicChest.getChest().getLocation() );
                 List<Entity> entities = player.getNearbyEntities( 20, 10, 20 );
                 for ( Entity e : entities ) {
                     if ( e instanceof ItemFrame ) {
@@ -79,8 +81,8 @@ public class SortingChest extends MagicPattern {
                     player.sendMessage( "You have invoked " + patternName + "!" );
                     String message = "";
                     if ( movedItems > 0 ) message += String.valueOf( movedItems) + " item stack(s) were moved. ";
-                    if ( leftoverItems > 0 ) message += String.valueOf( leftoverItems ) + " item stack(s) had leftover items." ;
-                    if ( failedMoves > 0 ) message += String.valueOf( failedMoves ) + " item stack(s) could not be moved.";
+                    if ( leftoverItems > 0 ) message += String.valueOf( leftoverItems ) + " item stack(s) had leftover items. " ;
+                    if ( failedMoves > 0 ) message += String.valueOf( failedMoves ) + " item stack(s) could not be moved. ";
                     player.sendMessage( message );
                 }
             }

@@ -2,10 +2,7 @@ package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.ToolPattern;
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
-import me.mistergone.AWizardDidIt.helpers.ToolFunction;
-import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
@@ -24,28 +21,6 @@ public class WizardPick extends ToolPattern {
         patternName = "Wizard Pick";
         patterns =  new ArrayList<String[]>();
         toolCost = 1;
-        List<Material> breakSilky = new ArrayList<>();
-        breakSilky.add( Material.BOOKSHELF );
-        breakSilky.add( Material.CLAY );
-        breakSilky.add( Material.COAL_ORE );
-        breakSilky.add( Material.DIAMOND_ORE );
-        breakSilky.add( Material.EMERALD_ORE );
-        breakSilky.add( Material.ENDER_CHEST );
-        breakSilky.add( Material.GLASS );
-        breakSilky.add( Material.GLASS_PANE );
-        breakSilky.add( Material.GLOWSTONE );
-        breakSilky.add( Material.GRASS_BLOCK );
-        breakSilky.add( Material.LAPIS_ORE );
-        breakSilky.add( Material.ENDER_CHEST );
-        breakSilky.add( Material.MELON );
-        breakSilky.add( Material.BROWN_MUSHROOM_BLOCK );
-        breakSilky.add( Material.RED_MUSHROOM_BLOCK );
-        breakSilky.add( Material.MYCELIUM );
-        breakSilky.add( Material.PODZOL );
-        breakSilky.add( Material.REDSTONE_ORE );
-        breakSilky.add( Material.SEA_LANTERN );
-        breakSilky.add( Material.STONE );
-
 
         patterns.add( new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
@@ -81,6 +56,7 @@ public class WizardPick extends ToolPattern {
                     meta.setLore( lore );
                     pickaxe.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "This pickaxe has been empowered!" );
+                    SpecialEffects.enchantEffect( magicChest.getChest().getLocation() );
 
                     int[] skipCenter = { 10 };
                     magicChest.clearPattern( skipCenter );
@@ -133,7 +109,7 @@ public class WizardPick extends ToolPattern {
                                 Boolean silky = player.getInventory().getItemInMainHand().getEnchantmentLevel( Enchantment.SILK_TOUCH ) > 0;
                                 Boolean silkTag = Tag.CORAL_BLOCKS.isTagged( bMat ) || Tag.CORALS.isTagged( bMat ) ||
                                         Tag.ICE.isTagged( bMat) || Tag.LEAVES.isTagged( bMat );
-                                if ( silky && ( silkTag || breakSilky.contains( b.getType() ) ) ) {
+                                if ( silky && ( silkTag || BlockManager.silkyPickTypes.contains( b.getType() ) ) ) {
                                     ItemStack drop = new ItemStack( b.getType() );
                                     loc.getWorld().dropItem( loc, drop );
                                     b.setType( Material.AIR );

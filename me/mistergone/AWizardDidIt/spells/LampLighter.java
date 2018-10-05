@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -56,6 +57,7 @@ public class LampLighter extends MagicSpell {
                             player.getInventory().setItemInOffHand( null );
                         }
                         player.sendMessage( "You have invoked Lamp Lighter! A torch has been placed in a dark spot.");
+                        SpecialEffects.flamesEffect( loc );
                     } else {
                         player.sendMessage( "Lamp Lighter failed! No valid torch spot was found in range!" );
                     }

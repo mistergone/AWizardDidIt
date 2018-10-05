@@ -3,10 +3,7 @@ package me.mistergone.AWizardDidIt.spells;
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.util.Vector;
 
@@ -53,8 +50,17 @@ public class MightyLeap extends MagicSpell {
                     if ( slimeBalls != null && slimeBalls.getType() == Material.SLIME_BALL ) {
                         speed = .75 + (double)slimeBalls.getAmount() / 64 * 2.25;
                     }
-                    // We want the angle on the Y part of the vector to be at least 30 degrees
-                    double pitch = Math.max( (double)Math.abs( Math.round(player.getLocation().getPitch() ) ), 30);
+                    // Multiply pitch by -1 because it makes it easier to understand :p
+                    double pitch = Math.round( player.getLocation().getPitch() ) * -1;
+                    // if the player is pitched at > -15 degrees, make it at least +30 degrees
+                    if ( pitch > -15 ) {
+                        pitch = (double)Math.min( pitch, 30 );
+                    // If the player is looking down, just launch them forward a little.
+                    } else if ( pitch < -60 ) {
+                        speed = .5;
+                        pitch = 5;
+                    }
+
                     if (angle >= 270) {
                         angle = Math.toRadians(Math.abs(angle - 360));
                     } else if (angle >= 180) {

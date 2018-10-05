@@ -3,6 +3,7 @@ package me.mistergone.AWizardDidIt.patterns;
 import me.mistergone.AWizardDidIt.MagicPattern;
 import me.mistergone.AWizardDidIt.helpers.ExpManager;
 import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -80,6 +81,7 @@ public class WizardFood extends MagicPattern {
                 wizardFood.setAmount( 5 );
             }
             if ( expCost == 0 || ExpManager.spendExp( player, expCost ) ) {
+                SpecialEffects.enchantEffect( magicChest.getChest().getLocation() );
                 wizardFood.addUnsafeEnchantment( Enchantment.MENDING, 1 );
                 meta.addItemFlags( ItemFlag.HIDE_ENCHANTS );
                 meta.setLore( lore );

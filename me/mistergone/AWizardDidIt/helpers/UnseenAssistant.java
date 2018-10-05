@@ -87,6 +87,7 @@ public class UnseenAssistant {
         int y = block.getY();
         int z = block.getZ();
 
+        SpecialEffects.magicChest( chest.getLocation() );
 
         for ( int i = 0; i < 100; i ++ ) {
             // Get block at currentLoc

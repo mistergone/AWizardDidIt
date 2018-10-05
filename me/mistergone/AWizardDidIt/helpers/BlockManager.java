@@ -7,6 +7,7 @@ import org.bukkit.block.BlockFace;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
 
 public class BlockManager {
@@ -23,6 +24,29 @@ public class BlockManager {
      * @param depth The depth of the box, which parallel to the 'face' direction
      * @return
      */
+    public static final List silkyPickTypes = Arrays.asList( new Material[] {
+            Material.BOOKSHELF,
+            Material.CLAY,
+            Material.COAL_ORE,
+            Material.DIAMOND_ORE,
+            Material.EMERALD_ORE,
+            Material.ENDER_CHEST,
+            Material.GLASS,
+            Material.GLASS_PANE,
+            Material.GLOWSTONE,
+            Material.GRASS_BLOCK,
+            Material.LAPIS_ORE,
+            Material.ENDER_CHEST,
+            Material.MELON,
+            Material.BROWN_MUSHROOM_BLOCK,
+            Material.RED_MUSHROOM_BLOCK,
+            Material.MYCELIUM,
+            Material.PODZOL,
+            Material.REDSTONE_ORE,
+            Material.SEA_LANTERN,
+            Material.STONE,
+    } );
+
     public static ArrayList<Block> getSquareBoxFromFace( Block block, BlockFace face, int size, int depth ) {
         ArrayList<Block> blockBox = new ArrayList<>();
         BlockFace opp = face.getOppositeFace();

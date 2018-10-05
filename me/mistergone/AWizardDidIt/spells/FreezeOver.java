@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
@@ -39,6 +40,7 @@ public class FreezeOver extends MagicSpell {
                                 block.setType( Material.ICE );
                             }
                         }
+                        SpecialEffects.magicPoof( targetBlock.getLocation() );
                         if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
                             player.sendMessage(ChatColor.BLUE + "You have invoked " + spellName + "!");
                             wizardPlayer.addMsgCooldown( spellName, 30 );

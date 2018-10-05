@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
@@ -31,6 +32,7 @@ public class GrassCutter extends MagicSpell {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
+                SpecialEffects.magicPoof( clickedBlock.getLocation() );
                 if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
                     player.sendMessage(ChatColor.DARK_GREEN + "You have invoked " + spellName + "!" );
                     wizardPlayer.addMsgCooldown( spellName, 20 );

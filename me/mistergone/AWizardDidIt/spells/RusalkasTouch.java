@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
@@ -65,6 +66,7 @@ public class RusalkasTouch extends MagicSpell {
                     }
 
                 }
+                SpecialEffects.magicPoof( clickedBlock.getLocation() );
                 if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
                     player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
                     wizardPlayer.addMsgCooldown( spellName, 30 );
