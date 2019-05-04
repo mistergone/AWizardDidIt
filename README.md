@@ -6,9 +6,9 @@ Did you ever want to summon the powers of sorcery and ruin things in the process
 
 Welcome to __A Wizard Did It!__
 
-## __CURRENTLY UNDER DEVELOPMENT__
+## __UNDER DEVELOPMENT__
 
-Feel free to pull it down, build it, and try it out, but currently there is no distributable .jar file, etc, because this plugin is not yet considered "ready for release."
+This code may or may not be stable and ready for release. Please check out the [Official Spigot Plugin page](https://www.spigotmc.org/resources/a-wizard-did-it.67085/) for JAR download and more information.
 
 ## Documentation
 
