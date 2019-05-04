@@ -1,10 +1,7 @@
 package me.mistergone.AWizardDidIt.data;
 
 import me.mistergone.AWizardDidIt.helpers.WizardryData;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
@@ -26,10 +23,10 @@ public class UnseenProjectManager {
         loadUnseenProjectList();
         for ( String key : unseenProjectList.keySet() ) {
             Location[] points = unseenProjectList.get( key );
-            if ( points[0] != null && points[0].getBlock().getType() != Material.SIGN ) {
+            if ( points[0] != null && Tag.SIGNS.isTagged( points[0].getBlock().getType() ) ) {
                 points[0] = null;
             }
-            if ( points[1] != null && points[1].getBlock().getType() != Material.SIGN ) {
+            if ( points[1] != null && Tag.SIGNS.isTagged( points[1].getBlock().getType() ) ) {
                 points[1] = null;
             }
             if ( points[0] == null && points[1] == null ) {

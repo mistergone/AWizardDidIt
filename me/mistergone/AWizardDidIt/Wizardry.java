@@ -89,6 +89,7 @@ public class Wizardry {
         spellRegistry.add( new MightyLeap() );
         spellRegistry.add( new RoadToNowhere() );
         spellRegistry.add( new RusalkasTouch() );
+        spellRegistry.add( new TerracottaTurner() );
         spellRegistry.add( new Thunderhorse() );
         spellRegistry.add( new TollOfMadness() );
 
@@ -106,6 +107,7 @@ public class Wizardry {
         patternRegistry.add( new FontOfPower() );
         patternRegistry.add( new SortingChest() );
         patternRegistry.add( new UnseenArchitect() );
+        patternRegistry.add( new WizardAnvil() );
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardHoe() );
         patternRegistry.add( new WizardFood() );

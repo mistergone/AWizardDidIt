@@ -12,18 +12,10 @@ import java.util.List;
 
 public class BlockManager {
     // BlockManager is a set of methods for making a "box" of Blocks, which is an ArrayList
-    // that represents a rectangular prism of Blocks in the World
+    // that represents a rectangular prism of Blocks in the World. It also contains some helpful
+    // statics
 
-    /**
-     * Gets a box of Blocks based on a block and a facing. The box selection is in the OPPOSITE direction
-     * of the BlockFace 'face' parameter, so the clicked face can be passed easily as a parameter. The box is
-     * 'square' on one side, because the width/height of the box are indistinguishable.
-     * @param block The Block to start with
-     * @param face The facing OPPOSITE of the direction of the box
-     * @param size The height and width of the box, which are perpendicular to the 'face' direction
-     * @param depth The depth of the box, which parallel to the 'face' direction
-     * @return
-     */
+    // Things that Silk Touch works on, for a pick
     public static final List silkyPickTypes = Arrays.asList( new Material[] {
             Material.BOOKSHELF,
             Material.CLAY,
@@ -47,6 +39,16 @@ public class BlockManager {
             Material.STONE,
     } );
 
+    /**
+     * Gets a box of Blocks based on a block and a facing. The box selection is in the OPPOSITE direction
+     * of the BlockFace 'face' parameter, so the clicked face can be passed easily as a parameter. The box is
+     * 'square' on one side, because the width/height of the box are indistinguishable.
+     * @param block The Block to start with
+     * @param face The facing OPPOSITE of the direction of the box
+     * @param size The height and width of the box, which are perpendicular to the 'face' direction
+     * @param depth The depth of the box, which parallel to the 'face' direction
+     * @return
+     */
     public static ArrayList<Block> getSquareBoxFromFace( Block block, BlockFace face, int size, int depth ) {
         ArrayList<Block> blockBox = new ArrayList<>();
         BlockFace opp = face.getOppositeFace();

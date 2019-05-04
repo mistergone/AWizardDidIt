@@ -5,6 +5,7 @@ import me.mistergone.AWizardDidIt.patterns.UnseenArchitect;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
@@ -26,7 +27,7 @@ public class SignListener implements Listener {
     @EventHandler
     public void onSignChange( SignChangeEvent event ) {
         String[] lines = event.getLines();
-        if ( event.getBlock().getType() == Material.SIGN && lines != null && lines[0].equals("[UnseenArchitect]") ) {
+        if ( Tag.SIGNS.isTagged(event.getBlock().getType() ) && lines != null && lines[0].equals("[UnseenArchitect]") ) {
             UnseenArchitect.handleSignEvent( event );
         }
 
@@ -37,7 +38,7 @@ public class SignListener implements Listener {
         Player p = e.getPlayer();
         Block b = e.getBlock();
         if ( p != null ) {
-            if ( b.getType() == Material.SIGN ) {
+            if ( Tag.SIGNS.isTagged( b.getType() ) ) {
                 Sign sign = (Sign) b.getState();
                 String[] lines = sign.getLines();
                 // Handle Unseen Assistant signs
@@ -74,7 +75,7 @@ public class SignListener implements Listener {
     }
 
     public static void wipeSign( Location loc ) {
-        if ( loc.getBlock() != null && loc.getBlock().getType() == Material.SIGN ) {
+        if ( loc.getBlock() != null && Tag.SIGNS.isTagged( loc.getBlock().getType() ) ) {
             Sign sign = (Sign)loc.getBlock().getState();
             for (int i = 0; i < 4; i++ ) {
                 sign.setLine( i, "???");

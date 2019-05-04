@@ -1,8 +1,8 @@
 name: AWizardDidIt
-version: 0.3.0
+version: 1.0.0
 author: mistergone
 main: me.mistergone.AWizardDidIt.AWizardDidIt
-api-version: 1.13
+api-version: 1.14
 description: A Wizard Did It!
 commands:
   wizardry:

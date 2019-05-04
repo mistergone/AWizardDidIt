@@ -4,15 +4,12 @@ package me.mistergone.AWizardDidIt.spells;
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import net.minecraft.server.v1_13_R2.Village;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Villager;
-import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.MerchantRecipe;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
@@ -32,7 +29,7 @@ public class CharmVillager extends MagicSpell {
           @Override
           public void run() {
               WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-              if ( wizardPlayer.spendWizardPower( cost ) && reagent.getAmount() >= 10) {
+              if ( wizardPlayer.spendWizardPower( cost ) && reagent.getAmount() >= 2) {
                   Location loc = clickedBlock.getRelative(BlockFace.UP, 1).getLocation();
                   loc.add(.5, 0, .5);
                   double theta = 0;
@@ -62,10 +59,10 @@ public class CharmVillager extends MagicSpell {
                               }
                           }
                           if (refreshed) {
-                              if (reagent.getAmount() >= 10) {
-                                  if (reagent.getAmount() > 10) {
-                                      reagent.setAmount(reagent.getAmount() - 10);
-                                  } else if (reagent.getAmount() == 10) {
+                              if (reagent.getAmount() >= 2) {
+                                  if (reagent.getAmount() > 2) {
+                                      reagent.setAmount(reagent.getAmount() - 1);
+                                  } else if (reagent.getAmount() == 1) {
                                       player.getInventory().setItemInOffHand(null);
                                   }
                                   player.sendMessage(ChatColor.AQUA + "You have charmed a villager!");
@@ -75,7 +72,7 @@ public class CharmVillager extends MagicSpell {
                                   if (((Villager) e).getCustomName() != null) {
                                       name = ((Villager) e).getCustomName();
                                   }
-                                  player.sendMessage(ChatColor.RED + "You do not have the 10 Emeralds needed in your off hand to charm "
+                                  player.sendMessage(ChatColor.RED + "You do not have the 2 Emeralds needed in your off hand to charm "
                                           + name + ".");
                               }
                           }

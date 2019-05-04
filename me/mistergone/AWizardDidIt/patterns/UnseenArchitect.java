@@ -8,6 +8,7 @@ import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
@@ -42,7 +43,7 @@ public class UnseenArchitect extends MagicPattern {
             @Override
             public void run() {
                 Block up = magicChest.getChest().getBlock().getRelative(BlockFace.UP);
-                if (up.getType() == Material.SIGN) {
+                if ( Tag.SIGNS.isTagged(up.getType() ) ) {
                     Sign sign = (Sign) up.getState();
                     String[] lines = sign.getLines();
                     Boolean isUA = lines[0].equals(signTitle);

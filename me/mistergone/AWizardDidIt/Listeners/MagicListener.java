@@ -116,6 +116,7 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onConsume( PlayerItemConsumeEvent event ) {
+
         ItemStack item = event.getItem();
         ItemStack main = event.getPlayer().getInventory().getItemInMainHand();
         ItemStack off = event.getPlayer().getInventory().getItemInOffHand();

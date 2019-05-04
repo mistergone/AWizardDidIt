@@ -1,5 +1,6 @@
 package me.mistergone.AWizardDidIt.helpers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
 public class ExpManager {
@@ -70,12 +71,13 @@ public class ExpManager {
 
     public static Boolean spendExp( Player player, int amount ) {
         int total = getExpTotal( player );
-        if ( total > amount ) {
+        if ( total >= amount ) {
             int newTotal = total - amount;
             int newLevel = getLevelBelow( newTotal );
             float progress = (float)( newTotal - levels[newLevel] ) / ( levels[newLevel +1 ] - levels[newLevel] );
             player.setLevel( newLevel );
             player.setExp( progress );
+
             return true;
         } else {
             return false;
