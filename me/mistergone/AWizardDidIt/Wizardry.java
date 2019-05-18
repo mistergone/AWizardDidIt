@@ -77,6 +77,7 @@ public class Wizardry {
 
     private void addSpells( ) {
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
+        spellRegistry.add( new AlfsActionArrow() );
         spellRegistry.add( new CharmVillager() );
         spellRegistry.add( new CloudRider() );
         spellRegistry.add( new FreezeOver() );
@@ -92,6 +93,7 @@ public class Wizardry {
         spellRegistry.add( new TerracottaTurner() );
         spellRegistry.add( new Thunderhorse() );
         spellRegistry.add( new TollOfMadness() );
+        spellRegistry.add( new XomirsQuiver() );
 
         for ( MagicSpell spell : spellRegistry ) {
             for ( String reagent : spell.reagents ) {

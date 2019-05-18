@@ -7,10 +7,7 @@ import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Particle;
+import org.bukkit.*;
 import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -37,7 +34,6 @@ public class WandListener implements Listener {
             ItemStack main =  e.getItem();
             if ( main != null &&  main.getType() == Material.STICK &&  main.getAmount() == 1) {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
-
 
                 // If a stick is used on a chest, it might be a Magic Pattern
                 if (e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.CHEST) {
@@ -81,10 +77,12 @@ public class WandListener implements Listener {
                     MagicSpell magicSpell = null;
 
                     if ( offItem == null || offItem.getType() == Material.AIR ) {
+                        e.setCancelled(true);
                         wizardPlayer.showWizardBar();
                     } else {
                         magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                         if (magicSpell == null) {
+                            e.setCancelled(true);
                             // If there's Wizard Food in the off hand, eat it!
                             if ( WizardFood.isWizardFood( offItem ) ){
                                 WizardFood.eatWizardFood( offItem, wizardPlayer );

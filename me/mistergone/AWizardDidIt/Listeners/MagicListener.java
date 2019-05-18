@@ -1,18 +1,17 @@
 package me.mistergone.AWizardDidIt.Listeners;
 
+import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityToggleGlideEvent;
-import org.bukkit.event.entity.FoodLevelChangeEvent;
-import org.bukkit.event.entity.ProjectileHitEvent;
+import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleExitEvent;
@@ -22,6 +21,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.scheduler.BukkitTask;
 
 import java.util.UUID;
 
@@ -34,6 +34,7 @@ public class MagicListener implements Listener {
 
     public MagicListener(Wizardry wizardry ) {
         this.wizardry = wizardry;
+
     }
 
     @EventHandler
@@ -67,6 +68,20 @@ public class MagicListener implements Listener {
                     wizardPlayer.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "You lack the Wizard Power to be protected from the fall!");
                 }
                 wizardPlayer.removeSpell("Mighty Leap");
+            }
+        }
+    }
+
+    @EventHandler
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+        if ( event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE ) {
+            if (event.getDamager() instanceof Arrow ) {
+                if ( event.getDamager().getCustomName() != null && event.getDamager().getCustomName().equals( "Alf's Action Arrow Projectile" ) ) {
+                    if ( event.getEntity() instanceof Monster ) {
+                        double damage =  Math.floor( ( Math.random() * 6 ) + 5 );
+                        event.setDamage( damage );
+                    }
+                }
             }
         }
     }
@@ -189,16 +204,19 @@ public class MagicListener implements Listener {
     @EventHandler
     public void onProjectileHit(ProjectileHitEvent event ) {
         Entity entity = event.getEntity();
+        if ( entity != null ) {
+            if ( entity instanceof SmallFireball && entity.getCustomName().equals( "Incinerate Projectile" ) ) {
+                if ( event.getHitEntity() != null && event.getHitEntity() instanceof LivingEntity ) {
+                    event.getHitEntity().setFireTicks( 60 );
+                    ((LivingEntity) event.getHitEntity()).damage( 15 );
+                } else if ( event.getHitBlock() != null ) {
 
-        if ( entity instanceof SmallFireball && entity.getCustomName().equals( "Incinerate Projectile" ) ) {
-            if ( event.getHitEntity() != null && event.getHitEntity() instanceof LivingEntity ) {
-                event.getHitEntity().setFireTicks( 60 );
-                ((LivingEntity) event.getHitEntity()).damage( 15 );
-            } else if ( event.getHitBlock() != null ) {
-
+                }
+                entity.getWorld().createExplosion( entity.getLocation(), 0, false );
             }
-            entity.getWorld().createExplosion( entity.getLocation(), 0, false );
+
         }
+
     }
 
 }

@@ -86,7 +86,9 @@ public class LayerLayer extends MagicSpell {
                         if ( b != null && player.getInventory().getItem( layerSlot ).getType() != Material.AIR ) {
                             Boolean isAir = BlockManager.airTypes.contains( b.getType() );
                             Boolean sameType = layerType == b.getType();
-                            if ( replaceAll  ) {
+                            if ( b.getType() == Material.BEDROCK ) {
+
+                            } else if ( replaceAll  ) {
                                 if ( !sameType ) {
                                     if ( !silkTouch ) {
                                         b.breakNaturally();

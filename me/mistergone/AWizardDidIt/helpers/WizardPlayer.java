@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.helpers;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -102,6 +103,30 @@ public class WizardPlayer {
         }
     }
 
+    /**
+     * Remove an active spell after a set time
+     * @param spellName Name of spell to be removed from activeSpells
+     * @param timer Ticks to wait to remove it
+     */
+    public void setSpellTimer( String spellName, int timer ) {
+        if ( this.spellTimers.get( spellName ) != null  ) {
+            this.spellTimers.get( spellName ).cancel();
+        }
+
+        BukkitTask task = Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(
+                plugin,
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        activeSpells.remove( spellName );
+                    }
+                },
+                timer
+        );
+        this.spellTimers.put( spellName, task );
+        this.addSpell( spellName );
+    }
+
     /*****##### messageCooldowns methods #####*****/
     // Message cooldowns prevent a player from being spammed by spell messages
 
@@ -162,7 +187,7 @@ public class WizardPlayer {
         if ( this.wizardBarTimer != null  ) {
             this.wizardBarTimer.cancel();
         }
-        this.wizardBarTimer = Bukkit.getServer().getScheduler().runTaskLater(
+        this.wizardBarTimer = Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(
                 plugin,
                 new Runnable() {
                     @Override
@@ -196,13 +221,14 @@ public class WizardPlayer {
      * @return
      */
      public Boolean spendWizardPower( int amount) {
-         if ( wizardPower > amount ) {
+         if ( wizardPower >= amount ) {
              wizardPower -= amount;
              showWizardBar();
              checkLastSave();
              return true;
          } else {
              checkLastSave();
+             player.sendMessage(ChatColor.RED + "You do not have enough Wizard Power!");
              return false;
          }
      }
@@ -315,29 +341,6 @@ public class WizardPlayer {
             }
         }
      }
-
-    /**
-     * Remove a spellTimer after a set time
-     * @param spellName Name of spell to be removed from activeSpells
-     * @param timer Ticks to wait to remove it
-     */
-    public void setSpellTimer( String spellName, int timer ) {
-        if ( this.spellTimers.get( spellName ) != null  ) {
-            this.spellTimers.get( spellName ).cancel();
-        }
-
-        BukkitTask task = Bukkit.getServer().getScheduler().runTaskLater(
-                plugin,
-                new Runnable() {
-                    @Override
-                    public void run() {
-                        activeSpells.remove( spellName );
-                    }
-                },
-                timer
-        );
-        this.spellTimers.put( spellName, task );
-    }
 
     /**
      * Set the last block face clicked by a tool
