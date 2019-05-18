@@ -15,7 +15,7 @@ public class XomirsQuiver extends MagicSpell {
 
     public XomirsQuiver() {
         spellName = "Xomir's Quiver";
-        cost = 50;
+        cost = 25;
         reagents = new ArrayList<String>();
         reagents.add( "CROSSBOW" );
         reagents.add( "BOW" );

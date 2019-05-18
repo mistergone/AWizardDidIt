@@ -17,7 +17,7 @@ public class AlfsActionArrow extends MagicSpell {
 
     public AlfsActionArrow() {
         spellName = "Alf's Action Arrow";
-        cost = 2;
+        cost = 5;
         reagents = new ArrayList<String>();
         reagents.add("ARROW");
 
