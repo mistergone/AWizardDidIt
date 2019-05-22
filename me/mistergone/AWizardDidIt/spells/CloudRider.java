@@ -9,6 +9,8 @@ import org.bukkit.Material;
 import org.bukkit.Sound;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -25,6 +27,7 @@ public class CloudRider extends MagicSpell {
     public CloudRider() {
         spellName = "Cloud Rider";
         cost = 25;
+        int slowFallCost = 10;
         reagents = new ArrayList<String>();
         reagents.add( "FEATHER" );
 
@@ -122,6 +125,10 @@ public class CloudRider extends MagicSpell {
                     wizardPlayer.removeSpell( "Cloud Rider" );
                     wizardPlayer.addSpell( "Cloud Rider (Gliding)");
 
+                } else if ( !player.isOnGround() && !player.isGliding() && !wizardPlayer.getSpells().contains( spellName )
+                        && wizardPlayer.spendWizardPower( slowFallCost) ) {
+                    PotionEffect slowFall = new PotionEffect(PotionEffectType.SLOW_FALLING, 300, 1 );
+                    player.addPotionEffect( slowFall );
                 }
             }
         };
