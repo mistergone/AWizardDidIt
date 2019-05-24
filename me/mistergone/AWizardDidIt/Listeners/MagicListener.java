@@ -1,6 +1,5 @@
 package me.mistergone.AWizardDidIt.Listeners;
 
-import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.MagicWand;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
@@ -21,7 +20,6 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.UUID;
 
@@ -52,9 +50,13 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onEntityDamage( EntityDamageEvent event) {
-        if ( event.getEntity() instanceof Player && event.getCause() == EntityDamageEvent.DamageCause.FALL ) {
-            WizardPlayer wizardPlayer = wizardry.getWizardPlayer( event.getEntity().getUniqueId() );
-            if ( wizardPlayer.checkSpell("Mighty Leap") ) {
+        EntityDamageEvent.DamageCause cause = event.getCause();
+        Boolean isFall = cause == EntityDamageEvent.DamageCause.FALL;
+        Boolean isWall = cause == EntityDamageEvent.DamageCause.FLY_INTO_WALL;
+        if ( event.getEntity() instanceof Player && ( isFall || isWall ) ) {
+            Player player = (Player)event.getEntity();
+            WizardPlayer wizardPlayer = wizardry.getWizardPlayer( player.getUniqueId() );
+            if ( wizardPlayer.checkSpell("Mighty Leap") && isFall ) {
                 int damageCost = (int)Math.floor( event.getDamage() / 2 );
                 if ( wizardPlayer.spendWizardPower( damageCost ) ) {
                     event.setDamage( 0 );
@@ -68,6 +70,20 @@ public class MagicListener implements Listener {
                     wizardPlayer.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "You lack the Wizard Power to be protected from the fall!");
                 }
                 wizardPlayer.removeSpell("Mighty Leap");
+            } else if ( wizardPlayer.checkSpell( "Cloud Rider" ) || wizardPlayer.checkSpell( "Cloud Rider (Gliding)" )
+                    || wizardPlayer.checkSpell( "Cloud Rider (Grounded)" ) ) {
+
+                if ( event.getDamage() >= player.getHealth() ) {
+                    event.setDamage( player.getHealth() - 0.5 );
+                    Bukkit.broadcastMessage( "Ouch!");
+                }
+                if ( wizardPlayer.checkSpell( "Cloud Rider") ) {
+                    wizardPlayer.removeSpell("Cloud Rider");
+                }
+                if ( wizardPlayer.checkSpell( "Cloud Rider (Gliding)" ) ) {
+                    wizardPlayer.removeSpell( "Cloud Rider (Gliding)" );
+                }
+
             }
         }
     }
@@ -105,6 +121,10 @@ public class MagicListener implements Listener {
         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() );
         if ( event.getPlayer().isOnGround() && wizardPlayer.checkSpell( "Cloud Rider (Gliding)" ) ) {
             wizardPlayer.removeSpell( "Cloud Rider (Gliding)" );
+            // "Grounded" status prevents a race condition with damage prevention event handler
+            wizardPlayer.addSpell( "Cloud Rider (Grounded)" );
+        } else if ( wizardPlayer.checkSpell( "Cloud Rider (Grounded)") ) {
+            wizardPlayer.checkSpell("Cloud Rider (Grounded)" );
         }
     }
 
