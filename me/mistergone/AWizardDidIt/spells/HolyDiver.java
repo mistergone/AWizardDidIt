@@ -46,8 +46,8 @@ public class HolyDiver extends MagicSpell {
                   int zFactor = 1;
                   double angle = Math.round(player.getLocation().getYaw());
 
-                  double speed = 1;
-                  double pitch = Math.round(player.getLocation().getPitch() );
+                  double speed = 0.75;
+                  double pitch = -1 * Math.round(player.getLocation().getPitch() );
                   if (angle >= 270) {
                       angle = Math.toRadians(Math.abs(angle - 360));
                   } else if (angle >= 180) {
@@ -69,8 +69,10 @@ public class HolyDiver extends MagicSpell {
                   player.setVelocity(v);
 
                   // Second, give the player a little Dolphin Power
-                  PotionEffect grace = new PotionEffect( PotionEffectType.DOLPHINS_GRACE, 60, 1 );
+                  PotionEffect grace = new PotionEffect( PotionEffectType.DOLPHINS_GRACE, 100, 1 );
+                  PotionEffect fishy = new PotionEffect( PotionEffectType.WATER_BREATHING, 100, 1 );
                   player.addPotionEffect( grace );
+                  player.addPotionEffect( fishy );
 
                   // Third, refill some bubbles
                   int gasp = player.getMaximumAir() - player.getRemainingAir();
