@@ -101,7 +101,8 @@ public class WizardAxe extends ToolPattern {
                                     for (int y = loc.getBlockY() - 1; y <= loc.getBlockY() + 1; y++) {
                                         for (int z = loc.getBlockZ() - 1; z <= loc.getBlockZ() + 1; z++) {
                                             Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
-                                            if (blockCheck.getType() == choppedType && !blocks.contains(blockCheck) ) {
+                                            if ( blocks.contains( blockCheck) ) continue;
+                                            if ( blockCheck.getType() == choppedType ) {
                                                 blocks.add( blockCheck );
                                             } else if ( blockCheck.getType() == leafType  ) {
                                                 leaves.add( blockCheck );
@@ -148,6 +149,7 @@ public class WizardAxe extends ToolPattern {
                 for (int y = loc.getBlockY() - 1; y <= loc.getBlockY() + 1; y++) {
                     for (int z = loc.getBlockZ() - 1; z <= loc.getBlockZ() + 1; z++) {
                         Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
+                        if ( leaves.contains( blockCheck ) ) continue;
                         if ( blockCheck.getType() == leafType ) {
                             Leaves data = (Leaves)blockCheck.getBlockData();
                             if ( data.isPersistent() ) continue;

@@ -16,7 +16,7 @@ public class BlockManager {
     // statics
 
     // Things that Silk Touch works on, for a pick
-    public static final List silkyPickTypes = Arrays.asList( new Material[] {
+    public static final List SILKY_PICK_TYPES = Arrays.asList( new Material[] {
             Material.BOOKSHELF,
             Material.CLAY,
             Material.COAL_ORE,
