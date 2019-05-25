@@ -5,6 +5,7 @@ import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -85,14 +86,14 @@ public class LayerLayer extends MagicSpell {
                         if ( b != null && player.getInventory().getItem( layerSlot ).getType() != Material.AIR ) {
                             Boolean isAir = BlockManager.airTypes.contains( b.getType() );
                             Boolean sameType = layerType == b.getType();
-                            if ( b.getType() == Material.BEDROCK ) {
-
-                            } else if ( replaceAll  ) {
+                            Bukkit.broadcastMessage( "")
+                            if ( b.getType() == Material.BEDROCK ) continue;
+                            if ( replaceAll  ) {
                                 if ( !sameType ) {
                                     if ( !silkTouch ) {
                                         b.breakNaturally();
                                     } else {
-                                        if ( BlockManager.SILKY_PICK_TYPES.contains( b.getType() ) ) {
+                                        if ( BlockManager.isSilkyPickType( b.getType() ) ) {
                                             ItemStack drop = new ItemStack( b.getType() );
                                             loc.getWorld().dropItem( loc, drop );
                                         } else {

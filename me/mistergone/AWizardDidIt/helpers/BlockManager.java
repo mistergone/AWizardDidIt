@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.helpers;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 
@@ -17,7 +18,9 @@ public class BlockManager {
 
     // Things that Silk Touch works on, for a pick
     public static final List SILKY_PICK_TYPES = Arrays.asList( new Material[] {
+            Material.BLUE_ICE,
             Material.BOOKSHELF,
+            Material.CAMPFIRE,
             Material.CLAY,
             Material.COAL_ORE,
             Material.DIAMOND_ORE,
@@ -27,17 +30,40 @@ public class BlockManager {
             Material.GLASS_PANE,
             Material.GLOWSTONE,
             Material.GRASS_BLOCK,
+            Material.ICE,
             Material.LAPIS_ORE,
             Material.ENDER_CHEST,
             Material.MELON,
             Material.BROWN_MUSHROOM_BLOCK,
             Material.RED_MUSHROOM_BLOCK,
+            Material.REDSTONE_ORE,
             Material.MYCELIUM,
+            Material.NETHER_QUARTZ_ORE,
             Material.PODZOL,
             Material.REDSTONE_ORE,
             Material.SEA_LANTERN,
             Material.STONE,
+            Material.TURTLE_EGG
     } );
+
+    /**
+     * Returns whether a Material is a "silky pick type"
+     * @param material The Material in question
+     * @return Boolean True if material is a silky pick type
+     */
+
+    public static Boolean isSilkyPickType( Material material ) {
+        if ( SILKY_PICK_TYPES.contains( material ) ) {
+            return true;
+        } else if ( Tag.CORALS.isTagged( material ) || Tag.CORAL_BLOCKS.isTagged( material ) || Tag.CORAL_PLANTS.isTagged( material )  ) {
+            // Coral is silk pickable!
+            return true;
+        } else if ( Tag.LEAVES.isTagged( material ) ) {
+            return true;
+        }
+
+        return false;
+    }
 
     /**
      * Gets a box of Blocks based on a block and a facing. The box selection is in the OPPOSITE direction
@@ -47,7 +73,7 @@ public class BlockManager {
      * @param face The facing OPPOSITE of the direction of the box
      * @param size The height and width of the box, which are perpendicular to the 'face' direction
      * @param depth The depth of the box, which parallel to the 'face' direction
-     * @return
+     * @return ArrayList<Block> An Array of Blocks
      */
     public static ArrayList<Block> getSquareBoxFromFace( Block block, BlockFace face, int size, int depth ) {
         ArrayList<Block> blockBox = new ArrayList<>();

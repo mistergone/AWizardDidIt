@@ -108,7 +108,7 @@ public class WizardPick extends ToolPattern {
                                 Boolean silky = player.getInventory().getItemInMainHand().getEnchantmentLevel( Enchantment.SILK_TOUCH ) > 0;
                                 Boolean silkTag = Tag.CORAL_BLOCKS.isTagged( bMat ) || Tag.CORALS.isTagged( bMat ) ||
                                         Tag.ICE.isTagged( bMat) || Tag.LEAVES.isTagged( bMat );
-                                if ( silky && ( silkTag || BlockManager.SILKY_PICK_TYPES.contains( b.getType() ) ) ) {
+                                if ( silky && ( silkTag || BlockManager.isSilkyPickType( b.getType() ) ) ) {
                                     ItemStack drop = new ItemStack( b.getType() );
                                     loc.getWorld().dropItem( loc, drop );
                                     b.setType( Material.AIR );
