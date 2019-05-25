@@ -5,7 +5,6 @@ import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -43,7 +42,7 @@ public class LayerLayer extends MagicSpell {
                     player.sendMessage( ChatColor.DARK_PURPLE + "Layer-Layer could not be invoked because the item found in the slot to the right of your Magic Wand was not a solid block.");
                     return;
                 }
-                if ( player.isOnGround() && clickedBlock.getType().isSolid() ) {
+                if ( player.isOnGround() ) {
                     Location loc = player.getLocation();
                     ArrayList<Block> blockBox = new ArrayList<>();
                     BlockFace facing = BlockManager.yawToFace( loc.getYaw() );
@@ -86,7 +85,6 @@ public class LayerLayer extends MagicSpell {
                         if ( b != null && player.getInventory().getItem( layerSlot ).getType() != Material.AIR ) {
                             Boolean isAir = BlockManager.airTypes.contains( b.getType() );
                             Boolean sameType = layerType == b.getType();
-                            Bukkit.broadcastMessage( "")
                             if ( b.getType() == Material.BEDROCK ) continue;
                             if ( replaceAll  ) {
                                 if ( !sameType ) {
