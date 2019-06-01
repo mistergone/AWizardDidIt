@@ -75,10 +75,10 @@ public class MagicListener implements Listener {
 
                 if ( event.getDamage() >= player.getHealth() ) {
                     event.setDamage( player.getHealth() - 0.5 );
-                    Bukkit.broadcastMessage( "Ouch!");
+                    player.sendMessage(  ChatColor.RED + "Ouch! " + ChatColor.AQUA + "The magic of Cloud Rider has protected you!" );
                 }
-                if ( wizardPlayer.checkSpell( "Cloud Rider") ) {
-                    wizardPlayer.removeSpell("Cloud Rider");
+                if ( wizardPlayer.checkSpell( "Cloud Rider" ) ) {
+                    wizardPlayer.removeSpell( "Cloud Rider" );
                 }
                 if ( wizardPlayer.checkSpell( "Cloud Rider (Gliding)" ) ) {
                     wizardPlayer.removeSpell( "Cloud Rider (Gliding)" );
@@ -120,11 +120,12 @@ public class MagicListener implements Listener {
     public void onPlayerMove( PlayerMoveEvent event ) {
         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() );
         if ( event.getPlayer().isOnGround() && wizardPlayer.checkSpell( "Cloud Rider (Gliding)" ) ) {
+            wizardPlayer.removeSpell( "Cloud Rider" );
             wizardPlayer.removeSpell( "Cloud Rider (Gliding)" );
             // "Grounded" status prevents a race condition with damage prevention event handler
             wizardPlayer.addSpell( "Cloud Rider (Grounded)" );
         } else if ( wizardPlayer.checkSpell( "Cloud Rider (Grounded)") ) {
-            wizardPlayer.checkSpell("Cloud Rider (Grounded)" );
+            wizardPlayer.removeSpell("Cloud Rider (Grounded)" );
         }
     }
 

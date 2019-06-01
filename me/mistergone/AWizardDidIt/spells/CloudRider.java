@@ -79,7 +79,6 @@ public class CloudRider extends MagicSpell {
                     v.setY(Math.sin(Math.toRadians(pitch)) * (sprinting + 0.5) * speed);
                     v.setZ(Math.cos(angle) * speed * sprinting * zFactor);
 
-
                     player.setVelocity(v);
                     player.sendMessage( ChatColor.DARK_AQUA + "Swing your wand again to begin gliding!");
 
@@ -119,14 +118,13 @@ public class CloudRider extends MagicSpell {
                     v.setY(Math.sin(Math.toRadians(pitch)) * (sprinting + 0.5) * speed);
                     v.setZ(Math.cos(angle) * speed * sprinting * zFactor);
 
-
                     player.setVelocity(v);
 
                     wizardPlayer.removeSpell( "Cloud Rider" );
                     wizardPlayer.addSpell( "Cloud Rider (Gliding)");
 
                 } else if ( !player.isOnGround() && !player.isGliding() && !wizardPlayer.getSpells().contains( spellName )
-                        && wizardPlayer.spendWizardPower( slowFallCost) ) {
+                        && !wizardPlayer.getSpells().contains( spellName + " (Gliding)" ) && wizardPlayer.spendWizardPower( slowFallCost) ) {
                     PotionEffect slowFall = new PotionEffect(PotionEffectType.SLOW_FALLING, 300, 1 );
                     player.addPotionEffect( slowFall );
                 }

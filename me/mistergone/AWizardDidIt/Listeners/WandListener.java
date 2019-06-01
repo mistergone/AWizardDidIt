@@ -1,10 +1,7 @@
 package me.mistergone.AWizardDidIt.Listeners;
 
 import me.mistergone.AWizardDidIt.*;
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
-import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
-import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import org.bukkit.*;

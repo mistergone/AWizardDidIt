@@ -42,71 +42,62 @@ public class LayerLayer extends MagicSpell {
                     player.sendMessage( ChatColor.DARK_PURPLE + "Layer-Layer could not be invoked because the item found in the slot to the right of your Magic Wand was not a solid block.");
                     return;
                 }
-                if ( player.isOnGround() ) {
-                    Location loc = player.getLocation();
-                    ArrayList<Block> blockBox = new ArrayList<>();
-                    BlockFace facing = BlockManager.yawToFace( loc.getYaw() );
-                    Boolean replaceAll = reagent.getType() == Material.COBBLESTONE_SLAB;
-                    Boolean silkTouch = false;
 
-                    // Define the blockBox
-                    if ( reagent.getType() == Material.COBBLESTONE_WALL ) {
-                        Block targetBlock = clickedBlock.getRelative(BlockFace.UP, 2);
-                        // If you didn't click the top face, then the clicked block is the bottom row
-                        if ( event.getBlockFace() != BlockFace.UP ) {
-                            targetBlock = clickedBlock.getRelative( BlockFace.UP, 1 );
-                        }
-                        if (reagent.getAmount() == 1) {
-                            blockBox.add( targetBlock.getRelative( BlockFace.DOWN ) );
-                            blockBox.add( targetBlock);
-                            blockBox.add( targetBlock.getRelative( BlockFace.UP ) );
-                        } else {
-                            blockBox = BlockManager.getSquareBoxFromFace(targetBlock, facing, 3, 1);
-                        }
-                        replaceAll = true;
-                    } else if ( reagent.getType() ==  Material.STONE_SLAB ){
-                        blockBox.add( clickedBlock );
-                        replaceAll = true;
-                        silkTouch = true;
-                    } else {
-                        Block targetBlock = clickedBlock.getRelative( facing, 2 );
-                        if ( reagent.getAmount() == 1 ) {
-                            blockBox.add( clickedBlock.getRelative( facing, 1 ) );
-                            blockBox.add( targetBlock );
-                            blockBox.add( targetBlock.getRelative( facing, 1 ) );
-                        } else {
-                            blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
-                        }
+                Location loc = player.getLocation();
+                ArrayList<Block> blockBox = new ArrayList<>();
+                BlockFace facing = BlockManager.yawToFace( loc.getYaw() );
+                Boolean replaceAll = reagent.getType() == Material.COBBLESTONE_SLAB;
+                Boolean silkTouch = false;
+
+                // Define the blockBox
+                if ( reagent.getType() == Material.COBBLESTONE_WALL ) {
+                    Block targetBlock = clickedBlock.getRelative(BlockFace.UP, 2);
+                    // If you didn't click the top face, then the clicked block is the bottom row
+                    if ( event.getBlockFace() != BlockFace.UP ) {
+                        targetBlock = clickedBlock.getRelative( BlockFace.UP, 1 );
                     }
+                    if (reagent.getAmount() == 1) {
+                        blockBox.add( targetBlock.getRelative( BlockFace.DOWN ) );
+                        blockBox.add( targetBlock);
+                        blockBox.add( targetBlock.getRelative( BlockFace.UP ) );
+                    } else {
+                        blockBox = BlockManager.getSquareBoxFromFace(targetBlock, facing, 3, 1);
+                    }
+                    replaceAll = true;
+                } else if ( reagent.getType() ==  Material.STONE_SLAB ){
+                    blockBox.add( clickedBlock );
+                    replaceAll = true;
+                    silkTouch = true;
+                } else {
+                    Block targetBlock = clickedBlock.getRelative( facing, 2 );
+                    if ( reagent.getAmount() == 1 ) {
+                        blockBox.add( clickedBlock.getRelative( facing, 1 ) );
+                        blockBox.add( targetBlock );
+                        blockBox.add( targetBlock.getRelative( facing, 1 ) );
+                    } else {
+                        blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
+                    }
+                }
 
-                    // Handle the blockBox
-                    for ( Block b : blockBox ) {
-                        // Check if player ran out of layerItem
-                        if ( b != null && player.getInventory().getItem( layerSlot ).getType() != Material.AIR ) {
-                            Boolean isAir = BlockManager.airTypes.contains( b.getType() );
-                            Boolean sameType = layerType == b.getType();
-                            if ( b.getType() == Material.BEDROCK ) continue;
-                            if ( replaceAll  ) {
-                                if ( !sameType ) {
-                                    if ( !silkTouch ) {
-                                        b.breakNaturally();
+                // Handle the blockBox
+                for ( Block b : blockBox ) {
+                    // Check if player ran out of layerItem
+                    if ( b != null && player.getInventory().getItem( layerSlot ).getType() != Material.AIR ) {
+                        Boolean isAir = BlockManager.airTypes.contains( b.getType() );
+                        Boolean sameType = layerType == b.getType();
+                        if ( b.getType() == Material.BEDROCK ) continue;
+                        if ( replaceAll  ) {
+                            if ( !sameType ) {
+                                if ( !silkTouch ) {
+                                    b.breakNaturally();
+                                } else {
+                                    if ( BlockManager.isSilkyPickType( b.getType() ) ) {
+                                        ItemStack drop = new ItemStack( b.getType() );
+                                        loc.getWorld().dropItem( loc, drop );
                                     } else {
-                                        if ( BlockManager.isSilkyPickType( b.getType() ) ) {
-                                            ItemStack drop = new ItemStack( b.getType() );
-                                            loc.getWorld().dropItem( loc, drop );
-                                        } else {
-                                            b.breakNaturally();
-                                        }
-                                    }
-                                    b.setType( layerType );
-                                    // Reduce stack
-                                    if ( layerItem.getAmount() > 1 ) {
-                                        layerItem.setAmount( layerItem.getAmount() - 1 );
-                                    } else if ( layerItem.getAmount() == 1 ) {
-                                        player.getInventory().setItem( layerSlot, null );
+                                        b.breakNaturally();
                                     }
                                 }
-                            } else if ( isAir ){
                                 b.setType( layerType );
                                 // Reduce stack
                                 if ( layerItem.getAmount() > 1 ) {
@@ -115,16 +106,23 @@ public class LayerLayer extends MagicSpell {
                                     player.getInventory().setItem( layerSlot, null );
                                 }
                             }
-
-                            SpecialEffects.magicPoof( clickedBlock.getLocation() );
-                            if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                                player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
-                                wizardPlayer.addMsgCooldown( spellName, 30 );
+                        } else if ( isAir ){
+                            b.setType( layerType );
+                            // Reduce stack
+                            if ( layerItem.getAmount() > 1 ) {
+                                layerItem.setAmount( layerItem.getAmount() - 1 );
+                            } else if ( layerItem.getAmount() == 1 ) {
+                                player.getInventory().setItem( layerSlot, null );
                             }
-                        } else {
-                            return;
                         }
 
+                        SpecialEffects.magicPoof( clickedBlock.getLocation() );
+                        if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
+                            player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
+                            wizardPlayer.addMsgCooldown( spellName, 30 );
+                        }
+                    } else {
+                        return;
                     }
 
                 }
