@@ -5,12 +5,14 @@ import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
 
@@ -30,10 +32,14 @@ public class LayerLayer extends MagicSpell {
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
-                int layerSlot = player.getInventory().getHeldItemSlot() + 1;
-                ItemStack layerItem = player.getInventory().getItem( layerSlot );
-                Material layerType = layerItem.getType();
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
+                PlayerInventory pInventory = player.getInventory();
+                int layerSlot = pInventory.getHeldItemSlot() + 1;
+                ItemStack layerItem = pInventory.getItem( layerSlot );
+                Material layerType = null;
+                if (layerItem != null) {
+                    layerType = layerItem.getType();
+                }
                 if ( layerItem == null || layerSlot > 8 ) {
                     player.sendMessage( ChatColor.DARK_PURPLE + "Layer-Layer could not be invoked because no item was found in the slot to the right of your Magic Wand.");
                     return;
@@ -82,9 +88,22 @@ public class LayerLayer extends MagicSpell {
                 // Handle the blockBox
                 for ( Block b : blockBox ) {
                     // Check if player ran out of layerItem
-                    if ( b != null && player.getInventory().getItem( layerSlot ).getType() != Material.AIR ) {
+                    if ( b != null && player.getInventory().getItem( layerSlot ) == null ) {
+                        for ( int i = layerSlot + 1; i < 9; i++ ) {
+                            if ( player.getInventory().getItem( i ) != null && player.getInventory().getItem( i ).getType() == layerType ) {
+                                int count = player.getInventory().getItem( i ).getAmount();
+                                ItemStack moved = new ItemStack( layerType, count );
+                                player.getInventory().setItem( layerSlot, moved );
+                                player.getInventory().setItem( i, null );
+                                break;
+                            }
+                        }
+                    }
+
+                    if ( b != null && player.getInventory().getItem( layerSlot ) != null ) {
                         Boolean isAir = BlockManager.airTypes.contains( b.getType() );
                         Boolean sameType = layerType == b.getType();
+                        layerItem = player.getInventory().getItem( layerSlot );
                         if ( b.getType() == Material.BEDROCK ) continue;
                         if ( replaceAll  ) {
                             if ( !sameType ) {
@@ -113,6 +132,19 @@ public class LayerLayer extends MagicSpell {
                                 layerItem.setAmount( layerItem.getAmount() - 1 );
                             } else if ( layerItem.getAmount() == 1 ) {
                                 player.getInventory().setItem( layerSlot, null );
+                            }
+                        }
+
+                        // If layerSlot is null, look for more layerItem in the hotbar, and move it to layerSlot
+                        if ( player.getInventory().getItem( layerSlot ) == null ) {
+                            for ( int i = layerSlot + 1; i < 9; i++ ) {
+                                if ( player.getInventory().getItem( i ) != null && player.getInventory().getItem( i ).getType() == layerType ) {
+                                    int count = player.getInventory().getItem( i ).getAmount();
+                                    ItemStack moved = new ItemStack( layerType, count );
+                                    player.getInventory().setItem( layerSlot, moved );
+                                    player.getInventory().setItem( i, null );
+                                    break;
+                                }
                             }
                         }
 

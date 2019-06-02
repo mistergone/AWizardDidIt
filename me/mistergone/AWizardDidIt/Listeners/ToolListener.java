@@ -58,11 +58,12 @@ public class ToolListener implements Listener {
     public void onPlayerInteractEvent( PlayerInteractEvent e ) {
         Player p = e.getPlayer();
         EquipmentSlot h = e.getHand();
+        Action action = e.getAction();
 
         // Save BlockFace on tool interact
-        if ( h != null && h == EquipmentSlot.HAND ) {
+        if ( h != null && h == EquipmentSlot.HAND && ( action == Action.LEFT_CLICK_BLOCK || action == Action.LEFT_CLICK_AIR ) ) {
             ItemStack main = p.getInventory().getItemInMainHand();
-            if ( main != null && main.getItemMeta() !=null ) {
+            if ( main != null && main.getItemMeta() != null ) {
                 List<String> lore = main.getItemMeta().getLore();
                 if ( lore != null ) {
                     String loreCheck = lore.get(0);
@@ -75,10 +76,10 @@ public class ToolListener implements Listener {
             }
         }
 
-        if ( h != null && h == EquipmentSlot.OFF_HAND ) {
+        if ( h != null &&  h == EquipmentSlot.OFF_HAND && ( action == Action.RIGHT_CLICK_BLOCK || action == Action.RIGHT_CLICK_AIR ) ) {
             ItemStack offhand = p.getInventory().getItemInOffHand();
             ItemStack main = p.getInventory().getItemInMainHand();
-            if ( offhand != null && main.getItemMeta() !=null ) {
+            if ( offhand != null && main.getItemMeta() != null ) {
                 List<String> lore = main.getItemMeta().getLore();
                 if ( lore != null ) {
                     String loreCheck = lore.get( 0 );

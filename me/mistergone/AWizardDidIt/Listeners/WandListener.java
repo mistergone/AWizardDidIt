@@ -10,6 +10,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
@@ -26,8 +27,10 @@ public class WandListener implements Listener {
     public void PlayerInteractEvent(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         EquipmentSlot h = e.getHand();
+        Action action = e.getAction();
+        Boolean isLeftClick = action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK;
 
-        if ( h != null && h == EquipmentSlot.HAND ) {
+        if ( h != null && isLeftClick ) {
             ItemStack main =  e.getItem();
             if ( main != null &&  main.getType() == Material.STICK &&  main.getAmount() == 1) {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
@@ -38,9 +41,7 @@ public class WandListener implements Listener {
                     Chest chest = (org.bukkit.block.Chest) e.getClickedBlock().getState();
                     MagicChest magicChest = new MagicChest(chest);
                     String[] pattern = magicChest.getPattern();
-
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
-
                     Boolean wandOrEnchant = magicPattern instanceof EnchantWand || MagicWand.isActuallyAWand(main);
 
                     // Run the MagicFunction
@@ -68,7 +69,7 @@ public class WandListener implements Listener {
 //                    Sign sign = (Sign)state;
 
 
-                } else if ( MagicWand.isActuallyAWand( main )) {
+                } else if ( MagicWand.isActuallyAWand( main ) ) {
                     // If you just wave a magic wand around, magic might happen!
                     ItemStack offItem = p.getInventory().getItemInOffHand();
                     MagicSpell magicSpell = null;
