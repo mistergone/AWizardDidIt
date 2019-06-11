@@ -32,7 +32,7 @@ public class FreezeOver extends MagicSpell {
                 ArrayList<Block> blockBox = new ArrayList<>();
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
 
-                if ( targetBlock.getType() == Material.WATER ) {
+                if ( targetBlock.getType() == Material.WATER && wizardPlayer.spendWizardPower( cost ) ) {
                     if ( targetBlock.getRelative( BlockFace.UP ).getType() == Material.AIR ) {
                         blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
                         for ( Block block : blockBox ) {
@@ -51,6 +51,12 @@ public class FreezeOver extends MagicSpell {
                             wizardPlayer.addMsgCooldown( spellName + " (warn)", 30 );
                         }
                     }
+                } else {
+                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                    }
+                    return;
                 }
             }
         };

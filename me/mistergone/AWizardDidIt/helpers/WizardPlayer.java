@@ -228,7 +228,6 @@ public class WizardPlayer {
              return true;
          } else {
              checkLastSave();
-             player.sendMessage(ChatColor.RED + "You do not have enough Wizard Power!");
              return false;
          }
      }

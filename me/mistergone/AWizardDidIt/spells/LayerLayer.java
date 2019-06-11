@@ -23,6 +23,7 @@ public class LayerLayer extends MagicSpell {
     public LayerLayer() {
         spellName = "Layer Layer";
         cost = 0;
+        int toolUseCost = 10;
         reagents = new ArrayList<String>();
         reagents.add( "COBBLESTONE_SLAB" );
         reagents.add( "SANDSTONE_SLAB" );
@@ -87,56 +88,9 @@ public class LayerLayer extends MagicSpell {
 
                 // Handle the blockBox
                 for ( Block b : blockBox ) {
-                    // Check if player ran out of layerItem
-                    if ( b != null && player.getInventory().getItem( layerSlot ) == null ) {
-                        for ( int i = layerSlot + 1; i < 9; i++ ) {
-                            if ( player.getInventory().getItem( i ) != null && player.getInventory().getItem( i ).getType() == layerType ) {
-                                int count = player.getInventory().getItem( i ).getAmount();
-                                ItemStack moved = new ItemStack( layerType, count );
-                                player.getInventory().setItem( layerSlot, moved );
-                                player.getInventory().setItem( i, null );
-                                break;
-                            }
-                        }
-                    }
-
-                    if ( b != null && player.getInventory().getItem( layerSlot ) != null ) {
-                        Boolean isAir = BlockManager.airTypes.contains( b.getType() );
-                        Boolean sameType = layerType == b.getType();
-                        layerItem = player.getInventory().getItem( layerSlot );
-                        if ( b.getType() == Material.BEDROCK ) continue;
-                        if ( replaceAll  ) {
-                            if ( !sameType ) {
-                                if ( !silkTouch ) {
-                                    b.breakNaturally();
-                                } else {
-                                    if ( BlockManager.isSilkyPickType( b.getType() ) ) {
-                                        ItemStack drop = new ItemStack( b.getType() );
-                                        loc.getWorld().dropItem( loc, drop );
-                                    } else {
-                                        b.breakNaturally();
-                                    }
-                                }
-                                b.setType( layerType );
-                                // Reduce stack
-                                if ( layerItem.getAmount() > 1 ) {
-                                    layerItem.setAmount( layerItem.getAmount() - 1 );
-                                } else if ( layerItem.getAmount() == 1 ) {
-                                    player.getInventory().setItem( layerSlot, null );
-                                }
-                            }
-                        } else if ( isAir ){
-                            b.setType( layerType );
-                            // Reduce stack
-                            if ( layerItem.getAmount() > 1 ) {
-                                layerItem.setAmount( layerItem.getAmount() - 1 );
-                            } else if ( layerItem.getAmount() == 1 ) {
-                                player.getInventory().setItem( layerSlot, null );
-                            }
-                        }
-
-                        // If layerSlot is null, look for more layerItem in the hotbar, and move it to layerSlot
-                        if ( player.getInventory().getItem( layerSlot ) == null ) {
+                    if ( wizardPlayer.spendToolUse( toolUseCost ) ) {
+                        // Check if player ran out of layerItem
+                        if ( b != null && player.getInventory().getItem( layerSlot ) == null ) {
                             for ( int i = layerSlot + 1; i < 9; i++ ) {
                                 if ( player.getInventory().getItem( i ) != null && player.getInventory().getItem( i ).getType() == layerType ) {
                                     int count = player.getInventory().getItem( i ).getAmount();
@@ -148,15 +102,68 @@ public class LayerLayer extends MagicSpell {
                             }
                         }
 
-                        SpecialEffects.magicPoof( clickedBlock.getLocation() );
-                        if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                            player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
-                            wizardPlayer.addMsgCooldown( spellName, 30 );
+                        if ( b != null && player.getInventory().getItem( layerSlot ) != null ) {
+                            Boolean isAir = BlockManager.airTypes.contains( b.getType() );
+                            Boolean sameType = layerType == b.getType();
+                            layerItem = player.getInventory().getItem( layerSlot );
+                            if ( b.getType() == Material.BEDROCK ) continue;
+                            if ( replaceAll  ) {
+                                if ( !sameType ) {
+                                    if ( !silkTouch ) {
+                                        b.breakNaturally();
+                                    } else {
+                                        if ( BlockManager.isSilkyPickType( b.getType() ) ) {
+                                            ItemStack drop = new ItemStack( b.getType() );
+                                            loc.getWorld().dropItem( loc, drop );
+                                        } else {
+                                            b.breakNaturally();
+                                        }
+                                    }
+                                    b.setType( layerType );
+                                    // Reduce stack
+                                    if ( layerItem.getAmount() > 1 ) {
+                                        layerItem.setAmount( layerItem.getAmount() - 1 );
+                                    } else if ( layerItem.getAmount() == 1 ) {
+                                        player.getInventory().setItem( layerSlot, null );
+                                    }
+                                }
+                            } else if ( isAir ){
+                                b.setType( layerType );
+                                // Reduce stack
+                                if ( layerItem.getAmount() > 1 ) {
+                                    layerItem.setAmount( layerItem.getAmount() - 1 );
+                                } else if ( layerItem.getAmount() == 1 ) {
+                                    player.getInventory().setItem( layerSlot, null );
+                                }
+                            }
+
+                            // If layerSlot is null, look for more layerItem in the hotbar, and move it to layerSlot
+                            if ( player.getInventory().getItem( layerSlot ) == null ) {
+                                for ( int i = layerSlot + 1; i < 9; i++ ) {
+                                    if ( player.getInventory().getItem( i ) != null && player.getInventory().getItem( i ).getType() == layerType ) {
+                                        int count = player.getInventory().getItem( i ).getAmount();
+                                        ItemStack moved = new ItemStack( layerType, count );
+                                        player.getInventory().setItem( layerSlot, moved );
+                                        player.getInventory().setItem( i, null );
+                                        break;
+                                    }
+                                }
+                            }
+
+                            SpecialEffects.magicPoof( clickedBlock.getLocation() );
+                            if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
+                                player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
+                                wizardPlayer.addMsgCooldown( spellName, 5 );
+                            }
+                        } else {
+                            return;
                         }
                     } else {
-                        return;
+                        if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                            player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                            wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                        }
                     }
-
                 }
             }
         };

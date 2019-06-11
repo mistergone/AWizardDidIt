@@ -21,7 +21,7 @@ public class CharmVillager extends MagicSpell {
 
     public CharmVillager() {
         spellName = "Charm Villager";
-        cost = 5;
+        cost = 25;
         reagents = new ArrayList<String>();
         reagents.add( "EMERALD" );
 
@@ -29,7 +29,7 @@ public class CharmVillager extends MagicSpell {
           @Override
           public void run() {
               WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-              if ( wizardPlayer.spendWizardPower( cost ) && reagent.getAmount() >= 2) {
+              if ( wizardPlayer.spendWizardPower( cost ) && reagent.getAmount() >= 1 ) {
                   Location loc = clickedBlock.getRelative(BlockFace.UP, 1).getLocation();
                   loc.add(.5, 0, .5);
                   double theta = 0;
@@ -59,8 +59,8 @@ public class CharmVillager extends MagicSpell {
                               }
                           }
                           if (refreshed) {
-                              if (reagent.getAmount() >= 2) {
-                                  if (reagent.getAmount() > 2) {
+                              if (reagent.getAmount() >= 1) {
+                                  if (reagent.getAmount() > 1) {
                                       reagent.setAmount(reagent.getAmount() - 1);
                                   } else if (reagent.getAmount() == 1) {
                                       player.getInventory().setItemInOffHand(null);
@@ -72,17 +72,20 @@ public class CharmVillager extends MagicSpell {
                                   if (((Villager) e).getCustomName() != null) {
                                       name = ((Villager) e).getCustomName();
                                   }
-                                  player.sendMessage(ChatColor.RED + "You do not have the 2 Emeralds needed in your off hand to charm "
+                                  player.sendMessage(ChatColor.RED + "You do not have the emerald needed in your off hand to charm "
                                           + name + ".");
                               }
                           }
                       }
                   }
-              } else if ( reagent.getAmount() < 10 ) {
-                  player.sendMessage( ChatColor.RED + "You don't have the 10 emeralds in your offhand needed to charm villagers." );
+              } else if ( reagent.getAmount() < 1 ) {
+                  player.sendMessage( ChatColor.RED + "You don't have the emerald in your offhand needed to charm villagers." );
                   return;
               } else {
-                  player.sendMessage(ChatColor.RED + "You do not have enough Wizard Power to invoke " + spellName + ".");
+                  if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                      player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                      wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                  }
                   return;
               }
 

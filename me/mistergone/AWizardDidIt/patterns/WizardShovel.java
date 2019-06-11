@@ -100,7 +100,11 @@ public class WizardShovel extends ToolPattern {
                             if ( wizardPlayer.spendToolUse( toolCost ) ) {
                                 b.breakNaturally(player.getInventory().getItemInMainHand());
                             } else {
-                                player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
+                                if ( !wizardPlayer.checkMsgCooldown( patternName + "OOM") ) {
+                                    player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + patternName );
+                                    wizardPlayer.addMsgCooldown(patternName + "OOM", 5 );
+                                }
+                                break;
                             }
                         }
                     }

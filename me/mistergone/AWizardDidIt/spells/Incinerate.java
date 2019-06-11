@@ -3,6 +3,7 @@ package me.mistergone.AWizardDidIt.spells;
 import me.mistergone.AWizardDidIt.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.SmallFireball;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
@@ -29,7 +30,7 @@ public class Incinerate extends MagicSpell {
 //                Entity ent = Targeter.getTargetEntity( player );
 //                SmallFireball fireball = (SmallFireball)player.getWorld().spawnEntity( player.getEyeLocation(), EntityType.SMALL_FIREBALL );
 //                fireball.setDirection( player.getLocation().getDirection() );
-                if (wizardPlayer.spendWizardPower(cost)) {
+                if ( wizardPlayer.spendWizardPower( cost ) ) {
                     Vector v = new Vector();
                     int xFactor = 1;
                     int zFactor = 1;
@@ -62,7 +63,14 @@ public class Incinerate extends MagicSpell {
                     fireball.setShooter( (ProjectileSource)player );
                     fireball.setVelocity( v );
 
+                } else {
+                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                    }
                 }
+
+
 
 
 //                if ( ent instanceof Monster && wizardPlayer.spendWizardPower( cost ) ) {

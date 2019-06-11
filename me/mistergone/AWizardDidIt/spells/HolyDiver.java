@@ -21,10 +21,10 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
  */
 public class HolyDiver extends MagicSpell {
     public HolyDiver() {
-        spellName = "Mighty Leap";
+        spellName = "Holy Diver";
         reagents = new ArrayList<String>();
         reagents.add( "TROPICAL_FISH" );
-        cost = 5;
+        cost = 10;
 
         spellFunction = new SpellFunction() {
           @Override
@@ -47,7 +47,7 @@ public class HolyDiver extends MagicSpell {
                   double angle = Math.round(player.getLocation().getYaw());
 
                   double speed = 0.75;
-                  double pitch = -1 * Math.round(player.getLocation().getPitch() );
+                  double pitch = Math.toRadians( -1 * Math.round( player.getLocation().getPitch() ) );
                   if (angle >= 270) {
                       angle = Math.toRadians(Math.abs(angle - 360));
                   } else if (angle >= 180) {
@@ -63,7 +63,7 @@ public class HolyDiver extends MagicSpell {
                   }
 
                   v.setX(Math.sin(angle) * speed * xFactor);
-                  v.setY(Math.sin(Math.toRadians(pitch)) * speed);
+                  v.setY(Math.sin(pitch) * speed);
                   v.setZ(Math.cos(angle) * speed * zFactor);
 
                   player.setVelocity(v);
@@ -79,6 +79,12 @@ public class HolyDiver extends MagicSpell {
                   if ( wizardPlayer.spendWizardPower( gasp / 10000 ) ) {
                       player.setRemainingAir( player.getMaximumAir() );
                   }
+              } else {
+                  if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                      player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                      wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                  }
+                  return;
               }
           }
         };

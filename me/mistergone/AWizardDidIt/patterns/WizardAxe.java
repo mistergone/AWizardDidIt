@@ -74,7 +74,6 @@ public class WizardAxe extends ToolPattern {
                 if ( !player.isSneaking() ) {
                     // TODO - Add a "normal mode" and a "tree feller mode" (and maybe a "leaf blower" mode?)
                     // TODO - Collect blocks first, then determine cost
-                    // TODO - When tree felling, decay leaves in a larger radius if those leaves are far from a log
                     WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                     Material choppedType = blockBreakEvent.getBlock().getType();
 
@@ -125,7 +124,10 @@ public class WizardAxe extends ToolPattern {
 
 
                         } else {
-                            player.sendMessage( "You lack the Wizard Power to use " + patternName + ".");
+                            if ( !wizardPlayer.checkMsgCooldown( patternName + "OOM") ) {
+                                player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + patternName );
+                                wizardPlayer.addMsgCooldown(patternName + "OOM", 5 );
+                            }
                         }
                     }
 

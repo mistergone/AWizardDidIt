@@ -18,6 +18,7 @@ public class AlfsActionArrow extends MagicSpell {
     public AlfsActionArrow() {
         spellName = "Alf's Action Arrow";
         cost = 5;
+        int throwCost = 1;
         reagents = new ArrayList<String>();
         reagents.add("ARROW");
 
@@ -26,11 +27,9 @@ public class AlfsActionArrow extends MagicSpell {
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer(player.getUniqueId());
                 int reagentCount = reagent.getAmount();
-                if ( wizardPlayer.getWizardPower() >= cost || reagentCount > 1 ) {
+                if ( ( reagentCount > 1 && wizardPlayer.spendWizardPower( throwCost ) ) || wizardPlayer.spendWizardPower( cost ) ) {
                     if ( reagentCount > 1 ) {
                         reagent.setAmount( reagentCount - 1 );
-                    } else {
-                        wizardPlayer.spendWizardPower( cost );
                     }
 
                     if ( wizardPlayer.checkSpell( spellName ) ) {
@@ -77,7 +76,10 @@ public class AlfsActionArrow extends MagicSpell {
                     arrow.setShooter((ProjectileSource) player);
                     arrow.setVelocity(v);
                 } else {
-                    wizardPlayer.spendWizardPower( cost );
+                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                    }
                 }
 
             }
