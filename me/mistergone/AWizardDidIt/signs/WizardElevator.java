@@ -108,7 +108,7 @@ public class WizardElevator extends MagicSign {
                 return false;
             } else {
 
-                if ( lines[0].equals( signature ) ) {
+                if ( ChatColor.stripColor( lines[0] ).equals( signature ) ) {
                     return true;
                 }
             }
@@ -122,6 +122,11 @@ public class WizardElevator extends MagicSign {
     public static void handleSignEvent(SignChangeEvent event) {
         String[] lines = event.getLines();
         Player p = event.getPlayer();
+
+        lines[0] = "[" + ChatColor.DARK_PURPLE + "WizardElevator" + ChatColor.BLACK + "]";
+        lines[1] = "";
+        lines[2] = ChatColor.GREEN + "Wand=UP";
+        lines[3] = ChatColor.RED + "Shift+Wand=DOWN";
 
     }
 

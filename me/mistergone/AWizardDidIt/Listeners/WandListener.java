@@ -36,8 +36,7 @@ public class WandListener implements Listener {
         if ( h != null && isLeftClick ) {
             ItemStack main =  e.getItem();
             Block clickedBlock = e.getClickedBlock();
-            if ( clickedBlock == null ) return;
-            Material clickedMaterial = clickedBlock.getType();
+            Material clickedMaterial = clickedBlock != null  ? clickedBlock.getType() : null;
 
             if ( main != null &&  main.getType() == Material.STICK &&  main.getAmount() == 1 ) {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
@@ -74,7 +73,7 @@ public class WandListener implements Listener {
                     Sign sign = (Sign)state;
                     String[] lines = sign.getLines();
                     if ( lines[0] == null ) return;
-                    String signature = lines[0].trim();
+                    String signature = ChatColor.stripColor( lines[0].trim() );
 
                     MagicSign magicSign = wizardry.getMagicSign( signature );
                     if ( magicSign != null ) {

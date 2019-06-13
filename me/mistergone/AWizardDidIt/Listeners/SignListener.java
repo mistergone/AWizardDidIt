@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.Listeners;
 
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.patterns.UnseenArchitect;
+import me.mistergone.AWizardDidIt.signs.WizardElevator;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
@@ -30,7 +31,7 @@ public class SignListener implements Listener {
         if ( lines[0].equals("[UnseenArchitect]") ) {
             UnseenArchitect.handleSignEvent( event );
         } else if ( lines[0].equals("[WizardElevator]") ) {
-            Bukkit.broadcastMessage("ELEVATE!");
+            WizardElevator.handleSignEvent( event );
         }
 
     }
