@@ -5,7 +5,10 @@ import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import org.bukkit.*;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockState;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -32,20 +35,24 @@ public class WandListener implements Listener {
 
         if ( h != null && isLeftClick ) {
             ItemStack main =  e.getItem();
-            if ( main != null &&  main.getType() == Material.STICK &&  main.getAmount() == 1) {
+            Block clickedBlock = e.getClickedBlock();
+            if ( clickedBlock == null ) return;
+            Material clickedMaterial = clickedBlock.getType();
+
+            if ( main != null &&  main.getType() == Material.STICK &&  main.getAmount() == 1 ) {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
 
                 // If a stick is used on a chest, it might be a Magic Pattern
-                if (e.getClickedBlock() != null && e.getClickedBlock().getType() == Material.CHEST) {
+                if ( clickedMaterial == Material.CHEST) {
                     e.setCancelled(true);
-                    Chest chest = (org.bukkit.block.Chest) e.getClickedBlock().getState();
+                    Chest chest = (org.bukkit.block.Chest) clickedBlock.getState();
                     MagicChest magicChest = new MagicChest(chest);
                     String[] pattern = magicChest.getPattern();
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
                     Boolean wandOrEnchant = magicPattern instanceof EnchantWand || MagicWand.isActuallyAWand(main);
 
                     // Run the MagicFunction
-                    if (magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant) {
+                    if ( magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant ) {
                         try {
                             PatternFunction function = magicPattern.getMagicFunction();
                             function.setPlayer(p);
@@ -62,13 +69,30 @@ public class WandListener implements Listener {
                         p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                     }
 
-//                } else if ( e.getClickedBlock()!= null && e.getClickedBlock().getType() == Material.WALL_SIGN ) {
-//                    // Signs might do cool stuff
-//                    Block b = e.getClickedBlock();
-//                    BlockState state = b.getState();
-//                    Sign sign = (Sign)state;
+                } else if ( Tag.WALL_SIGNS.isTagged( clickedMaterial ) ) {
+                    BlockState state = clickedBlock.getState();
+                    Sign sign = (Sign)state;
+                    String[] lines = sign.getLines();
+                    if ( lines[0] == null ) return;
+                    String signature = lines[0].trim();
+
+                    MagicSign magicSign = wizardry.getMagicSign( signature );
+                    if ( magicSign != null ) {
+                        e.setCancelled(true);
+                        try {
+                            SignFunction function = magicSign.getSignFunction();
+                            function.setPlayer(p);
+                            function.setClickedBlock( clickedBlock );
+                            function.setEvent( e );
+                            function.setMagicWand( main );
+                            function.call();
+                        } catch ( Exception ex ) {
+                            ex.printStackTrace();
+                        }
+                    }
 
 
+                    return;
                 } else if ( MagicWand.isActuallyAWand( main ) ) {
                     // If you just wave a magic wand around, magic might happen!
                     ItemStack offItem = p.getInventory().getItemInOffHand();
@@ -97,12 +121,12 @@ public class WandListener implements Listener {
                             try {
                                 SpellFunction function = magicSpell.getSpellFunction();
                                 function.setPlayer(p);
-                                function.setClickedBlock(e.getClickedBlock());
+                                function.setClickedBlock( clickedBlock );
                                 function.setEvent( e );
                                 function.setMagicWand( main );
-                                function.setReagent(offItem);
+                                function.setReagent( offItem );
                                 function.call();
-                            } catch (Exception ex) {
+                            } catch ( Exception ex ) {
                                 ex.printStackTrace();
                             }
 

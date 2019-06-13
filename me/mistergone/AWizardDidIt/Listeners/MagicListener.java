@@ -52,10 +52,14 @@ public class MagicListener implements Listener {
     public void onEntityDamage( EntityDamageEvent event) {
         EntityDamageEvent.DamageCause cause = event.getCause();
         Boolean isFall = cause == EntityDamageEvent.DamageCause.FALL;
+        Boolean isSuff = cause == EntityDamageEvent.DamageCause.SUFFOCATION;
         Boolean isWall = cause == EntityDamageEvent.DamageCause.FLY_INTO_WALL;
-        if ( event.getEntity() instanceof Player && ( isFall || isWall ) ) {
-            Player player = (Player)event.getEntity();
-            WizardPlayer wizardPlayer = wizardry.getWizardPlayer( player.getUniqueId() );
+        if ( ! ( event.getEntity() instanceof Player ) ) return;
+
+        Player player = (Player)event.getEntity();
+        WizardPlayer wizardPlayer = wizardry.getWizardPlayer( player.getUniqueId() );
+        if ( event.getEntity() instanceof Player && ( isFall || isWall || isSuff) ) {
+
             if ( wizardPlayer.checkSpell("Mighty Leap") && isFall ) {
                 int damageCost = (int)Math.floor( event.getDamage() / 2 );
                 if ( wizardPlayer.spendWizardPower( damageCost ) ) {
@@ -70,6 +74,10 @@ public class MagicListener implements Listener {
                     wizardPlayer.getPlayer().sendMessage(ChatColor.DARK_PURPLE + "You lack the Wizard Power to be protected from the fall!");
                 }
                 wizardPlayer.removeSpell("Mighty Leap");
+
+            } else if ( isSuff && wizardPlayer.checkSpell( "Wizard Elevator" ) ) {
+                event.setCancelled( true );
+
             } else if ( wizardPlayer.checkSpell( "Cloud Rider" ) || wizardPlayer.checkSpell( "Cloud Rider (Gliding)" )
                     || wizardPlayer.checkSpell( "Cloud Rider (Grounded)" ) ) {
 

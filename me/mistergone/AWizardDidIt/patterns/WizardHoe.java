@@ -124,7 +124,7 @@ public class WizardHoe extends ToolPattern {
                                 block.breakNaturally();
                             }
 
-                        } else {
+                        } else if ( ( isFarmland || isCrop ) ) {
                             if ( !wizardPlayer.checkMsgCooldown( patternName + "OOM") ) {
                                 player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + patternName );
                                 wizardPlayer.addMsgCooldown(patternName + "OOM", 5 );

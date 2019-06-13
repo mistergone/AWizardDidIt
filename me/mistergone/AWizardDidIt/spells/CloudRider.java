@@ -134,7 +134,7 @@ public class CloudRider extends MagicSpell {
 
                 } else if ( !player.isOnGround() && !player.isGliding() && !wizardPlayer.getSpells().contains( spellName )
                         && !wizardPlayer.getSpells().contains( spellName + " (Gliding)" ) && wizardPlayer.spendWizardPower( slowFallCost) ) {
-                    PotionEffect slowFall = new PotionEffect(PotionEffectType.SLOW_FALLING, 100, 1 );
+                    PotionEffect slowFall = new PotionEffect(PotionEffectType.SLOW_FALLING, 200, 1 );
                     player.addPotionEffect( slowFall );
 
                     player.sendMessage( ChatColor.AQUA + "You have invoked " + spellName + " to slow your fall!" );

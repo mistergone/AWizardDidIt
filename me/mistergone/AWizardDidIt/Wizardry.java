@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt;
 
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.*;
+import me.mistergone.AWizardDidIt.signs.WizardElevator;
 import me.mistergone.AWizardDidIt.spells.*;
 
 import java.util.ArrayList;
@@ -14,6 +15,7 @@ public class Wizardry {
     private Map< UUID, WizardPlayer> wizardList;
     private Map< String, MagicSpell > spellList;
     private Map< String, MagicPattern > patternList;
+    private Map< String, MagicSign > signList;
     private ArrayList<String> reagentList;
     Map< String, ToolPattern > loreMap;
 
@@ -21,11 +23,13 @@ public class Wizardry {
         this.wizardList = new HashMap< UUID, WizardPlayer >();
         this.spellList = new HashMap< String, MagicSpell>();
         this.patternList = new HashMap< String, MagicPattern>();
+        this.signList = new HashMap< String, MagicSign>();
         this.loreMap = new HashMap<>();
         this.reagentList = new ArrayList<>();
         this.addLore();
         this.addSpells();
         this.addPatterns();
+        this.addSigns();
     }
 
 
@@ -46,6 +50,10 @@ public class Wizardry {
 
     public MagicSpell getMagicSpell( String reagent ) {
         return this.spellList.get( reagent );
+    }
+
+    public MagicSign getMagicSign( String signature ) {
+        return this.signList.get( signature );
     }
 
     public ArrayList<String> getReagentList() {
@@ -77,7 +85,7 @@ public class Wizardry {
 
     private void addSpells( ) {
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
-        spellRegistry.add( new AlfsActionArrow() );
+        spellRegistry.add( new AlfsActionArrow()    );
         spellRegistry.add( new CharmVillager() );
         spellRegistry.add( new CloudRider() );
         spellRegistry.add( new FreezeOver() );
@@ -127,9 +135,17 @@ public class Wizardry {
                 }
                 this.patternList.put( pattern, magicPattern);
             }
-
         }
 
+    }
+
+    private void addSigns() {
+        ArrayList<MagicSign> signRegistry = new ArrayList<>();
+        signRegistry.add( new WizardElevator() );
+
+        for ( MagicSign magicSign: signRegistry) {
+            this.signList.put( magicSign.signature, magicSign );
+        }
     }
 
     private void addLore() {
