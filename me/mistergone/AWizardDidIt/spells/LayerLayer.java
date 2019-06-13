@@ -23,7 +23,7 @@ public class LayerLayer extends MagicSpell {
     public LayerLayer() {
         spellName = "Layer Layer";
         cost = 0;
-        int toolUseCost = 10;
+        int toolUseCost = 2;
         reagents = new ArrayList<String>();
         reagents.add( "COBBLESTONE_SLAB" );
         reagents.add( "SANDSTONE_SLAB" );

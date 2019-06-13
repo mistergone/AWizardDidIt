@@ -47,6 +47,11 @@ public class Thunderhorse extends MagicSpell {
                     horsie.addPassenger( player );
 
                     wizardPlayer.addSpell( "Thunderhorse" );
+                }  else {
+                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                    }
                 }
 
             }

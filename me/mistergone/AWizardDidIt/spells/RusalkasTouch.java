@@ -24,7 +24,7 @@ public class RusalkasTouch extends MagicSpell {
 
     public RusalkasTouch() {
         spellName = "Rusalka's Touch";
-        cost = 0;
+        cost = 1;
         reagents = new ArrayList<String>();
         reagents.add( "BUCKET" );
         reagents.add( "WATER_BUCKET" );
@@ -33,44 +33,52 @@ public class RusalkasTouch extends MagicSpell {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                if ( reagent.getType() == Material.BUCKET ) {
-                    // Remove water!
-                    Block targetBlock = player.getTargetBlock( null, 10 );
-                    if ( targetBlock.getType() == Material.WATER ) {
-                        Location loc = player.getLocation();
-                        BlockFace face = BlockManager.yawToFace( loc.getYaw() );
-                        if ( loc.getPitch() > 45 ) {
-                            face = BlockFace.DOWN;
-                        } else if ( loc.getPitch() < -45 ) {
-                            face = BlockFace.UP;
-                        }
-                        ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
-                        for ( Block block : blockBox ) {
-                            if ( block.getType() == Material.WATER ) {
-                                block.setType( Material.AIR );
+                if ( wizardPlayer.spendWizardPower( cost ) ) {
+                    if ( reagent.getType() == Material.BUCKET ) {
+                        // Remove water!
+                        Block targetBlock = player.getTargetBlock( null, 10 );
+                        if ( targetBlock.getType() == Material.WATER ) {
+                            Location loc = player.getLocation();
+                            BlockFace face = BlockManager.yawToFace( loc.getYaw() );
+                            if ( loc.getPitch() > 45 ) {
+                                face = BlockFace.DOWN;
+                            } else if ( loc.getPitch() < -45 ) {
+                                face = BlockFace.UP;
+                            }
+                            ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
+                            for ( Block block : blockBox ) {
+                                if ( block.getType() == Material.WATER ) {
+                                    block.setType( Material.AIR );
+                                }
                             }
                         }
-                    }
 
-                } else if ( reagent.getType() == Material.WATER_BUCKET ) {
-                    // Repair water!
-                    Block targetBlock = player.getTargetBlock( null, 10 );
-                    if ( targetBlock.getType() == Material.WATER ) {
-                        BlockFace face = BlockManager.yawToFace( player.getLocation().getYaw() );
-                        ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
-                        for ( Block block : blockBox ) {
-                            if ( block.getType() == Material.WATER ) {
-                                block.setType( Material.WATER );
+                    } else if ( reagent.getType() == Material.WATER_BUCKET ) {
+                        // Repair water!
+                        Block targetBlock = player.getTargetBlock( null, 10 );
+                        if ( targetBlock.getType() == Material.WATER ) {
+                            BlockFace face = BlockManager.yawToFace( player.getLocation().getYaw() );
+                            ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
+                            for ( Block block : blockBox ) {
+                                if ( block.getType() == Material.WATER ) {
+                                    block.setType( Material.WATER );
+                                }
                             }
                         }
-                    }
 
+                    }
+                    SpecialEffects.magicPoof( clickedBlock.getLocation() );
+                    if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
+                        player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
+                        wizardPlayer.addMsgCooldown( spellName, 30 );
+                    }
+                }  else {
+                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                    }
                 }
-                SpecialEffects.magicPoof( clickedBlock.getLocation() );
-                if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                    player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
-                    wizardPlayer.addMsgCooldown( spellName, 30 );
-                }
+
 
 
             }

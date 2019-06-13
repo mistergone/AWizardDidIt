@@ -89,6 +89,11 @@ public class MightyLeap extends MagicSpell {
                     player.setVelocity(v);
 
                     wizardPlayer.setSpellTimer( spellName, 200 );
+                } else if ( player.isOnGround() ) {
+                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
+                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
+                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
+                    }
                 }
             }
         };
