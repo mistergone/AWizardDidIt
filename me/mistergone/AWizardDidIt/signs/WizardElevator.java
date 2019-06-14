@@ -4,6 +4,7 @@ import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.MagicSign;
 import me.mistergone.AWizardDidIt.helpers.SignFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import me.mistergone.AWizardDidIt.spells.CharmVillager;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -14,6 +15,8 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
+
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
@@ -33,46 +36,65 @@ public class WizardElevator extends MagicSign {
                 Block destination = findDestination( clickedBlock, direction, player );
                 if ( destination == null ) return;
 
-                moveIt( player, destination, clickedBlock );
+                moveIt( wizardPlayer, destination, clickedBlock );
 
             }
         };
     }
 
-    private void moveIt( Player player, Block destination, Block clickedBlock ) {
+    private void moveIt( WizardPlayer wizardPlayer, Block destination, Block clickedBlock ) {
         AWizardDidIt plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
+        Player p = wizardPlayer.getPlayer();
         final Location newLoc = destination.getLocation();
+        final AtomicInteger stuckCount = new AtomicInteger();
         Location startingPoint = clickedBlock.getLocation().add( 0.5,-1,0.5 );
-        startingPoint.setPitch( player.getLocation().getPitch() );
-        startingPoint.setYaw( player.getLocation().getYaw() );
-        player.teleport( startingPoint );
+        startingPoint.setPitch( p.getLocation().getPitch() );
+        startingPoint.setYaw( p.getLocation().getYaw() );
+        p.teleport( startingPoint );
+        p.setAllowFlight( true );
 
         new BukkitRunnable(){
             @Override
             public void run() {
 
-                player.setFallDistance(0f);
+                p.setFallDistance(0f);
 
-                if ( Math.abs( newLoc.getY() - player.getLocation().getY() ) < .7 ) {
+                // Stuck check - sometimes, the player gets stuck under a black, so we check
+                // to see if the player is possibly stuck, and teleport them if stuck
+                if ( p.getLocation().getY() == wizardPlayer.getLastKnownLocation().getY() ) {
+                    stuckCount.incrementAndGet();
+                } else {
+                    stuckCount.set( 0 );
+                }
+                if ( stuckCount.intValue() > 10 ) {
+                    p.teleport( p.getLocation().add( 0, .5, 0 ) );
+                }
+                wizardPlayer.setLastKnownLocation( p.getLocation() );
+
+                if ( Math.abs( newLoc.getY() - p.getLocation().getY() ) < .7 ) {
                     Location endLoc = destination.getLocation().add(0.5,-1,0.5);
-                    endLoc.setYaw( player.getLocation().getYaw() );
-                    endLoc.setPitch( player.getLocation().getPitch() );
-                    player.teleport( endLoc );
-                    getWizardry().getWizardPlayer( player.getUniqueId() ).removeSpell( signName );
+                    endLoc.setYaw( p.getLocation().getYaw() );
+                    endLoc.setPitch( p.getLocation().getPitch() );
+                    p.teleport( endLoc );
+                   wizardPlayer.removeSpell( signName );
+                    if ( p.getGameMode() != GameMode.CREATIVE ) {
+                        p.setAllowFlight( false );
+                    }
                     cancel();
                     return;
-                } else if ( newLoc.getY() > player.getLocation().getY() ) {
-                    player.setVelocity( new Vector(0, 0.5,0) );
-                    if ( player.getLocation().add( 0, 2, 0).getBlock().getType().isSolid() ) {
-                        player.teleport( player.getLocation().add( 0, 1, 0 ) );
+                } else if ( newLoc.getY() > p.getLocation().getY() ) {
+                    p.setVelocity( new Vector(0, 0.5,0) );
+                    if ( p.getLocation().add( 0, 2, 0).getBlock().getType().isSolid() ) {
+                        p.teleport( p.getLocation().add( 0, 1, 0 ) );
                     }
-                } else if ( newLoc.getY() < player.getLocation().getY() ) {
-                    player.setVelocity(new Vector(0, -0.5,0));
-                    if ( player.getLocation().add( 0,-1,0 ).getBlock().getType().isSolid() ) {
-                        player.teleport( player.getLocation().add( 0, -1, 0 ) );
+                } else if ( newLoc.getY() < p.getLocation().getY() ) {
+                    p.setVelocity(new Vector(0, -0.5,0));
+                    if ( p.getLocation().add( 0,-1,0 ).getBlock().getType().isSolid() ) {
+                        p.teleport( p.getLocation().add( 0, -1, 0 ) );
                     }
                 } else {
-                    player.teleport( destination.getLocation().add( 0, -1, 0 ) );
+                    // Something weird has happened?
+                    p.teleport( destination.getLocation().add( 0, -1, 0 ) );
                 }
             }
         }.runTaskTimer( plugin, 5, 1 );
@@ -84,13 +106,20 @@ public class WizardElevator extends MagicSign {
 
         while( true ) {
             destination = destination.getRelative( next );
+            // TODO: Refactor the following IF statement into a function
+            if ( destination.getType() == Material.FIRE || destination.getType() == Material.LAVA || destination.getType() == Material.SWEET_BERRY_BUSH ) {
+                p.sendMessage(ChatColor.RED + "The elevator path is not safe! No transit in that direction is possible." );
+                return null;
+            }
             if ( isElevatorSign( destination ) ) {
-                if ( destination.getRelative( BlockFace.DOWN ).getType() == Material.AIR &&
-                    destination.getRelative( BlockFace.DOWN ).getRelative( BlockFace.DOWN ).getType().isSolid() ) {
+                Material footType = destination.getRelative( BlockFace.DOWN ).getType();
+                Material floorType = destination.getRelative( BlockFace.DOWN ).getRelative( BlockFace.DOWN ).getType();
+                if ( !footType.isSolid() && footType != Material.LAVA && footType != Material.FIRE &&
+                        floorType.isSolid() && floorType != Material.MAGMA_BLOCK ) {
                     break;
                 }
             } else if ( destination.getY() == start.getWorld().getMaxHeight() || destination.getY() == 0 ) {
-                p.sendMessage( "No valid destination found!" );
+                p.sendMessage( ChatColor.RED + "No valid destination found!" );
                 return null;
             }
         }
@@ -124,7 +153,6 @@ public class WizardElevator extends MagicSign {
         Player p = event.getPlayer();
 
         lines[0] = "[" + ChatColor.DARK_PURPLE + "WizardElevator" + ChatColor.BLACK + "]";
-        lines[1] = "";
         lines[2] = ChatColor.GREEN + "Wand=UP";
         lines[3] = ChatColor.RED + "Shift+Wand=DOWN";
 

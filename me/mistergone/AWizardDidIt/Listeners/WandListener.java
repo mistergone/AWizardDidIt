@@ -100,6 +100,7 @@ public class WandListener implements Listener {
                     if ( offItem == null || offItem.getType() == Material.AIR ) {
                         e.setCancelled(true);
                         wizardPlayer.showWizardBar();
+                        Bukkit.broadcastMessage( wizardPlayer.getSpells().toString() );
                     } else {
                         magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                         if (magicSpell == null) {

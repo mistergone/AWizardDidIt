@@ -3,6 +3,7 @@ package me.mistergone.AWizardDidIt.helpers;
 import me.mistergone.AWizardDidIt.AWizardDidIt;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
@@ -15,6 +16,7 @@ import org.bukkit.scheduler.BukkitTask;
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class WizardPlayer {
@@ -28,6 +30,7 @@ public class WizardPlayer {
     UnseenAssistant unseenAssistant;
     HashMap< String, BukkitTask > spellTimers;
     BlockFace lastFaceToolClicked;
+    Location lastKnownLocation;
     int wizardToolUses;
     int unseenEnergy;
     long lastSaved;
@@ -47,6 +50,7 @@ public class WizardPlayer {
         this.plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
         this.lastSaved = System.currentTimeMillis();
         this.wizardToolUses = 0;
+        this.lastKnownLocation = player.getLocation();
     }
 
     /**
@@ -295,6 +299,7 @@ public class WizardPlayer {
             playerDataConfig = new YamlConfiguration();
             try {
                 playerDataConfig.createSection("Wizard Power");
+                playerDataConfig.createSection("Active Spells");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -305,6 +310,7 @@ public class WizardPlayer {
          // Write data to file
         try {
             playerDataConfig.set("Wizard Power", getWizardPower() );
+            playerDataConfig.set( "Active Spells", getSpells() );
             playerDataConfig.save( playerDataFile );
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -330,8 +336,13 @@ public class WizardPlayer {
             try {
                 fileConfiguration.load( playerDataFile );
                 String power = fileConfiguration.getString( "Wizard Power");
+                List<String> activeSpells = fileConfiguration.getStringList( "Active Spells" );
                 try {
                     this.wizardPower = Integer.parseInt( power );
+                    for ( String str: activeSpells ) {
+                        this.addSpell( str );
+                    }
+
                 } catch (Exception e) {
                     e.printStackTrace();
                 }
@@ -377,4 +388,17 @@ public class WizardPlayer {
         this.unseenEnergy -= amount;
         return true;
     }
+
+
+    /*****##### Last Known Location #####*****/
+    // This exists to help unstick stuck players on WizardElevator, etc
+
+    public Location getLastKnownLocation() {
+        return this.lastKnownLocation;
+    }
+
+    public void setLastKnownLocation( Location loc ) {
+        this.lastKnownLocation = loc;
+    }
+
 }
