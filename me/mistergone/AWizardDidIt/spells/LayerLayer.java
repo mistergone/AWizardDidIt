@@ -5,16 +5,14 @@ import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
 import java.util.ArrayList;
+import java.util.Set;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
@@ -25,10 +23,16 @@ public class LayerLayer extends MagicSpell {
         cost = 0;
         int toolUseCost = 2;
         reagents = new ArrayList<String>();
-        reagents.add( "COBBLESTONE_SLAB" );
-        reagents.add( "SANDSTONE_SLAB" );
-        reagents.add( "COBBLESTONE_WALL" );
-        reagents.add( "STONE_SLAB");
+        // All SLABS are reagents for this spell
+        Set<Material> slabs = Tag.SLABS.getValues();
+        for ( Material slab : slabs ) {
+            reagents.add( slab.toString() );
+        }
+        // All WALLS are reagents for this spell
+        Set<Material> walls = Tag.WALLS.getValues();
+        for ( Material wall : walls ) {
+            reagents.add( wall.toString() );
+        }
 
         spellFunction = new SpellFunction() {
             @Override
@@ -53,11 +57,11 @@ public class LayerLayer extends MagicSpell {
                 Location loc = player.getLocation();
                 ArrayList<Block> blockBox = new ArrayList<>();
                 BlockFace facing = BlockManager.yawToFace( loc.getYaw() );
-                Boolean replaceAll = reagent.getType() == Material.COBBLESTONE_SLAB;
+                Boolean replaceAll = !reagent.getType().toString().contains( "SANDSTONE" );
                 Boolean silkTouch = false;
 
                 // Define the blockBox
-                if ( reagent.getType() == Material.COBBLESTONE_WALL ) {
+                if ( Tag.WALLS.isTagged( reagent.getType() ) ) {
                     Block targetBlock = clickedBlock.getRelative(BlockFace.UP, 2);
                     // If you didn't click the top face, then the clicked block is the bottom row
                     if ( event.getBlockFace() != BlockFace.UP ) {
@@ -70,7 +74,6 @@ public class LayerLayer extends MagicSpell {
                     } else {
                         blockBox = BlockManager.getSquareBoxFromFace(targetBlock, facing, 3, 1);
                     }
-                    replaceAll = true;
                 } else if ( reagent.getType() ==  Material.STONE_SLAB ){
                     blockBox.add( clickedBlock );
                     replaceAll = true;
@@ -104,6 +107,7 @@ public class LayerLayer extends MagicSpell {
 
                         if ( b != null && player.getInventory().getItem( layerSlot ) != null ) {
                             Boolean isAir = BlockManager.airTypes.contains( b.getType() );
+                            Boolean isSolid = b.getType().isSolid();
                             Boolean sameType = layerType == b.getType();
                             layerItem = player.getInventory().getItem( layerSlot );
                             if ( b.getType() == Material.BEDROCK ) continue;
@@ -127,7 +131,10 @@ public class LayerLayer extends MagicSpell {
                                         player.getInventory().setItem( layerSlot, null );
                                     }
                                 }
-                            } else if ( isAir ){
+                            } else if ( isAir || !isSolid ){
+                                if ( !isAir ) {
+                                    b.breakNaturally();
+                                }
                                 b.setType( layerType );
                                 // Reduce stack
                                 if ( layerItem.getAmount() > 1 ) {

@@ -19,6 +19,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.List;
+import java.util.Set;
+
 public class WandListener implements Listener {
     private Wizardry wizardry;
 
@@ -100,7 +103,6 @@ public class WandListener implements Listener {
                     if ( offItem == null || offItem.getType() == Material.AIR ) {
                         e.setCancelled(true);
                         wizardPlayer.showWizardBar();
-                        Bukkit.broadcastMessage( wizardPlayer.getSpells().toString() );
                     } else {
                         magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                         if (magicSpell == null) {

@@ -50,7 +50,7 @@ public class UnseenArchitect extends MagicPattern {
                     String projectName = ChatColor.stripColor( lines[1] ).toLowerCase();
                     String command = ChatColor.stripColor(lines[2]);
                     Boolean exists = lines[1] != null && getUnseenPM().checkProjectExists( player, projectName );
-                    Boolean isClone = command.substring( 0, 5 ).equalsIgnoreCase("clone");
+                    Boolean isClone = command.substring( 0, 5 ).equalsIgnoreCase( "clone" );
                     if ( isUA && exists ) {
                         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                         if ( wizardPlayer.getUnseenAssistant().getIsWorking() != null ) {
