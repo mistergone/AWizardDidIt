@@ -5,11 +5,13 @@ import org.bukkit.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.xml.sax.Locator;
 
 import java.io.File;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 
 public class UnseenProjectManager {
@@ -17,30 +19,15 @@ public class UnseenProjectManager {
     private static HashMap<String, Location[]> unseenProjectList;
     private static ArrayList<String> signTitles;
 
+    // TODO: The two points of a project should be in the same world, for sure. So check that.
+    // TODO: And if the two points are in the same world, no need to store them twice.
+
     private UnseenProjectManager() {
         unseenProjectList = new HashMap<>();
         ArrayList<String> badProjects = new ArrayList<>();
-        loadUnseenProjectList();
-        for ( String key : unseenProjectList.keySet() ) {
-            Location[] points = unseenProjectList.get( key );
-            if ( points[0] != null && Tag.SIGNS.isTagged( points[0].getBlock().getType() ) ) {
-                points[0] = null;
-            }
-            if ( points[1] != null && Tag.SIGNS.isTagged( points[1].getBlock().getType() ) ) {
-                points[1] = null;
-            }
-            if ( points[0] == null && points[1] == null ) {
-                badProjects.add( key );
-            }
-        }
-        for ( String badKey : badProjects ) {
-            unseenProjectList.remove( badKey );
-        }
 
         signTitles = new ArrayList<>();
         signTitles.add( ChatColor.DARK_RED + "[UnseenArchitect]" );
-
-
     }
 
     public static UnseenProjectManager getUnseenPM() {
@@ -58,15 +45,9 @@ public class UnseenProjectManager {
 
     /**
      * Removes project from unseenProjectList
-     * @param projectKey - Name of project to remove
+     * @param p - Player who owns the project
+     * @param projectName - Name of project to remove
      */
-    public void removeUnseenProject( String projectKey ) {
-        if ( unseenProjectList.containsKey( projectKey ) ) {
-            unseenProjectList.remove( projectKey );
-            saveUnseenProjectList();
-        }
-    }
-
     public void removeUnseenProject( Player p, String projectName ) {
         String projectKey = makeProjectString( p, projectName );
         if ( unseenProjectList.containsKey( projectKey ) ) {
@@ -97,11 +78,15 @@ public class UnseenProjectManager {
         saveUnseenProjectList();
     }
 
+    public HashMap<String, Location[]> getUnseenProjectList() {
+        return unseenProjectList;
+    }
+
     /**
      * Loads UnseenProject list
      * @return HashMap of ids and UnseenProject objects
      */
-    private void loadUnseenProjectList() {
+    public void loadUnseenProjectList() {
         File path = WizardryData.openWizardryFolder( "/" );
         String fileName = "unseen-projects.yml";
         FileConfiguration unseenDataConfig;
@@ -123,9 +108,32 @@ public class UnseenProjectManager {
                 }
                 Location[] locs = new Location[]{ loc1, loc2 };
                 unseenProjectList.put( projectKey, locs );
-
             }
         }
+        System.out.println( "Unseen Project List loaded...");
+
+    }
+
+    public void removeBadProjects() {
+        ArrayList<String> badProjects = new ArrayList<>();
+        for ( String key : unseenProjectList.keySet() ) {
+            Location[] points = unseenProjectList.get( key );
+            if ( points[0] != null && Tag.SIGNS.isTagged( points[0].getBlock().getType() ) ) {
+                points[0] = null;
+            }
+            if ( points[1] != null && Tag.SIGNS.isTagged( points[1].getBlock().getType() ) ) {
+                points[1] = null;
+            }
+            if ( points[0] == null && points[1] == null ) {
+                badProjects.add( key );
+            }
+        }
+        for ( String badKey : badProjects ) {
+            unseenProjectList.remove( badKey );
+        }
+
+        saveUnseenProjectList();
+
     }
 
     /**
@@ -176,5 +184,6 @@ public class UnseenProjectManager {
     public Boolean isUASign( String title ) {
         return signTitles.contains( title );
     }
+
 
 }

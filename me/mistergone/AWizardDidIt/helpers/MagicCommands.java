@@ -3,13 +3,18 @@ package me.mistergone.AWizardDidIt.helpers;
 // This Class exists mostly to debug stuff
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
+import java.util.HashMap;
+
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
+import static me.mistergone.AWizardDidIt.data.UnseenProjectManager.getUnseenPM;
 
 public class MagicCommands implements CommandExecutor {
 
@@ -24,6 +29,47 @@ public class MagicCommands implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("wizardry")) {
             if (args.length == 0) {
                 return false;
+                // "/wizard me" commands
+            } else if ( args.length >= 1 && args[0].equalsIgnoreCase( "loadtest" ) ) {
+                if ( sender instanceof Player ) {
+                    Player p = (Player) sender;
+                    HashMap<String, Location[]> map = getUnseenPM().getUnseenProjectList();
+                    for (String str : map.keySet()) {
+                        p.sendMessage("Found project " + str );
+                    }
+                }
+            } else if ( args.length >= 1 && args[0].equalsIgnoreCase( "tryload" ) ) {
+                getUnseenPM().loadUnseenProjectList();
+            } else if ( args.length >= 1 && args[0].equalsIgnoreCase( "me" ) ) {
+                if ( sender instanceof Player ) {
+                    Player p = (Player) sender;
+                    WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
+                    int wizardPower = wizardPlayer.getWizardPower();
+                    getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
+                    // Player typed /wizardry me
+                    if ( args.length == 1 ) {
+                        Bukkit.broadcastMessage( String.valueOf( args.length ) );
+                        p.sendMessage( ChatColor.LIGHT_PURPLE + "You have " + String.valueOf( wizardPower )
+                                +  " points of Wizard Power.");
+                        // TODO - Add tooluses to the printout? Maybe?
+                        if ( wizardPlayer.getSpells().size() > 0 ) {
+                            for ( String spell: wizardPlayer.getSpells() ) {
+                                p.sendMessage( ChatColor.AQUA + "You are under the effect of the spell " + ChatColor.GOLD
+                                        + spell );
+                            }
+                        }
+                        if ( wizardPlayer.getUnseenAssistant().getIsWorking() != null ) {
+                            p.sendMessage( ChatColor.YELLOW + wizardPlayer.getUnseenAssistant().getIsWorking() );
+                        }
+                        return true;
+                    } else if ( args.length == 2 && args[1].equalsIgnoreCase( "cancelUA" ) ) {
+                        wizardPlayer.getUnseenAssistant().cancelTask();
+                        p.sendMessage( ChatColor.YELLOW + "Your Unseen Assistant has cancelled its current task!");
+                    }
+                    return true;
+                } else {
+                    // A Player didn't send the command?
+                }
             } else if (args.length == 1 ) {
                 if (args[0].equalsIgnoreCase("version")) {
                     sender.sendMessage("This server is running version " + plugin.getDescription().getVersion());
@@ -35,23 +81,6 @@ public class MagicCommands implements CommandExecutor {
                         getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
                         p.sendMessage( "You have " + String.valueOf( wizardPower  )
                                 +  " points of Wizard Power.");
-                        return true;
-                    }
-                } else if (args[0].equalsIgnoreCase( "me" ) ) {
-                    if ( sender instanceof Player ) {
-                        Player p = (Player) sender;
-                        WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
-                        int wizardPower = wizardPlayer.getWizardPower();
-                        getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
-                        p.sendMessage( "You have " + String.valueOf( wizardPower )
-                                +  " points of Wizard Power.");
-                        // TODO - Add tooluses to the printout? Maybe?
-                        if ( wizardPlayer.getSpells().size() > 0 ) {
-                            for ( String spell: wizardPlayer.getSpells() ) {
-                                p.sendMessage( "You are under the effect of the spell " + ChatColor.GOLD
-                                        + spell );
-                            }
-                        }
                         return true;
                     }
                 }

@@ -152,6 +152,13 @@ public class WizardElevator extends MagicSign {
         String[] lines = event.getLines();
         Player p = event.getPlayer();
 
+        if ( !Tag.WALL_SIGNS.isTagged( event.getBlock().getType() ) ) {
+            p.sendMessage( ChatColor.RED + "Wizard Elevator must be a wall sign!");
+            lines[0] = "Wizard Elevator must";
+            lines[1] = "be a wall sign.";
+            return;
+        }
+
         lines[0] = "[" + ChatColor.DARK_PURPLE + "WizardElevator" + ChatColor.BLACK + "]";
         lines[2] = ChatColor.GREEN + "Wand=UP";
         lines[3] = ChatColor.RED + "Shift+Wand=DOWN";

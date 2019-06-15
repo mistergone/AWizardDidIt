@@ -5,10 +5,7 @@ import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import org.bukkit.*;
-import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
+import org.bukkit.block.*;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -21,6 +18,8 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
 import java.util.Set;
+
+import static me.mistergone.AWizardDidIt.data.UnseenProjectManager.getUnseenPM;
 
 public class WandListener implements Listener {
     private Wizardry wizardry;
@@ -36,7 +35,7 @@ public class WandListener implements Listener {
         Action action = e.getAction();
         Boolean isLeftClick = action == Action.LEFT_CLICK_AIR || action == Action.LEFT_CLICK_BLOCK;
 
-        if ( h != null && isLeftClick ) {
+        if ( h != null && h == EquipmentSlot.HAND && isLeftClick ) {
             ItemStack main =  e.getItem();
             Block clickedBlock = e.getClickedBlock();
             Material clickedMaterial = clickedBlock != null  ? clickedBlock.getType() : null;
@@ -47,7 +46,7 @@ public class WandListener implements Listener {
                 // If a stick is used on a chest, it might be a Magic Pattern
                 if ( clickedMaterial == Material.CHEST) {
                     e.setCancelled(true);
-                    Chest chest = (org.bukkit.block.Chest) clickedBlock.getState();
+                    Chest chest = (Chest) clickedBlock.getState();
                     MagicChest magicChest = new MagicChest(chest);
                     String[] pattern = magicChest.getPattern();
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
@@ -71,7 +70,7 @@ public class WandListener implements Listener {
                         p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                     }
 
-                } else if ( Tag.WALL_SIGNS.isTagged( clickedMaterial ) ) {
+                } else if ( Tag.WALL_SIGNS.isTagged( clickedMaterial ) || Tag.SIGNS.isTagged( clickedMaterial ) ) {
                     BlockState state = clickedBlock.getState();
                     Sign sign = (Sign)state;
                     String[] lines = sign.getLines();
@@ -80,7 +79,7 @@ public class WandListener implements Listener {
 
                     MagicSign magicSign = wizardry.getMagicSign( signature );
                     if ( magicSign != null ) {
-                        e.setCancelled(true);
+                        e.setCancelled( true );
                         try {
                             SignFunction function = magicSign.getSignFunction();
                             function.setPlayer(p);

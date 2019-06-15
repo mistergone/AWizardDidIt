@@ -45,7 +45,7 @@ public class WizardPick extends ToolPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
-                ItemStack pickaxe = magicChest.getChest().getBlockInventory().getItem( 10 );
+                ItemStack pickaxe = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = pickaxe.getItemMeta();
 
                 List<String> loreCheck = meta.getLore();

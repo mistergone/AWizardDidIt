@@ -47,7 +47,7 @@ public class WizardAxe extends ToolPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
-                ItemStack axe = magicChest.getChest().getBlockInventory().getItem( 10 );
+                ItemStack axe = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = axe.getItemMeta();
                 // TODO - Remove this legacy support for updating the old name, "Magic Axe"
                 List<String> loreCheck = meta.getLore();

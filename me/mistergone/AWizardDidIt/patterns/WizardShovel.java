@@ -44,7 +44,7 @@ public class WizardShovel extends ToolPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
-                ItemStack shovel = magicChest.getChest().getBlockInventory().getItem( 10 );
+                ItemStack shovel = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = shovel.getItemMeta();
                 List<String> loreCheck = meta.getLore();
                 if ( meta.getLore() == null ) {

@@ -1,6 +1,9 @@
 package me.mistergone.AWizardDidIt;
 
 import org.bukkit.block.Chest;
+import org.bukkit.block.DoubleChest;
+import org.bukkit.inventory.DoubleChestInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -20,7 +23,7 @@ public class MagicChest {
     }
 
     public String[] getPattern() {
-        ItemStack[] stuff = this.chest.getBlockInventory().getContents();
+        ItemStack[] stuff = this.chest.getInventory().getContents();
 
         String[] pattern = new String[9];
         for ( int i = 0; i < 9; i++ ) {
@@ -41,12 +44,12 @@ public class MagicChest {
         int[] slots = { 0, 1, 2, 9, 10, 11, 18, 19, 20 };
 
         for ( int slot: slots ) {
-            ItemStack item = chest.getBlockInventory().getItem( slot );
+            ItemStack item = chest.getInventory().getItem( slot );
             if ( item != null ) {
                 if ( item.getAmount() > 1 ) {
                     item.setAmount( item.getAmount() - 1 );
                 } else if ( item.getAmount() == 1 ) {
-                    chest.getBlockInventory().setItem( slot, null );
+                    chest.getInventory().setItem( slot, null );
                 }
             }
 
@@ -66,12 +69,12 @@ public class MagicChest {
             }
         }
         for ( int slot: slots ) {
-            ItemStack item = chest.getBlockInventory().getContents()[slot];
+            ItemStack item = chest.getInventory().getContents()[slot];
             if ( item != null ) {
                 if ( item.getAmount() > 1 ) {
                     item.setAmount( item.getAmount() - 1 );
                 } else if ( item.getAmount() == 1 ) {
-                    chest.getBlockInventory().setItem( slot, null );
+                    chest.getInventory().setItem( slot, null );
                 }
             }
 

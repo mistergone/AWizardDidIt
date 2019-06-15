@@ -1,8 +1,8 @@
 package me.mistergone.AWizardDidIt.Listeners;
 
 import me.mistergone.AWizardDidIt.Wizardry;
-import me.mistergone.AWizardDidIt.patterns.UnseenArchitect;
 import me.mistergone.AWizardDidIt.signs.WizardElevator;
+import me.mistergone.AWizardDidIt.signs.UnseenArchitect;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;

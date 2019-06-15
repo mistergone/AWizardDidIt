@@ -51,7 +51,7 @@ public class WizardHoe extends ToolPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
-                ItemStack hoe = magicChest.getChest().getBlockInventory().getItem( 10 );
+                ItemStack hoe = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = hoe.getItemMeta();
 
                 List<String> loreCheck = meta.getLore();

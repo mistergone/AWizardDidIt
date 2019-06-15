@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt;
 
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.*;
+import me.mistergone.AWizardDidIt.signs.UnseenArchitect;
 import me.mistergone.AWizardDidIt.signs.WizardElevator;
 import me.mistergone.AWizardDidIt.spells.*;
 
@@ -9,6 +10,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
+
+import static me.mistergone.AWizardDidIt.data.UnseenProjectManager.getUnseenPM;
 
 public class Wizardry {
     private static Wizardry wizardry = new Wizardry();
@@ -30,6 +33,7 @@ public class Wizardry {
         this.addSpells();
         this.addPatterns();
         this.addSigns();
+        getUnseenPM().loadUnseenProjectList();
     }
 
 
@@ -116,7 +120,6 @@ public class Wizardry {
         patternRegistry.add( new EnchantWand() );
         patternRegistry.add( new FontOfPower() );
         patternRegistry.add( new SortingChest() );
-        patternRegistry.add( new UnseenArchitect() );
         patternRegistry.add( new WizardAnvil() );
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardHoe() );
@@ -142,6 +145,7 @@ public class Wizardry {
     private void addSigns() {
         ArrayList<MagicSign> signRegistry = new ArrayList<>();
         signRegistry.add( new WizardElevator() );
+        signRegistry.add( new UnseenArchitect() );
 
         for ( MagicSign magicSign: signRegistry) {
             this.signList.put( magicSign.signature, magicSign );
