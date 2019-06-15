@@ -59,6 +59,7 @@ public class LayerLayer extends MagicSpell {
                 BlockFace facing = BlockManager.yawToFace( loc.getYaw() );
                 Boolean replaceAll = !reagent.getType().toString().contains( "SANDSTONE" );
                 Boolean silkTouch = false;
+                Boolean lowerSlab = reagent.getType().toString().contains( "SMOOTH" );
 
                 // Define the blockBox
                 if ( Tag.WALLS.isTagged( reagent.getType() ) ) {
@@ -136,12 +137,19 @@ public class LayerLayer extends MagicSpell {
                                     b.breakNaturally();
                                 }
                                 b.setType( layerType );
+                                // Set to upper slab if applicable
                                 // Reduce stack
                                 if ( layerItem.getAmount() > 1 ) {
                                     layerItem.setAmount( layerItem.getAmount() - 1 );
                                 } else if ( layerItem.getAmount() == 1 ) {
                                     player.getInventory().setItem( layerSlot, null );
                                 }
+                            }
+                            // Change slab to upper unless specified otherwise
+                            if ( b.getType() == layerType && Tag.SLABS.isTagged( layerType ) && !lowerSlab ) {
+                                String state = b.getState().getBlockData().getAsString();
+                                state = state.replace( "type=bottom", "type=top" );
+                                b.setBlockData( Bukkit.getServer().createBlockData( state ) );
                             }
 
                             // If layerSlot is null, look for more layerItem in the hotbar, and move it to layerSlot
