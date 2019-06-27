@@ -1,10 +1,9 @@
-package me.mistergone.AWizardDidIt.Listeners;
+package me.mistergone.AWizardDidIt.listeners;
 
-import me.mistergone.AWizardDidIt.MagicWand;
+import me.mistergone.AWizardDidIt.helpers.MagicWand;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.entity.*;
@@ -36,14 +35,28 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onPlayerJoin( PlayerJoinEvent event ) {
-        wizardry.addWizardPlayer( new WizardPlayer( event.getPlayer() ) );
-        wizardry.getWizardPlayer( event.getPlayer().getUniqueId() ).loadSavedPlayerData();
+        Player p = event.getPlayer();
+        wizardry.addWizardPlayer( new WizardPlayer( p ) );
+        WizardPlayer wizardPlayer = wizardry.getWizardPlayer( p.getUniqueId() );
+        wizardPlayer.loadSavedPlayerData();
+        if ( p.isOnGround() ) {
+            wizardPlayer.removeSpell( "Teletransference" );
+            wizardPlayer.removeSpell( "Wizard Elevator" );
+        }
     }
 
     @EventHandler
     public void onPlayerQuit( PlayerQuitEvent event ) {
-        UUID uuid = event.getPlayer().getUniqueId();
-        wizardry.getWizardPlayer( uuid ).savePlayerData();
+        Player p = event.getPlayer();
+        UUID uuid = p.getUniqueId();
+        WizardPlayer wizardPlayer = wizardry.getWizardPlayer( uuid );
+        if ( wizardPlayer.getIntendedDestination() != null ) {
+            p.teleport( wizardPlayer.getLastKnownLocation() );
+            wizardPlayer.removeSpell( "Teletransference" );
+            wizardPlayer.removeSpell( "Wizard Elevator" );
+        }
+
+        wizardPlayer.savePlayerData();
         wizardry.removeWizardPlayer( uuid );
     }
 

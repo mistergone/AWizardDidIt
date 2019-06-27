@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.Targeter;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
@@ -43,7 +43,8 @@ public class TollOfMadness extends MagicSpell {
                         }
                         int index = (int)Math.floor( Math.random() * monsters.size() );
                         Entity newTarget = monsters.get( index );
-                        if ( newTarget != null && wizardPlayer.spendWizardPower( cost ) ) {
+                        if ( newTarget != null ) {
+                            if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
                             player.sendMessage(ChatColor.LIGHT_PURPLE + "Madness takes its toll!");
                             ((Monster) target).setTarget( (LivingEntity) newTarget );
                         }

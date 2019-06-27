@@ -1,8 +1,11 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.Wizardry;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -30,6 +33,7 @@ public class LampLighter extends MagicSpell {
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
+                WizardPlayer wizardPlayer = Wizardry.getWizardry().getWizardPlayer(player.getUniqueId() );
                 Block torchSpot = null;
                 Location loc = player.getLocation();
                 if ( loc.getBlock().getType() == Material.TORCH ) {
@@ -49,6 +53,7 @@ public class LampLighter extends MagicSpell {
                         }
                     }
                     if ( torchSpot != null ) {
+                        if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
                         torchSpot.setType( Material.TORCH );
                         ItemStack offHand = player.getInventory().getItemInOffHand();
                         if ( offHand.getAmount() > 1 ) {
@@ -56,10 +61,15 @@ public class LampLighter extends MagicSpell {
                         } else if ( offHand.getAmount() == 1 ) {
                             player.getInventory().setItemInOffHand( null );
                         }
-                        player.sendMessage( "You have invoked Lamp Lighter! A torch has been placed in a dark spot.");
+
+                        wizardPlayer.sendMsgWithCooldown( spellName,
+                                ChatColor.GOLD + "You have invoked Lamp Lighter! A torch has been placed in a dark spot.",
+                                5 );
                         SpecialEffects.flamesEffect( loc );
                     } else {
-                        player.sendMessage( "Lamp Lighter failed! No valid torch spot was found in range!" );
+                        wizardPlayer.sendMsgWithCooldown( spellName + " (Error)",
+                                ChatColor.RED + "Lamp Lighter failed! No valid torch spot was found in range!",
+                                1 );
                     }
                 }
             }

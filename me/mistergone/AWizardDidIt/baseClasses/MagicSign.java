@@ -1,6 +1,4 @@
-package me.mistergone.AWizardDidIt;
-
-import me.mistergone.AWizardDidIt.helpers.SignFunction;
+package me.mistergone.AWizardDidIt.baseClasses;
 
 import java.util.ArrayList;
 
@@ -10,7 +8,7 @@ public class MagicSign {
     protected int cost;
     protected ArrayList<String> reagents;
     protected SignFunction signFunction;
-    protected String signature;
+    public String signature;
 
     public String getSignName() {
         return this.signName;

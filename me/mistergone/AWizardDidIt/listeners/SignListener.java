@@ -1,4 +1,4 @@
-package me.mistergone.AWizardDidIt.Listeners;
+package me.mistergone.AWizardDidIt.listeners;
 
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.signs.WizardElevator;

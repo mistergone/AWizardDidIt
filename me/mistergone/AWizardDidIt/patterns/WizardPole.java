@@ -1,8 +1,8 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import me.mistergone.AWizardDidIt.ToolPattern;
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
-import me.mistergone.AWizardDidIt.helpers.ToolFunction;
+import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
+import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
+import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;

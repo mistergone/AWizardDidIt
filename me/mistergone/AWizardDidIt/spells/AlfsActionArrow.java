@@ -1,11 +1,10 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
 import org.bukkit.entity.Arrow;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.projectiles.ProjectileSource;
 import org.bukkit.util.Vector;
 
@@ -27,7 +26,7 @@ public class AlfsActionArrow extends MagicSpell {
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer(player.getUniqueId());
                 int reagentCount = reagent.getAmount();
-                if ( ( reagentCount > 1 && wizardPlayer.spendWizardPower( throwCost ) ) || wizardPlayer.spendWizardPower( cost ) ) {
+                if ( ( reagentCount > 1 && wizardPlayer.spendWizardPower( throwCost, spellName ) ) || wizardPlayer.spendWizardPower( cost, spellName ) ) {
                     if ( reagentCount > 1 ) {
                         reagent.setAmount( reagentCount - 1 );
                     }
@@ -38,11 +37,9 @@ public class AlfsActionArrow extends MagicSpell {
                     } else {
                         wizardPlayer.setSpellTimer( spellName, 20 );
                     }
-
-                    if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                        player.sendMessage(ChatColor.LIGHT_PURPLE + "You have invoked " + spellName + "!");
-                        wizardPlayer.addMsgCooldown( spellName, 5 );
-                    }
+                    wizardPlayer.sendMsgWithCooldown( spellName,
+                            ChatColor.LIGHT_PURPLE + "You have invoked " + spellName + "!",
+                            5 );
 
                     player.playSound(player.getLocation(), Sound.ENTITY_ARROW_SHOOT, .6F, .1F);
                     Vector v = new Vector();
@@ -75,11 +72,6 @@ public class AlfsActionArrow extends MagicSpell {
                     arrow.setCustomName("Alf's Action Arrow Projectile");
                     arrow.setShooter((ProjectileSource) player);
                     arrow.setVelocity(v);
-                } else {
-                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
-                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
-                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
-                    }
                 }
 
             }

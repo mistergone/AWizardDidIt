@@ -1,9 +1,9 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -32,7 +32,8 @@ public class FreezeOver extends MagicSpell {
                 ArrayList<Block> blockBox = new ArrayList<>();
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
 
-                if ( targetBlock.getType() == Material.WATER && wizardPlayer.spendWizardPower( cost ) ) {
+                if ( targetBlock.getType() == Material.WATER ) {
+                    if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
                     if ( targetBlock.getRelative( BlockFace.UP ).getType() == Material.AIR ) {
                         blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
                         for ( Block block : blockBox ) {
@@ -51,12 +52,6 @@ public class FreezeOver extends MagicSpell {
                             wizardPlayer.addMsgCooldown( spellName + " (warn)", 30 );
                         }
                     }
-                } else {
-                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
-                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
-                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
-                    }
-                    return;
                 }
             }
         };

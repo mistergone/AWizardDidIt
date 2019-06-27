@@ -1,6 +1,6 @@
 package me.mistergone.AWizardDidIt;
 
-import me.mistergone.AWizardDidIt.Listeners.*;
+import me.mistergone.AWizardDidIt.listeners.*;
 import me.mistergone.AWizardDidIt.helpers.MagicCommands;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -13,11 +13,13 @@ public class AWizardDidIt extends JavaPlugin{
     @Override
     public void onEnable(){
 
-        getServer().getPluginManager().registerEvents(new WandListener( Wizardry.getWizardry() ), this);
-        getServer().getPluginManager().registerEvents(new ToolListener( Wizardry.getWizardry() ), this);
+
+        getServer().getPluginManager().registerEvents(new DamageListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new MagicListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new SignListener( Wizardry.getWizardry() ), this);
-        getServer().getPluginManager().registerEvents(new DamageListener( Wizardry.getWizardry() ), this);
+        getServer().getPluginManager().registerEvents(new ToolListener( Wizardry.getWizardry() ), this);
+        getServer().getPluginManager().registerEvents(new WandListener( Wizardry.getWizardry() ), this);
+        getServer().getPluginManager().registerEvents(new WeaponListener( Wizardry.getWizardry() ), this);
 
         MagicCommands commandHandler = new MagicCommands(this );
         getCommand( "wizardry" ).setExecutor( commandHandler );

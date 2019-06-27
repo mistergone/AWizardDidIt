@@ -1,8 +1,8 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -34,14 +34,16 @@ public class RoadToNowhere extends MagicSpell {
                 if ( clickedBlock != null ) {
                     WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                     Block target = player.getWorld().getBlockAt( clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ() );
-
-                    if ( clickedBlock.getType() == Material.GRASS_PATH && wizardPlayer.spendToolUse( cost ) ) {
+                    if ( clickedBlock.getType() == Material.GRASS_PATH ) {
+                        if ( !wizardPlayer.spendToolUse( cost, spellName ) ) return;
                         target.setType( Material.GRASS_BLOCK );
                         SpecialEffects.magicPoof( clickedBlock.getLocation() );
-                    } else if ( clickedBlock.getType() == Material.GRASS_BLOCK && wizardPlayer.spendToolUse( cost ) ) {
+                    } else if ( clickedBlock.getType() == Material.GRASS_BLOCK ) {
+                        if ( !wizardPlayer.spendToolUse( cost, spellName ) ) return;
                         target.setType( Material.GRASS_PATH );
                         SpecialEffects.magicPoof( clickedBlock.getLocation() );
-                    } else if ( clickedBlock.getType() == Material.DIRT && wizardPlayer.spendToolUse( cost ) ) {
+                    } else if ( clickedBlock.getType() == Material.DIRT ) {
+                        if ( !wizardPlayer.spendToolUse( cost, spellName ) ) return;
                         target.setType( Material.GRASS_PATH );
                         SpecialEffects.magicPoof( clickedBlock.getLocation() );
                     }

@@ -31,6 +31,7 @@ public class WizardPlayer {
     HashMap< String, BukkitTask > spellTimers;
     BlockFace lastFaceToolClicked;
     Location lastKnownLocation;
+    Location intendedDestination;
     int wizardToolUses;
     int unseenEnergy;
     long lastSaved;
@@ -135,6 +136,23 @@ public class WizardPlayer {
     // Message cooldowns prevent a player from being spammed by spell messages
 
     /**
+     * Send message and add cooldown
+     * @param key (String) A short string for the message "key"
+     * @param message (String) The message
+     * @param cooldown (long) The cooldown in seconds
+     * @return Boolean True if the message was sent, false if it's on cooldow
+     */
+    public Boolean sendMsgWithCooldown( String key, String message, long cooldown ) {
+        if ( !checkMsgCooldown( key ) ) {
+            player.sendMessage( message );
+            addMsgCooldown( key, cooldown );
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
      * Set a message cooldown for a spell
      * @param name The name (String) associated with the spell message
      * @param l The time (in seconds) to wait before sending the spell message again
@@ -224,7 +242,7 @@ public class WizardPlayer {
      * @param amount The amount of wizard power to try to spend
      * @return
      */
-     public Boolean spendWizardPower( int amount) {
+     public Boolean spendWizardPower( int amount, String spellName ) {
          if ( wizardPower >= amount ) {
              wizardPower -= amount;
              showWizardBar();
@@ -232,6 +250,10 @@ public class WizardPlayer {
              return true;
          } else {
              checkLastSave();
+             if ( spellName != null && !this.checkMsgCooldown( spellName + "OOM" ) ) {
+                 player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName + "!");
+                 this.addMsgCooldown(spellName + "OOM", 5 );
+             }
              return false;
          }
      }
@@ -241,9 +263,9 @@ public class WizardPlayer {
      * @param amount
      * @return
      */
-     public Boolean spendToolUse( int amount ) {
-         if ( this.wizardToolUses <= 0 ) {
-             if ( spendWizardPower( 1 ) ) {
+     public Boolean spendToolUse( int amount, String spellName ) {
+         while ( this.wizardToolUses <= 0 ) {
+             if ( spendWizardPower( 1, spellName ) ) {
                  this.wizardToolUses += 100;
              } else {
                  return false;
@@ -377,9 +399,9 @@ public class WizardPlayer {
      * @param amount
      * @return
      */
-    public Boolean spendUnseenEnergy( int amount ) {
+    public Boolean spendUnseenEnergy( int amount, String spellName ) {
         if ( this.unseenEnergy <= 0 ) {
-            if ( spendWizardPower( 1 ) ) {
+            if ( spendWizardPower( 1, spellName ) ) {
                 this.unseenEnergy += 100;
             } else {
                 return false;
@@ -400,5 +422,12 @@ public class WizardPlayer {
     public void setLastKnownLocation( Location loc ) {
         this.lastKnownLocation = loc;
     }
+
+    /*****##### Intended destination #####*****/
+    // This helps us get players to their destinations when trouble occurs.
+
+    public Location getIntendedDestination() { return this.intendedDestination; }
+
+    public void setIntendedDestination( Location loc ) { this.intendedDestination = loc; }
 
 }

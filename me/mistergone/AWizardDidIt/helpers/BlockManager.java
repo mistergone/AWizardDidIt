@@ -165,4 +165,12 @@ public class BlockManager {
 
     public static List<Material> airTypes = new ArrayList<Material>( Arrays.asList( Material.AIR, Material.CAVE_AIR ) );
 
+    public static Boolean isDangerous( Material m ) {
+        if ( m == Material.LAVA || m == Material.FIRE ) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
 }

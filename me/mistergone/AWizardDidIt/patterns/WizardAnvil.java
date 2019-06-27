@@ -1,22 +1,15 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import me.mistergone.AWizardDidIt.MagicPattern;
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.helpers.ExpManager;
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
-import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
+import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import org.bukkit.ChatColor;
-import org.bukkit.block.Chest;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.Damageable;
 import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.scheduler.BukkitTask;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-
-import static sun.misc.PostVMInitHook.run;
 
 public class WizardAnvil extends MagicPattern {
     public WizardAnvil() {

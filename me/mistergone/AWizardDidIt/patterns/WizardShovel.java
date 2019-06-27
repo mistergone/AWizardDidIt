@@ -1,7 +1,9 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import me.mistergone.AWizardDidIt.MagicWand;
-import me.mistergone.AWizardDidIt.ToolPattern;
+import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
+import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
+import me.mistergone.AWizardDidIt.helpers.MagicWand;
+import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -50,6 +52,7 @@ public class WizardShovel extends ToolPattern {
                 if ( meta.getLore() == null ) {
                     ArrayList<String> lore = new ArrayList<String>();
                     lore.add( "Wizard Shovel" );
+                    lore.add( "Mode: 3x3 (Centered)" );
                     meta.setLore( lore );
                     shovel.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "This shovel has been empowered!" );
@@ -97,15 +100,9 @@ public class WizardShovel extends ToolPattern {
                     for ( Block b : blockBox ) {
                         Boolean dirtMatch = dirtTypes.contains( b.getType()) && dirtTypes.contains( brokenMat );
                         if ( ( b.getType() == brokenMat || dirtMatch ) && !b.equals( firstBlock ) ) {
-                            if ( wizardPlayer.spendToolUse( toolCost ) ) {
-                                b.breakNaturally(player.getInventory().getItemInMainHand());
-                            } else {
-                                if ( !wizardPlayer.checkMsgCooldown( patternName + "OOM") ) {
-                                    player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + patternName );
-                                    wizardPlayer.addMsgCooldown(patternName + "OOM", 5 );
-                                }
-                                break;
-                            }
+                            if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
+
+                            b.breakNaturally(player.getInventory().getItemInMainHand());
                         }
                     }
                 }

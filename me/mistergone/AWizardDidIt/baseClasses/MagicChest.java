@@ -1,4 +1,4 @@
-package me.mistergone.AWizardDidIt;
+package me.mistergone.AWizardDidIt.baseClasses;
 
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;

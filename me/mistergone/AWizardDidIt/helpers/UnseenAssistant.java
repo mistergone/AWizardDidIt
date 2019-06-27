@@ -156,18 +156,14 @@ public class UnseenAssistant {
 
                     }
                 } else {
-                    if ( wizardPlayer.spendUnseenEnergy( 1 ) ) {
+                    if ( wizardPlayer.spendUnseenEnergy( 1, "Unseen Architect (clone)" ) ) {
                         clone.setType(block.getType());
-                    } else {
-                        wizardPlayer.getPlayer().sendMessage(ChatColor.RED + "You do not have sufficient Wizard Power to empower your Unseen Assistant for this task!");
                     }
                 }
 
             } else if ( airTypes.contains( block.getType() ) && !airTypes.contains( clone.getType() ) ) {
-                if ( wizardPlayer.spendUnseenEnergy( 1 ) ) {
+                if ( wizardPlayer.spendUnseenEnergy( 1, "Unseen Architect (clone)" ) ) {
                     clone.breakNaturally();
-                } else {
-                    wizardPlayer.getPlayer().sendMessage(ChatColor.RED + "You do not have sufficient Wizard Power to empower your Unseen Assistant for this task!");
                 }
             }
 

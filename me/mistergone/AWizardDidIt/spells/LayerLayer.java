@@ -1,9 +1,9 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -92,7 +92,7 @@ public class LayerLayer extends MagicSpell {
 
                 // Handle the blockBox
                 for ( Block b : blockBox ) {
-                    if ( wizardPlayer.spendToolUse( toolUseCost ) ) {
+                    if ( wizardPlayer.spendToolUse( toolUseCost, spellName ) ) {
                         // Check if player ran out of layerItem
                         if ( b != null && player.getInventory().getItem( layerSlot ) == null ) {
                             for ( int i = layerSlot + 1; i < 9; i++ ) {
@@ -172,11 +172,6 @@ public class LayerLayer extends MagicSpell {
                             }
                         } else {
                             return;
-                        }
-                    } else {
-                        if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
-                            player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
-                            wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
                         }
                     }
                 }

@@ -1,6 +1,4 @@
-package me.mistergone.AWizardDidIt;
-
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+package me.mistergone.AWizardDidIt.baseClasses;
 
 import java.util.ArrayList;
 

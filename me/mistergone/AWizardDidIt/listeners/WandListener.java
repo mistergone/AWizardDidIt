@@ -1,6 +1,7 @@
-package me.mistergone.AWizardDidIt.Listeners;
+package me.mistergone.AWizardDidIt.listeners;
 
 import me.mistergone.AWizardDidIt.*;
+import me.mistergone.AWizardDidIt.baseClasses.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
@@ -11,15 +12,9 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
-
-import java.util.List;
-import java.util.Set;
-
-import static me.mistergone.AWizardDidIt.data.UnseenProjectManager.getUnseenPM;
 
 public class WandListener implements Listener {
     private Wizardry wizardry;

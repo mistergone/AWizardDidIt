@@ -1,17 +1,15 @@
-package me.mistergone.AWizardDidIt.Listeners;
+package me.mistergone.AWizardDidIt.listeners;
 
-import me.mistergone.AWizardDidIt.ToolPattern;
+import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
 import me.mistergone.AWizardDidIt.Wizardry;
-import me.mistergone.AWizardDidIt.helpers.ToolFunction;
+import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
-import org.bukkit.event.player.PlayerFishEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;

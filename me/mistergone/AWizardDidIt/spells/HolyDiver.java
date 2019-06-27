@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,7 +33,8 @@ public class HolyDiver extends MagicSpell {
               Location loc = player.getLocation();
               Block head = player.getWorld().getBlockAt( loc.getBlockX(), loc.getBlockY() + 1, loc.getBlockZ() );
               Boolean underwater = head.getType() == Material.WATER;
-              if ( ( player.isSwimming() || underwater ) && wizardPlayer.spendWizardPower( cost ) ) {
+              if ( ( player.isSwimming() || underwater ) ) {
+                  if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
 
                   if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
                       player.sendMessage(ChatColor.BLUE + "You have invoked Holy Diver! You've been down too long in the midnight sea!");
@@ -76,15 +77,9 @@ public class HolyDiver extends MagicSpell {
 
                   // Third, refill some bubbles
                   int gasp = player.getMaximumAir() - player.getRemainingAir();
-                  if ( wizardPlayer.spendWizardPower( gasp / 10000 ) ) {
+                  if ( wizardPlayer.spendWizardPower( gasp / 10000, null ) ) {
                       player.setRemainingAir( player.getMaximumAir() );
                   }
-              } else {
-                  if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
-                      player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
-                      wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
-                  }
-                  return;
               }
           }
         };

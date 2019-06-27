@@ -1,13 +1,11 @@
-package me.mistergone.AWizardDidIt;
-
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+package me.mistergone.AWizardDidIt.baseClasses;
 
 import java.util.ArrayList;
 
 public class MagicSpell {
-    protected String spellName;
+    public String spellName;
     protected int cost;
-    protected ArrayList<String> reagents;
+    public ArrayList<String> reagents;
     protected SpellFunction spellFunction;
 
     public String getSpellName() {

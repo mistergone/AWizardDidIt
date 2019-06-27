@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
 import org.bukkit.inventory.ItemStack;
@@ -29,7 +29,8 @@ public class MightyLeap extends MagicSpell {
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
 
-                if ( player.isOnGround() && wizardPlayer.spendWizardPower( cost ) ) {
+                if ( player.isOnGround() ) {
+                    if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
                     wizardPlayer.addSpell( spellName );
 
                     if ( wizardPlayer.checkMsgCooldown( "Magic Leap" ) == false ) {
@@ -89,11 +90,6 @@ public class MightyLeap extends MagicSpell {
                     player.setVelocity(v);
 
                     wizardPlayer.setSpellTimer( spellName, 200 );
-                } else if ( player.isOnGround() ) {
-                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
-                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
-                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
-                    }
                 }
             }
         };

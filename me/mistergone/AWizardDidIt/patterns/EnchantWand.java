@@ -1,8 +1,8 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import me.mistergone.AWizardDidIt.MagicPattern;
-import me.mistergone.AWizardDidIt.MagicWand;
-import me.mistergone.AWizardDidIt.helpers.PatternFunction;
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
+import me.mistergone.AWizardDidIt.helpers.MagicWand;
+import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;

@@ -1,6 +1,7 @@
-package me.mistergone.AWizardDidIt.helpers;
+package me.mistergone.AWizardDidIt.baseClasses;
 
-import me.mistergone.AWizardDidIt.MagicChest;
+import me.mistergone.AWizardDidIt.baseClasses.MagicChest;
+import me.mistergone.AWizardDidIt.baseClasses.MagicFunction;
 
 public class PatternFunction extends MagicFunction {
     public MagicChest magicChest;

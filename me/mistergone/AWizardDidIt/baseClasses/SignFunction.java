@@ -1,5 +1,6 @@
-package me.mistergone.AWizardDidIt.helpers;
+package me.mistergone.AWizardDidIt.baseClasses;
 
+import me.mistergone.AWizardDidIt.baseClasses.MagicFunction;
 import org.bukkit.block.Block;
 import org.bukkit.event.player.PlayerInteractEvent;
 

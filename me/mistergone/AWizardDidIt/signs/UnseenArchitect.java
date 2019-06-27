@@ -1,10 +1,9 @@
 package me.mistergone.AWizardDidIt.signs;
 
-import com.mysql.fabric.xmlrpc.base.Array;
-import me.mistergone.AWizardDidIt.Listeners.SignListener;
-import me.mistergone.AWizardDidIt.MagicSign;
+import me.mistergone.AWizardDidIt.listeners.SignListener;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
-import me.mistergone.AWizardDidIt.helpers.SignFunction;
+import me.mistergone.AWizardDidIt.baseClasses.SignFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -13,7 +12,6 @@ import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.regex.Pattern;
@@ -162,6 +160,7 @@ public class UnseenArchitect extends MagicSign {
                 }
                 return;
             }
+            command = "clone " + command.substring( 6 ).toUpperCase();
             p.sendMessage(ChatColor.BLUE + "To clone the original use the Unseen Architect Magic Pattern in a chest adjacent to this sign. Make sure it's not inside the new structure!");
             lines[2] = ChatColor.DARK_BLUE + command;
         } else {

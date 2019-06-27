@@ -1,4 +1,4 @@
-package me.mistergone.AWizardDidIt;
+package me.mistergone.AWizardDidIt.helpers;
 
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;

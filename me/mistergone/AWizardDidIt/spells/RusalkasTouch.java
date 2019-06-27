@@ -1,9 +1,9 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -33,27 +33,27 @@ public class RusalkasTouch extends MagicSpell {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                if ( wizardPlayer.spendWizardPower( cost ) ) {
-                    if ( reagent.getType() == Material.BUCKET ) {
-                        // Remove water!
-                        Block targetBlock = player.getTargetBlock( null, 10 );
-                        if ( targetBlock.getType() == Material.WATER ) {
-                            Location loc = player.getLocation();
-                            BlockFace face = BlockManager.yawToFace( loc.getYaw() );
-                            if ( loc.getPitch() > 45 ) {
-                                face = BlockFace.DOWN;
-                            } else if ( loc.getPitch() < -45 ) {
-                                face = BlockFace.UP;
-                            }
-                            ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
-                            for ( Block block : blockBox ) {
-                                if ( block.getType() == Material.WATER ) {
-                                    block.setType( Material.AIR );
-                                }
+                if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
+                if ( reagent.getType() == Material.BUCKET ) {
+                    // Remove water!
+                    Block targetBlock = player.getTargetBlock( null, 10 );
+                    if ( targetBlock.getType() == Material.WATER ) {
+                        Location loc = player.getLocation();
+                        BlockFace face = BlockManager.yawToFace( loc.getYaw() );
+                        if ( loc.getPitch() > 45 ) {
+                            face = BlockFace.DOWN;
+                        } else if ( loc.getPitch() < -45 ) {
+                            face = BlockFace.UP;
+                        }
+                        ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
+                        for ( Block block : blockBox ) {
+                            if ( block.getType() == Material.WATER ) {
+                                block.setType( Material.AIR );
                             }
                         }
+                    }
 
-                    } else if ( reagent.getType() == Material.WATER_BUCKET ) {
+                } else if ( reagent.getType() == Material.WATER_BUCKET ) {
                         // Repair water!
                         Block targetBlock = player.getTargetBlock( null, 10 );
                         if ( targetBlock.getType() == Material.WATER ) {
@@ -72,15 +72,6 @@ public class RusalkasTouch extends MagicSpell {
                         player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
                         wizardPlayer.addMsgCooldown( spellName, 30 );
                     }
-                }  else {
-                    if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
-                        player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
-                        wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
-                    }
-                }
-
-
-
             }
         };
     }

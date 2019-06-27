@@ -1,8 +1,8 @@
 package me.mistergone.AWizardDidIt.spells;
 
 
-import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -29,7 +29,8 @@ public class CharmVillager extends MagicSpell {
           @Override
           public void run() {
               WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-              if ( wizardPlayer.spendWizardPower( cost ) && reagent.getAmount() >= 1 ) {
+              if ( reagent.getAmount() >= 1 ) {
+                  if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
                   Location loc = clickedBlock.getRelative(BlockFace.UP, 1).getLocation();
                   loc.add(.5, 0, .5);
                   double theta = 0;
@@ -80,12 +81,6 @@ public class CharmVillager extends MagicSpell {
                   }
               } else if ( reagent.getAmount() < 1 ) {
                   player.sendMessage( ChatColor.RED + "You don't have the emerald in your offhand needed to charm villagers." );
-                  return;
-              } else {
-                  if ( !wizardPlayer.checkMsgCooldown( spellName + "OOM") ) {
-                      player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + spellName );
-                      wizardPlayer.addMsgCooldown(spellName + "OOM", 5 );
-                  }
                   return;
               }
 

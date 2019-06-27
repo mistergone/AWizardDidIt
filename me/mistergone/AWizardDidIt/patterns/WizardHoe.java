@@ -1,6 +1,8 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import me.mistergone.AWizardDidIt.ToolPattern;
+import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
+import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
+import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -99,7 +101,8 @@ public class WizardHoe extends ToolPattern {
                         offHand = player.getInventory().getItemInOffHand();
                         Boolean isCrop = crops.values().contains( block.getType() );
                         Boolean isFarmland = block.getType() == Material.FARMLAND;
-                        if ( ( isFarmland || isCrop ) && wizardPlayer.spendToolUse( toolCost ) ) {
+                        if ( ( isFarmland || isCrop ) ) {
+                            if ( ! wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
                             Boolean belowAir = block.getRelative( BlockFace.UP ).getType() == Material.AIR;
                             Boolean belowCrop = crops.values().contains( block.getRelative( BlockFace.UP ).getType() );
                             Boolean hasItems = offHand.getType() != Material.AIR;
@@ -124,11 +127,6 @@ public class WizardHoe extends ToolPattern {
                                 block.breakNaturally();
                             }
 
-                        } else if ( ( isFarmland || isCrop ) ) {
-                            if ( !wizardPlayer.checkMsgCooldown( patternName + "OOM") ) {
-                                player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + patternName );
-                                wizardPlayer.addMsgCooldown(patternName + "OOM", 5 );
-                            }
                         }
                         block = block.getRelative( newFace );
                     }

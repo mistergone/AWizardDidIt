@@ -1,9 +1,9 @@
 package me.mistergone.AWizardDidIt;
 
-import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import me.mistergone.AWizardDidIt.baseClasses.*;
+import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.*;
-import me.mistergone.AWizardDidIt.signs.UnseenArchitect;
-import me.mistergone.AWizardDidIt.signs.WizardElevator;
+import me.mistergone.AWizardDidIt.signs.*;
 import me.mistergone.AWizardDidIt.spells.*;
 
 import java.util.ArrayList;
@@ -16,20 +16,23 @@ import static me.mistergone.AWizardDidIt.data.UnseenProjectManager.getUnseenPM;
 public class Wizardry {
     private static Wizardry wizardry = new Wizardry();
     private Map< UUID, WizardPlayer> wizardList;
-    private Map< String, MagicSpell > spellList;
-    private Map< String, MagicPattern > patternList;
-    private Map< String, MagicSign > signList;
+    private Map< String, MagicSpell> spellList;
+    private Map< String, MagicPattern> patternList;
+    private Map< String, MagicSign> signList;
     private ArrayList<String> reagentList;
-    Map< String, ToolPattern > loreMap;
+    Map< String, ToolPattern> toolLoreMap;
+    Map< String, WeaponPattern> weaponLoreMap;
 
     private Wizardry() {
         this.wizardList = new HashMap< UUID, WizardPlayer >();
         this.spellList = new HashMap< String, MagicSpell>();
         this.patternList = new HashMap< String, MagicPattern>();
         this.signList = new HashMap< String, MagicSign>();
-        this.loreMap = new HashMap<>();
+        this.toolLoreMap = new HashMap<>();
+        this.weaponLoreMap = new HashMap<>();
         this.reagentList = new ArrayList<>();
-        this.addLore();
+        this.addToolLore();
+        this.addWeaponLore();
         this.addSpells();
         this.addPatterns();
         this.addSigns();
@@ -65,7 +68,11 @@ public class Wizardry {
     }
 
     public ToolPattern getToolByLore( String lore ) {
-        return loreMap.get( lore );
+        return toolLoreMap.get( lore );
+    }
+
+    public WeaponPattern getWeaponByLore( String lore ) {
+        return weaponLoreMap.get( lore );
     }
 
     public WizardPlayer getWizardPlayer( UUID uuid ) {
@@ -122,10 +129,14 @@ public class Wizardry {
         patternRegistry.add( new SortingChest() );
         patternRegistry.add( new WizardAnvil() );
         patternRegistry.add( new WizardAxe() );
+        patternRegistry.add( new WizardBow() );
+        patternRegistry.add( new WizardCrossbow() );
         patternRegistry.add( new WizardHoe() );
         patternRegistry.add( new WizardFood() );
         patternRegistry.add( new WizardPick() );
         patternRegistry.add( new WizardShovel() );
+        patternRegistry.add( new WizardSword() );
+        patternRegistry.add( new WizardTrident() );
 
         for ( MagicPattern magicPattern : patternRegistry ) {
             for ( String[] p : magicPattern.getPatterns() ) {
@@ -152,11 +163,18 @@ public class Wizardry {
         }
     }
 
-    private void addLore() {
-        this.loreMap.put( "Wizard Pick", new WizardPick() );
-        this.loreMap.put( "Wizard Shovel", new WizardShovel() );
-        this.loreMap.put( "Wizard Axe", new WizardAxe() );
-        this.loreMap.put( "Wizard Hoe", new WizardHoe() );
+    private void addToolLore() {
+        this.toolLoreMap.put( "Wizard Pick", new WizardPick() );
+        this.toolLoreMap.put( "Wizard Shovel", new WizardShovel() );
+        this.toolLoreMap.put( "Wizard Axe", new WizardAxe() );
+        this.toolLoreMap.put( "Wizard Hoe", new WizardHoe() );
+    }
+
+    private void addWeaponLore() {
+        this.weaponLoreMap.put( "Wizard Bow", new WizardBow() );
+        this.weaponLoreMap.put( "Wizard Crossbow", new WizardCrossbow() );
+        this.weaponLoreMap.put( "Wizard Sword", new WizardSword() );
+        this.weaponLoreMap.put( "Wizard Trident", new WizardTrident() );
     }
 
 }

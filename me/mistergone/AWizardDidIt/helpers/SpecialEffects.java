@@ -66,7 +66,7 @@ public class SpecialEffects {
             double y = .1 + ( (double)i / 20 );
             double z = radius * Math.sin( theta );
             loc.add(x, y, z);
-            loc.getWorld().spawnParticle( Particle.VILLAGER_HAPPY, loc, 2);
+            loc.getWorld().spawnParticle( Particle.SPELL_WITCH, loc, 2);
             loc.subtract(x, y, z);
         }
     }

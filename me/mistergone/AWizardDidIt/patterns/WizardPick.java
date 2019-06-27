@@ -1,7 +1,9 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import me.mistergone.AWizardDidIt.MagicWand;
-import me.mistergone.AWizardDidIt.ToolPattern;
+import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
+import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
+import me.mistergone.AWizardDidIt.helpers.MagicWand;
+import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
@@ -52,6 +54,7 @@ public class WizardPick extends ToolPattern {
                 if ( meta.getLore() == null ) {
                     ArrayList<String> lore = new ArrayList<String>();
                     lore.add( "Wizard Pick" );
+                    lore.add( "Mode: 3x3 (Centered)" );
                     meta.setLore( lore );
                     pickaxe.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "This pickaxe has been empowered!" );
@@ -103,24 +106,18 @@ public class WizardPick extends ToolPattern {
                         Boolean digType = stoneTypes.contains(b.getType()) && stoneTypes.contains(brokenMat);
                         // Let the tool break the original block
                         if ((sameType || digType) && !b.equals(firstBlock) ) {
-                            if ( wizardPlayer.spendToolUse( toolCost ) ) {
-                                Material bMat = b.getType();
-                                Boolean silky = player.getInventory().getItemInMainHand().getEnchantmentLevel( Enchantment.SILK_TOUCH ) > 0;
-                                Boolean silkTag = Tag.CORAL_BLOCKS.isTagged( bMat ) || Tag.CORALS.isTagged( bMat ) ||
-                                        Tag.ICE.isTagged( bMat) || Tag.LEAVES.isTagged( bMat );
-                                if ( silky && ( silkTag || BlockManager.isSilkyPickType( b.getType() ) ) ) {
-                                    ItemStack drop = new ItemStack( b.getType() );
-                                    loc.getWorld().dropItem( loc, drop );
-                                    b.setType( Material.AIR );
-                                } else {
-                                    b.breakNaturally( player.getInventory().getItemInMainHand() );
-                                }
+                            if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
+
+                            Material bMat = b.getType();
+                            Boolean silky = player.getInventory().getItemInMainHand().getEnchantmentLevel( Enchantment.SILK_TOUCH ) > 0;
+                            Boolean silkTag = Tag.CORAL_BLOCKS.isTagged( bMat ) || Tag.CORALS.isTagged( bMat ) ||
+                                    Tag.ICE.isTagged( bMat) || Tag.LEAVES.isTagged( bMat );
+                            if ( silky && ( silkTag || BlockManager.isSilkyPickType( b.getType() ) ) ) {
+                                ItemStack drop = new ItemStack( b.getType() );
+                                loc.getWorld().dropItem( loc, drop );
+                                b.setType( Material.AIR );
                             } else {
-                                if ( !wizardPlayer.checkMsgCooldown( patternName + "OOM") ) {
-                                    player.sendMessage( ChatColor.DARK_RED + "You do not have enough Wizard Power to invoke " + patternName );
-                                    wizardPlayer.addMsgCooldown(patternName + "OOM", 5 );
-                                }
-                                break;
+                                b.breakNaturally( player.getInventory().getItemInMainHand() );
                             }
                         }
                     }
@@ -156,7 +153,7 @@ public class WizardPick extends ToolPattern {
                     }
                     meta.setLore( lore );
                     tool.setItemMeta( meta );
-                    player.sendMessage( ChatColor.GOLD + "Wizard Shovel set to " + lore.get( 1 ) );
+                    player.sendMessage( ChatColor.GOLD + "Wizard Pick set to " + lore.get( 1 ) );
                 }
 
             }

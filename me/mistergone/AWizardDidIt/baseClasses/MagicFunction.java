@@ -1,5 +1,6 @@
-package me.mistergone.AWizardDidIt.helpers;
+package me.mistergone.AWizardDidIt.baseClasses;
 
+import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 
@@ -7,6 +8,7 @@ import java.util.concurrent.Callable;
 
 public class MagicFunction implements Callable<Boolean> {
     public Player player;
+    public WizardPlayer wizardPlayer;
     public ItemStack magicWand;
 
     public MagicFunction(){

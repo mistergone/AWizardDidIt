@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import me.mistergone.AWizardDidIt.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.SpellFunction;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -24,15 +24,15 @@ public class XomirsQuiver extends MagicSpell {
             @Override
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                if ( wizardPlayer.spendWizardPower( cost ) ) {
-                    if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                        player.sendMessage(ChatColor.AQUA + "You have invoked " + spellName + "!");
-                        wizardPlayer.addMsgCooldown( spellName, 10 );
-                    }
-                    ItemStack arrows = new ItemStack( Material.ARROW );
-                    arrows.setAmount( 16 );
-                    player.getWorld().dropItem( player.getLocation(), arrows );
+                if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
+
+                if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
+                    player.sendMessage(ChatColor.AQUA + "You have invoked " + spellName + "!");
+                    wizardPlayer.addMsgCooldown( spellName, 10 );
                 }
+                ItemStack arrows = new ItemStack( Material.ARROW );
+                arrows.setAmount( 16 );
+                player.getWorld().dropItem( player.getLocation(), arrows );
             }
         };
     }
