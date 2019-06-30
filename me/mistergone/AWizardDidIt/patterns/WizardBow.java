@@ -76,6 +76,7 @@ public class WizardBow extends WeaponPattern {
 //                    if ( wizardPlayer.checkSpell( "Teletransference" ) ) return;
                     String spellName = "Bow of Teletransference";
                     Block hitBlock = projectileHitEvent.getHitBlock();
+                    BlockFace hitFace = projectileHitEvent.getHitBlockFace();
                     Arrow arrow = (Arrow)projectileHitEvent.getEntity();
                     if ( arrow == null ) return;
                     Vector v = new Vector();
@@ -95,7 +96,7 @@ public class WizardBow extends WeaponPattern {
                         start = (Location)m.value();
                     }
 
-                    Location destination = findSafeLanding( hitBlock );
+                    Location destination = findSafeLanding( hitBlock, hitFace );
 
                     if ( destination != null ) {
                         if ( !wizardPlayer.spendWizardPower( getModeCost( spellName), spellName ) ) return;
@@ -170,20 +171,33 @@ public class WizardBow extends WeaponPattern {
         return (int) modeCosts.get( mode );
     }
 
-    private Location findSafeLanding( Block hitBlock ) {
+    /***
+     * Tries to find a safe block to teletransfer to.
+     * @param hitBlock Block hit by arrow
+     * @param hitFace Face hit by arrow
+     * @return Location for safe teletransfer
+     */
+    private Location findSafeLanding( Block hitBlock, BlockFace hitFace ) {
         Block b = hitBlock.getRelative( BlockFace.UP );
-        int limit = 10;
+        int limit = 20;
+
         while ( !MoveManager.isItSafe( b ) ) {
             if ( b == null ) {
                 return null;
             }
-            b = b.getRelative( BlockFace.UP );
-
-            limit--;
-            if ( limit == 0 ) {
+            if ( limit >= 11 ) {
+                b = b.getRelative( BlockFace.UP );
+            } else if ( limit == 10 ) {
+                b = hitBlock.getRelative( hitFace);
+            } else if ( limit > 0 ) {
+                b = b.getRelative( BlockFace.DOWN );
+            } else {
                 return null;
             }
+
+            limit--;
         }
+
         return b.getLocation();
 
     }
@@ -197,6 +211,7 @@ public class WizardBow extends WeaponPattern {
         wizardPlayer.addSpell( "Teletransference" );
 
         Arrow flyer = (Arrow) p.getWorld().spawnEntity( start, EntityType.ARROW );
+        flyer.setCustomName( "Bow of Teletransference (Riding)" );
         flyer.addPassenger( p );
         flyer.setVelocity( vector );
 
@@ -209,6 +224,7 @@ public class WizardBow extends WeaponPattern {
                 Boolean notMoving = newLoc.equals( wizardPlayer.getLastKnownLocation() );
                 if (  movingAway || notMoving ) {
                     flyer.eject();
+                    destination.add( .5, .5, .5 );
                     destination.setYaw( p.getLocation().getYaw() );
                     destination.setPitch( p.getLocation().getPitch() );
                     p.teleport( destination );

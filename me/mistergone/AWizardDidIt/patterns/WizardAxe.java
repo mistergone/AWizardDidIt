@@ -153,7 +153,7 @@ public class WizardAxe extends ToolPattern {
                     }
 
                 }
-                
+
             }
         };
 

@@ -100,16 +100,11 @@ public class DamageListener implements Listener {
                 if ( damager.getCustomName() == null ) return;
                 String customName = damager.getCustomName();
 
-
-                if ( customName.equals( "Alf's Action Arrow Projectile" ) ) {
-                    if ( event.getEntity() instanceof Monster) {
+                if ( event.getEntity() instanceof Monster ) {
+                    if ( customName.equals( "Alf's Action Arrow Projectile" ) ) {
                         double damage =  Math.floor( ( Math.random() * 6 ) + 5 );
                         event.setDamage( damage );
-                    }
-                }
-
-                if ( event.getEntity() instanceof Monster ) {
-                    if ( customName.equals( "Slow Bolt" ) ) {
+                    } else if ( customName.equals( "Slow Bolt" ) ) {
                         PotionEffect slow = new PotionEffect( PotionEffectType.SLOW, 60, 2 );
                         ((Monster) event.getEntity()).addPotionEffect( slow );
                         wizardPlayer.sendMsgWithCooldown( "Slow Bolt",
@@ -121,8 +116,16 @@ public class DamageListener implements Listener {
                         wizardPlayer.sendMsgWithCooldown( "Poison Bolt",
                                 ChatColor.AQUA + "You have invoked Poison Bolt with your Wizard Crossbow!",
                                 5 );
-                    }               }
-            }
+                    }
+                } else if ( customName.contains( "Teletransference" ) ) {
+                    wizardPlayer.sendMsgWithCooldown( "Teletransference (non-Monster hit)",
+                        ChatColor.LIGHT_PURPLE + "Your Bow of Teletransference hit a non-Monster entity! Your teletransference has been cancelled.",
+                        2 );
+                    event.setDamage( 0 );
+                    event.setCancelled( true );
+                    projectile.setCustomName( "" );
+                    }
+                }
 
             // ***** Trident ***** //
             if ( damager instanceof Trident ) {
