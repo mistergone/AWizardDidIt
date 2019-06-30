@@ -37,7 +37,7 @@ public class UnseenArchitect extends MagicSign {
         signFunction = new SignFunction() {
             @Override
             public void run() {
-                Sign sign = (Sign) clickedBlock.getState();
+                Sign sign = (Sign) signBlock.getState();
                 String[] lines = sign.getLines();
 
                 String projectName = ChatColor.stripColor( lines[1] ).toLowerCase().trim();
@@ -55,21 +55,20 @@ public class UnseenArchitect extends MagicSign {
                     }
                     String projectKey = player.getName() + ":" + projectName;
                     if ( isClone ) {
-                        wizardPlayer.getUnseenAssistant().architectClone( projectKey, clickedBlock, command );
+                        wizardPlayer.getUnseenAssistant().architectClone( projectKey, signBlock, command );
                     } else if ( isPoint1 || isPoint2 ) {
                         Location point1 = getUnseenPM().getProjectPoints( player, projectName )[0];
                         Location point2 = getUnseenPM().getProjectPoints( player, projectName )[1];
-                        if ( isPoint1 && point1 != null && point1.equals( clickedBlock.getLocation() ) ) {
-                            Bukkit.broadcastMessage("BLARG");
+                        if ( isPoint1 && point1 != null && point1.equals( signBlock.getLocation() ) ) {
                             player.sendMessage( ChatColor.YELLOW + "Your Unseen Assistant has verified that this location is stored as Point 1 for the Unseen Project " + projectName );
-                        } else if ( isPoint2 && point2 != null && point2.equals( clickedBlock.getLocation() ) ) {
+                        } else if ( isPoint2 && point2 != null && point2.equals( signBlock.getLocation() ) ) {
                             player.sendMessage( ChatColor.YELLOW + "Your Unseen Assistant has verified that this location is stored as Point 2 for the Unseen Project " + projectName );
                         } else if ( isPoint1 ) {
-                            getUnseenPM().setProjectPoint( player, projectName, 0, clickedBlock.getLocation() );
+                            getUnseenPM().setProjectPoint( player, projectName, 0, signBlock.getLocation() );
                             player.sendMessage( ChatColor.YELLOW + "Your Unseen Assistant has updated Point 1 of the Unseen Project \""
                                     + projectName + "\" to this location.");
                         } else if ( isPoint2 ) {
-                            getUnseenPM().setProjectPoint( player, projectName, 1, clickedBlock.getLocation() );
+                            getUnseenPM().setProjectPoint( player, projectName, 1, signBlock.getLocation() );
                             player.sendMessage( ChatColor.YELLOW + "Your Unseen Assistant has updated Point 2 of the Unseen Project \""
                                     + projectName + "\" to this location.");
                         }
@@ -78,7 +77,7 @@ public class UnseenArchitect extends MagicSign {
                     player.sendMessage(ChatColor.RED + "The Unseen Project on this sign, " + projectName + " could not be found!");
                     if ( isPoint1 || isPoint2 ) {
                         player.sendMessage(ChatColor.YELLOW + "Your Unseen Assistant is attempting to fix this...");
-                        SignChangeEvent event = new SignChangeEvent( clickedBlock, player, lines );
+                        SignChangeEvent event = new SignChangeEvent( signBlock, player, lines );
                         handleSignEvent( event );
                     }
                 }
@@ -102,7 +101,6 @@ public class UnseenArchitect extends MagicSign {
         }
         // Check the command
         String command = ChatColor.stripColor( lines[2] ).toLowerCase();
-        Bukkit.broadcastMessage( command );
         if ( command == null || !validCommands.contains( command ) ) {
             p.sendMessage( ChatColor.RED + "No valid command was found on this sign!");
             for (int l = 0; l < 4; l++) {

@@ -39,7 +39,7 @@ public class WandListener implements Listener {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
 
                 // If a stick is used on a chest, it might be a Magic Pattern
-                if ( clickedMaterial == Material.CHEST) {
+                if ( clickedMaterial == Material.CHEST ) {
                     e.setCancelled(true);
                     Chest chest = (Chest) clickedBlock.getState();
                     MagicChest magicChest = new MagicChest(chest);
@@ -65,38 +65,52 @@ public class WandListener implements Listener {
                         p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                     }
 
-                } else if ( Tag.WALL_SIGNS.isTagged( clickedMaterial ) || Tag.SIGNS.isTagged( clickedMaterial ) ) {
-                    BlockState state = clickedBlock.getState();
-                    Sign sign = (Sign)state;
-                    String[] lines = sign.getLines();
-                    if ( lines[0] == null ) return;
-                    String signature = ChatColor.stripColor( lines[0].trim() );
-
-                    MagicSign magicSign = wizardry.getMagicSign( signature );
-                    if ( magicSign != null ) {
-                        e.setCancelled( true );
-                        try {
-                            SignFunction function = magicSign.getSignFunction();
-                            function.setPlayer(p);
-                            function.setClickedBlock( clickedBlock );
-                            function.setEvent( e );
-                            function.setMagicWand( main );
-                            function.call();
-                        } catch ( Exception ex ) {
-                            ex.printStackTrace();
-                        }
-                    }
-
-
-                    return;
                 } else if ( MagicWand.isActuallyAWand( main ) ) {
+
                     // If you just wave a magic wand around, magic might happen!
                     ItemStack offItem = p.getInventory().getItemInOffHand();
                     MagicSpell magicSpell = null;
 
-                    if ( offItem == null || offItem.getType() == Material.AIR ) {
-                        e.setCancelled(true);
-                        wizardPlayer.showWizardBar();
+                    // If you hit a SIGN, then do a sign thing
+                    // If you hit a block with your wand, let's see if there's a WizardPassage on the other side
+                    if ( clickedBlock != null &&
+                            ( ( Tag.WALL_SIGNS.isTagged( clickedMaterial ) || Tag.SIGNS.isTagged( clickedMaterial )
+                                ||  Tag.WALL_SIGNS.isTagged( clickedBlock.getRelative( e.getBlockFace().getOppositeFace(),1 ).getType() ) ) ) ) {
+                        BlockState state;
+                        Block signBlock = clickedBlock;
+                        if (Tag.WALL_SIGNS.isTagged(clickedMaterial) || Tag.SIGNS.isTagged(clickedMaterial)) {
+                            state = clickedBlock.getState();
+                        } else {
+                            signBlock = clickedBlock.getRelative(e.getBlockFace().getOppositeFace(), 1);
+                            state = signBlock.getState();
+                        }
+                        Sign sign = (Sign) state;
+                        String[] lines = sign.getLines();
+                        if (lines[0] == null) return;
+                        String signature = ChatColor.stripColor(lines[0].trim());
+
+                        MagicSign magicSign = wizardry.getMagicSign(signature);
+                        if (magicSign != null) {
+                            e.setCancelled(true);
+                            try {
+                                SignFunction function = magicSign.getSignFunction();
+                                function.setPlayer( p );
+                                function.setSignBlock( signBlock );
+                                function.setState( state );
+                                function.setLines( lines );
+                                function.setEvent( e );
+                                function.setMagicWand( main );
+                                function.call();
+                            } catch (Exception ex) {
+                                ex.printStackTrace();
+                            }
+                        }
+
+                        return;
+                        // If you swing a wand in the air with no reagent, show the WizardBar
+                    } else if ( offItem == null || offItem.getType() == Material.AIR ) {
+//                            e.setCancelled( true );
+                            wizardPlayer.showWizardBar();
                     } else {
                         magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                         if (magicSpell == null) {

@@ -5,6 +5,7 @@ import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.*;
 import me.mistergone.AWizardDidIt.signs.*;
 import me.mistergone.AWizardDidIt.spells.*;
+import org.bukkit.Bukkit;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -95,6 +96,7 @@ public class Wizardry {
     }
 
     private void addSpells( ) {
+        // TODO: Is there a better way to access all these classes? Should they be static?
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
         spellRegistry.add( new AlfsActionArrow()    );
         spellRegistry.add( new CharmVillager() );
@@ -157,6 +159,7 @@ public class Wizardry {
         ArrayList<MagicSign> signRegistry = new ArrayList<>();
         signRegistry.add( new WizardElevator() );
         signRegistry.add( new UnseenArchitect() );
+        signRegistry.add( new WizardPassage() );
 
         for ( MagicSign magicSign: signRegistry) {
             this.signList.put( magicSign.signature, magicSign );

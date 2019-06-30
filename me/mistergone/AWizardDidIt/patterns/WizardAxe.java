@@ -21,7 +21,8 @@ public class WizardAxe extends ToolPattern {
     public WizardAxe() {
         patternName = "Wizard Axe";
         patterns =  new ArrayList<String[]>();
-        toolCost = 100;
+        toolCost = 1;
+        int lumberjackCost = 5;
 
         patterns.add( new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
@@ -92,7 +93,7 @@ public class WizardAxe extends ToolPattern {
                         player.playSound( player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, .3F, 2F  );
                         blocks.add( firstBlock );
 
-                        if ( !wizardPlayer.spendWizardPower( toolCost, patternName ) ) return;
+                        if ( !wizardPlayer.spendWizardPower( lumberjackCost, patternName ) ) return;
 
                         for (int i = 0; i < 1000 && i < blocks.size(); i++) {
                             Block b = blocks.get(i);
@@ -152,12 +153,7 @@ public class WizardAxe extends ToolPattern {
                     }
 
                 }
-
-
-
-                if ( Tag.LOGS.isTagged( choppedType ) ) {
-
-                }
+                
             }
         };
 

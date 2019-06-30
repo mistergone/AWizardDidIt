@@ -48,7 +48,6 @@ public class MagicCommands implements CommandExecutor {
                     getWizardry().getWizardPlayer( p.getUniqueId() ).showWizardBar();
                     // Player typed /wizardry me
                     if ( args.length == 1 ) {
-                        Bukkit.broadcastMessage( String.valueOf( args.length ) );
                         p.sendMessage( ChatColor.LIGHT_PURPLE + "You have " + String.valueOf( wizardPower )
                                 +  " points of Wizard Power.");
                         // TODO - Add tooluses to the printout? Maybe?

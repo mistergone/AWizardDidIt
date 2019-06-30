@@ -31,21 +31,22 @@ public class WizardElevator extends MagicSign {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 wizardPlayer.addSpell( signName );
                 int direction = player.isSneaking() ? -1 : 1;
-                Block destination = findDestination( clickedBlock, direction, player );
+                Block destination = findDestination( signBlock, direction, player );
+
                 if ( destination == null ) return;
 
-                moveIt( wizardPlayer, destination, clickedBlock );
+                moveIt( wizardPlayer, destination, signBlock );
 
             }
         };
     }
 
-    private void moveIt( WizardPlayer wizardPlayer, Block destination, Block clickedBlock ) {
+    private void moveIt( WizardPlayer wizardPlayer, Block destination, Block signBlock ) {
         AWizardDidIt plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
         Player p = wizardPlayer.getPlayer();
         final Location newLoc = destination.getLocation();
         final AtomicInteger stuckCount = new AtomicInteger();
-        Location startingPoint = clickedBlock.getLocation().add( 0.5,-1,0.5 );
+        Location startingPoint = signBlock.getLocation().add( 0.5,-1,0.5 );
         startingPoint.setPitch( p.getLocation().getPitch() );
         startingPoint.setYaw( p.getLocation().getYaw() );
         p.teleport( startingPoint );
@@ -152,8 +153,9 @@ public class WizardElevator extends MagicSign {
 
         if ( !Tag.WALL_SIGNS.isTagged( event.getBlock().getType() ) ) {
             p.sendMessage( ChatColor.RED + "Wizard Elevator must be a wall sign!");
-            lines[0] = "Wizard Elevator must";
-            lines[1] = "be a wall sign.";
+            lines[0] = "Wizard Elevator";
+            lines[1] = "must be";
+            lines[2] = "a wall sign.";
             return;
         }
 
