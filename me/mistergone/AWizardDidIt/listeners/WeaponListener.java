@@ -52,6 +52,11 @@ public class WeaponListener implements Listener {
                             String loreTwo = lore.get(1);
                             if ( loreTwo.substring( 0, 6 ).equals( "Mode: " ) ) {
                                 String mode = loreTwo.substring( 6 );
+                                if ( mode.contains( "Teletransference") ) {
+                                    AWizardDidIt plugin = (AWizardDidIt) Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
+                                    proj.setMetadata( "vector", new FixedMetadataValue( plugin, proj.getVelocity() ) );
+                                    proj.setMetadata( "location", new FixedMetadataValue( plugin, proj.getLocation() ) );
+                                }
 
                                 if ( itemType == Material.TRIDENT && loreOne.equals( "Wizard Trident" ) ) {
                                     if ( !mode.equals( "Normal" ) ) {
@@ -82,11 +87,6 @@ public class WeaponListener implements Listener {
                                             return;
                                         }
                                         proj.setCustomName( mode );
-                                        if ( mode.contains( "Teletransference") ) {
-                                            AWizardDidIt plugin = (AWizardDidIt) Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
-                                            proj.setMetadata( "vector", new FixedMetadataValue( plugin, proj.getVelocity() ) );
-                                            proj.setMetadata( "location", new FixedMetadataValue( plugin, proj.getLocation() ) );
-                                        }
                                     }
                                 }
                             }

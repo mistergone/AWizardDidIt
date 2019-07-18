@@ -65,7 +65,7 @@ public class DamageListener implements Listener {
             } else if ( ( isFall || isSuff || isWall ) && wizardPlayer.checkSpell( "Teletransference" ) ) {
                 event.setCancelled( true );
                 if ( isFall ) {
-                    player.sendMessage( ChatColor.AQUA + "It looks like something went wrong with Teletransference, so your falling damage was prevented!");
+                    player.sendMessage( ChatColor.AQUA + "It's possible something went wrong with Teletransference, so your falling damage was prevented!");
                     wizardPlayer.removeSpell( "Teletransference" );
                 }
 
@@ -100,7 +100,7 @@ public class DamageListener implements Listener {
                 if ( damager.getCustomName() == null ) return;
                 String customName = damager.getCustomName();
 
-                if ( event.getEntity() instanceof Monster ) {
+                if ( MobManager.isMonster( event.getEntity() ) ) {
                     if ( customName.equals( "Alf's Action Arrow Projectile" ) ) {
                         double damage =  Math.floor( ( Math.random() * 6 ) + 5 );
                         event.setDamage( damage );
@@ -119,7 +119,7 @@ public class DamageListener implements Listener {
                     }
                 } else if ( customName.contains( "Teletransference" ) ) {
                     wizardPlayer.sendMsgWithCooldown( "Teletransference (non-Monster hit)",
-                        ChatColor.LIGHT_PURPLE + "Your Bow of Teletransference hit a non-Monster entity! Your teletransference has been cancelled.",
+                        ChatColor.LIGHT_PURPLE + "Your Teletransference arrow hit a non-Monster entity! Your teletransference has been cancelled.",
                         2 );
                     event.setDamage( 0 );
                     event.setCancelled( true );
@@ -131,28 +131,37 @@ public class DamageListener implements Listener {
             if ( damager instanceof Trident ) {
                 Trident trident = (Trident) damager;
 
-                if ( trident.getCustomName() == null ) return;
+                String customName = trident.getCustomName();
+                if ( customName == null ) return;
                 Entity victim = event.getEntity();
-                if ( trident.getCustomName().equals( "Fiery Pitchfork" ) ) {
+
+                if ( customName.equals( "Fiery Pitchfork" ) ) {
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Fiery Pitchfork" ) , null ) ) return;
                     victim.setFireTicks( 80 );
                     SpecialEffects.flamesEffect( victim.getLocation().add( -.5, 0, -.5 ) );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Fiery Pitchfork)",
                             ChatColor.AQUA + "You have invoked Fiery Pitchfork using your Wizard Trident!", 10 );
-                } else if ( trident.getCustomName().equals( "Monster Slayer" ) ) {
-                    if ( ! ( victim instanceof Monster ) ) return;
+                } else if ( customName.equals( "Monster Slayer" ) ) {
+                    if ( ! MobManager.isMonster( victim ) ) return;
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Monster Slayer" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
                     SpecialEffects.magicSpiral( victim.getLocation() );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Monstery Slayer)",
                             ChatColor.AQUA + "You have invoked Monstery Slayer using your Wizard Trident!", 10 );
-                } else if ( trident.getCustomName().equals( "Hunting Spear" ) ) {
+                } else if ( customName.equals( "Hunting Spear" ) ) {
                     if ( ! ( victim instanceof Animals ) ) return;
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Hunting Spear" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
                     SpecialEffects.portalCollapse( victim.getLocation() );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Hunting Spear)",
                             ChatColor.AQUA + "You have invoked Hunting Spear using your Wizard Trident!", 10 );
+                } else if ( customName.contains( "Teletransference" )  && !MobManager.isMonster( victim ) ) {
+                    wizardPlayer.sendMsgWithCooldown( "Teletransference (non-Monster hit)",
+                            ChatColor.LIGHT_PURPLE + "Your Teletransference Trident hit a non-Monster entity! Your teletransference has been cancelled.",
+                            2 );
+                    event.setDamage( 0 );
+                    event.setCancelled( true );
+                    projectile.setCustomName( "" );
                 }
             }
 
@@ -189,20 +198,18 @@ public class DamageListener implements Listener {
             WizardPlayer wizardPlayer = Wizardry.getWizardry().getWizardPlayer( p.getUniqueId() );
 
             if ( entity instanceof SmallFireball && entity.getCustomName().equals( "Incinerate Projectile" ) ) {
-                if ( event.getHitEntity() != null && event.getHitEntity() instanceof LivingEntity ) {
-                    event.getHitEntity().setFireTicks( 60 );
-                    ((LivingEntity) event.getHitEntity()).damage( 15 );
+                if (event.getHitEntity() != null && event.getHitEntity() instanceof LivingEntity) {
+                    event.getHitEntity().setFireTicks(60);
+                    ((LivingEntity) event.getHitEntity()).damage(15);
                 }
-                entity.getWorld().createExplosion( entity.getLocation(), 0, false );
-            } else if ( entity instanceof Arrow ) {
+                entity.getWorld().createExplosion(entity.getLocation(), 0, false);
+            } else if ( entity instanceof Trident ) {
                 String customName = entity.getCustomName();
                 if ( customName != null ) {
-                    if ( !( customName.equals( "Bow of Teletransference" ) )
-                        && !( customName.equals( "Bane of Darkness" ) ) ) return;
-
+                    if ( !( customName.equals( "Teletransference Trident" ) ) ) return;
                     if ( event.getHitBlock() == null ) return;
                     try {
-                        WeaponPattern magicBow = wizardry.getWeaponByLore( "Wizard Bow" );
+                        WeaponPattern magicBow = wizardry.getWeaponByLore( "Wizard Trident" );
                         WeaponFunction weaponFunction = magicBow.getWeaponFunction();
                         weaponFunction.weapon = p.getInventory().getItemInMainHand();
                         weaponFunction.mode = customName;
@@ -212,6 +219,39 @@ public class DamageListener implements Listener {
                         weaponFunction.call();
                     } catch ( Exception ex ) {
                         ex.printStackTrace( );
+                    }
+                }
+            } else if ( entity instanceof Arrow ) {
+                String customName = entity.getCustomName();
+                if ( customName != null ) {
+                    if ( event.getHitBlock() == null ) return;
+
+                    if ( customName.contains( "Bolt" ) ) {
+                        try {
+                            WeaponPattern magicCrossbow = wizardry.getWeaponByLore( "Wizard Crossbow" );
+                            WeaponFunction weaponFunction = magicCrossbow.getWeaponFunction();
+                            weaponFunction.weapon = p.getInventory().getItemInMainHand();
+                            weaponFunction.mode = customName;
+                            weaponFunction.projectileHitEvent = event;
+                            weaponFunction.player = p;
+                            weaponFunction.wizardPlayer = wizardPlayer;
+                            weaponFunction.call();
+                        } catch ( Exception ex ) {
+                            ex.printStackTrace( );
+                        }
+                    } else {
+                        try {
+                            WeaponPattern magicBow = wizardry.getWeaponByLore( "Wizard Bow" );
+                            WeaponFunction weaponFunction = magicBow.getWeaponFunction();
+                            weaponFunction.weapon = p.getInventory().getItemInMainHand();
+                            weaponFunction.mode = customName;
+                            weaponFunction.projectileHitEvent = event;
+                            weaponFunction.player = p;
+                            weaponFunction.wizardPlayer = wizardPlayer;
+                            weaponFunction.call();
+                        } catch ( Exception ex ) {
+                            ex.printStackTrace( );
+                        }
                     }
                 }
 

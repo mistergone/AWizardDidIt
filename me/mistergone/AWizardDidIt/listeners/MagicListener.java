@@ -85,7 +85,9 @@ public class MagicListener implements Listener {
             // "Grounded" status prevents a race condition with damage prevention event handler
             wizardPlayer.addSpell( "Cloud Rider (Grounded)" );
         } else if ( wizardPlayer.checkSpell( "Cloud Rider (Grounded)") ) {
-            wizardPlayer.removeSpell("Cloud Rider (Grounded)" );
+            wizardPlayer.removeSpell(" Cloud Rider (Grounded)" );
+        } else if ( wizardPlayer.checkSpell( "Teletransference" ) ) {
+            wizardPlayer.removeSpell( "Teletransference" );
         }
     }
 
