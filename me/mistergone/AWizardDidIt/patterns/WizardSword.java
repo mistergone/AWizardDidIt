@@ -81,7 +81,7 @@ public class WizardSword extends WeaponPattern {
 
         this.weaponModes = new ArrayList<>();
         weaponModes.add( "Mode: Normal" );
-        weaponModes.add( "Mode: Whirlwind Slash" );
+//        weaponModes.add( "Mode: Whirlwind Slash" );
         weaponModes.add( "Mode: Lifestealer" );
         weaponModes.add( "Mode: Moonblade" );
 

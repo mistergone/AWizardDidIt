@@ -83,6 +83,7 @@ public class ToolListener implements Listener {
                     String loreCheck = lore.get( 0 );
                     ToolPattern toolPattern = wizardry.getToolByLore( loreCheck );
                     if ( toolPattern != null &&  toolPattern.getSecondaryFunction() != null ) {
+                        e.setCancelled( true );
                         try {
                             ToolFunction toolFunction = toolPattern.getSecondaryFunction();
                             toolFunction.tool = main;

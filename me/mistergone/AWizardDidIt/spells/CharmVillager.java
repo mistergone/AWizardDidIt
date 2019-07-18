@@ -60,6 +60,7 @@ public class CharmVillager extends MagicSpell {
                               }
                           }
                           if (refreshed) {
+
                               if (reagent.getAmount() >= 1) {
                                   if (reagent.getAmount() > 1) {
                                       reagent.setAmount(reagent.getAmount() - 1);

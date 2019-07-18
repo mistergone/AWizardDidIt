@@ -91,7 +91,7 @@ public class WandListener implements Listener {
 
                         MagicSign magicSign = wizardry.getMagicSign(signature);
                         if (magicSign != null) {
-                            e.setCancelled(true);
+                            e.setCancelled( true );
                             try {
                                 SignFunction function = magicSign.getSignFunction();
                                 function.setPlayer( p );

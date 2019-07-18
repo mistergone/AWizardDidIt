@@ -1,8 +1,5 @@
 package me.mistergone.AWizardDidIt.patterns;
 
-import com.google.common.util.concurrent.AtomicDouble;
-import com.sun.org.apache.xpath.internal.operations.Bool;
-import io.netty.handler.codec.http2.Http2FrameLogger;
 import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
