@@ -72,7 +72,6 @@ public class WizardCrossbow extends WeaponPattern {
             @Override
             public void run() {
                 if ( mode.equals( "Teletransference Bolt" )) {
-                    Bukkit.broadcastMessage( "HERE" );
 //                    if ( wizardPlayer.checkSpell( "Teletransference" ) ) return;
                     String spellName = "Teletransference Bolt";
                     Block hitBlock = projectileHitEvent.getHitBlock();
