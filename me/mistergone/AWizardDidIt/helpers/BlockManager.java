@@ -1,10 +1,14 @@
 package me.mistergone.AWizardDidIt.helpers;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Sign;
+import org.bukkit.block.data.Directional;
+import org.bukkit.block.data.type.WallSign;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -45,6 +49,11 @@ public class BlockManager {
             Material.STONE,
             Material.TURTLE_EGG
     } );
+
+    public static List<Material> airTypes = new ArrayList<Material>( Arrays.asList( Material.AIR, Material.CAVE_AIR ) );
+
+    public static List<BlockFace> sides = new ArrayList<>( Arrays.asList( BlockFace.NORTH, BlockFace.EAST,
+            BlockFace.SOUTH, BlockFace.WEST ) );
 
     /**
      * Returns whether a Material is a "silky pick type"
@@ -163,14 +172,37 @@ public class BlockManager {
         return str;
     }
 
-    public static List<Material> airTypes = new ArrayList<Material>( Arrays.asList( Material.AIR, Material.CAVE_AIR ) );
-
     public static Boolean isDangerous( Material m ) {
         if ( m == Material.LAVA || m == Material.FIRE ) {
             return true;
         } else {
             return false;
         }
+    }
+
+    public static ArrayList<Block> getAttachedSigns( Block b ) {
+        ArrayList<Block> signs = new ArrayList<>();
+        for ( BlockFace face: sides ) {
+            Block check = b.getRelative( face );
+            if ( Tag.WALL_SIGNS.isTagged( check.getType() ) ) {
+                WallSign sign = (WallSign) check.getBlockData();
+                if ( sign.getFacing() == face ) {
+                    signs.add( check );
+                }
+            }
+        }
+        return signs;
+    }
+
+    public static Boolean hasSignOpposite( Block b, BlockFace clickedFace ) {
+        Block check = b.getRelative( clickedFace.getOppositeFace() );
+        if ( Tag.WALL_SIGNS.isTagged( check.getType() ) ) {
+            WallSign sign = (WallSign) check.getBlockData();
+            if ( sign.getFacing() == clickedFace.getOppositeFace() ) {
+                return true;
+            }
+        }
+        return false;
     }
 
 }

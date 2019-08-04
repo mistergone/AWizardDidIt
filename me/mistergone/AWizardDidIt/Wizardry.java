@@ -101,6 +101,7 @@ public class Wizardry {
         spellRegistry.add( new AlfsActionArrow()    );
         spellRegistry.add( new CharmVillager() );
         spellRegistry.add( new CloudRider() );
+        spellRegistry.add( new EnderPocket() );
         spellRegistry.add( new FreezeOver() );
         spellRegistry.add( new GrassCutter() );
         spellRegistry.add( new HolyDiver() );
@@ -134,7 +135,7 @@ public class Wizardry {
         patternRegistry.add( new WizardBow() );
         patternRegistry.add( new WizardCrossbow() );
         patternRegistry.add( new WizardHoe() );
-        patternRegistry.add( new WizardFood() );
+//        patternRegistry.add( new WizardFood() );
         patternRegistry.add( new WizardPick() );
         patternRegistry.add( new WizardShovel() );
         patternRegistry.add( new WizardSword() );

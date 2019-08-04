@@ -19,6 +19,8 @@ import java.util.ArrayList;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
+
+// This class has been deprecated and is no longer active in version 1.3.0
 public class WizardFood extends MagicPattern {
     public WizardFood() {
         patternName = "Wizard Food";

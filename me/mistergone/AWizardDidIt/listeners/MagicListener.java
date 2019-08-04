@@ -173,6 +173,7 @@ public class MagicListener implements Listener {
             InventoryHolder holder = event.getClickedInventory().getHolder();
             Boolean isThunderhorse = holder instanceof SkeletonHorse &&  ((SkeletonHorse) holder).getName().equals( "Thunderhorse" );
             Boolean hasThunderhorse = wizardPlayer.checkSpell( "Thunderhorse" );
+            if ( event.getCurrentItem() == null ) return;
             Boolean clickedSaddle = event.getCurrentItem().getType() == Material.SADDLE;
             if ( isThunderhorse && hasThunderhorse && clickedSaddle ) {
                 event.setCancelled( true );
