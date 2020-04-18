@@ -183,7 +183,11 @@ public class DamageListener implements Listener {
                 } else if ( mode.equals( "Moonblade") && p.getWorld().getTime() > 13000 ) {
                     event.setDamage( event.getDamage() + 4 );
                 }
+            }
 
+            // Wands do not hurt
+            if ( main != null &&  MagicWand.isActuallyAWand(main) ) {
+                event.setCancelled( true );
             }
         }
     }
