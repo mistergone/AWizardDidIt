@@ -13,7 +13,7 @@ public class AWizardDidIt extends JavaPlugin{
     @Override
     public void onEnable(){
 
-
+        getServer().getPluginManager().registerEvents(new BlockListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new DamageListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new MagicListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new SignListener( Wizardry.getWizardry() ), this);

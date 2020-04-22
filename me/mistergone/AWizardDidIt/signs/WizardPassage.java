@@ -123,11 +123,12 @@ public class WizardPassage extends MagicSign {
         if ( !( lines[1].equals( "<<" ) || lines[1].equals( ">>" ) ) ) {
             lines[1] = ">>";
         }
-        if ( ( lines[2] == null ) || Integer.valueOf( lines[2] ) > 10 ) {
+        if ( ( lines[2].equals( "" ) ) || Integer.valueOf( lines[2] ) > 10 ) {
             lines[2] = "5";
         }
 
         lines[0] = "[" + ChatColor.DARK_PURPLE + "WizardPassage" + ChatColor.BLACK + "]";
+        lines[3] = "";
     }
 
     public static Boolean isWizardPassageSign( Block b ) {

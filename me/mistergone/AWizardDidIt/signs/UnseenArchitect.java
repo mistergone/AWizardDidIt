@@ -170,7 +170,7 @@ public class UnseenArchitect extends MagicSign {
         }
         lines[1] = ChatColor.DARK_BLUE + projectName;
         lines[0] = signTitle;
-        lines[3] = ChatColor.DARK_PURPLE + p.getName();
+        lines[3] = ChatColor.LIGHT_PURPLE + p.getName();
 
     }
 

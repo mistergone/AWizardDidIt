@@ -313,7 +313,7 @@ public class WizardPlayer {
      */
     public void savePlayerData() {
         File path = WizardryData.openWizardryFolder( "/players" );
-        String fileName = player.getDisplayName() + ".yml";
+        String fileName = player.getName() + ".yml";
         File playerDataFile = WizardryData.openWizardryFile( path, fileName );
         FileConfiguration playerDataConfig;
         if ( !playerDataFile.exists() ) {
@@ -344,7 +344,7 @@ public class WizardPlayer {
      */
     public void loadSavedPlayerData() {
         File path = WizardryData.openWizardryFolder( "/players" );
-        String fileName = player.getDisplayName() + ".yml";
+        String fileName = player.getName() + ".yml";
         File playerDataFile = WizardryData.openWizardryFile( path, fileName );
         FileConfiguration fileConfiguration = new YamlConfiguration();
         this.wizardPower = 1000;
@@ -429,5 +429,7 @@ public class WizardPlayer {
     public Location getIntendedDestination() { return this.intendedDestination; }
 
     public void setIntendedDestination( Location loc ) { this.intendedDestination = loc; }
+
+
 
 }

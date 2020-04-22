@@ -1,11 +1,19 @@
 package me.mistergone.AWizardDidIt.listeners;
 
+import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.helpers.MagicWand;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
+import me.mistergone.AWizardDidIt.signs.WizardLock;
+import net.minecraft.server.v1_15_R1.BlockChest;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -13,6 +21,8 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleExitEvent;
+import org.bukkit.inventory.DoubleChestInventory;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
@@ -20,6 +30,7 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
 
+import java.util.ArrayList;
 import java.util.UUID;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
@@ -165,12 +176,12 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onInventoryInteractEvent( InventoryClickEvent event ) {
-        if ( event.getWhoClicked() instanceof  Player && event.getClickedInventory() != null ) {
+        if ( event.getWhoClicked() instanceof Player && event.getClickedInventory() != null ) {
             Player p = (Player )event.getWhoClicked();
             WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
+            InventoryHolder holder = event.getClickedInventory().getHolder();
 
             // Did you try to take Thunderhorse's saddle?!?!
-            InventoryHolder holder = event.getClickedInventory().getHolder();
             Boolean isThunderhorse = holder instanceof SkeletonHorse &&  ((SkeletonHorse) holder).getName().equals( "Thunderhorse" );
             Boolean hasThunderhorse = wizardPlayer.checkSpell( "Thunderhorse" );
             if ( event.getCurrentItem() == null ) return;
@@ -180,6 +191,43 @@ public class MagicListener implements Listener {
                 p.sendMessage( ChatColor.DARK_RED + "You dare touch the saddle of Thunderhorse?!?!? Suffer the curse of darkness!");
                 PotionEffect curse = new PotionEffect( PotionEffectType.BLINDNESS, 200, 1 );
                 p.addPotionEffect( curse );
+            }
+
+        }
+    }
+
+    @EventHandler
+    public void onPlayerInteractEvent( PlayerInteractEvent e ) {
+        Player p = e.getPlayer();
+        // Block interaction events
+        if ( e != null && e.hasBlock() ) {
+            Block b = e.getClickedBlock();
+            // Chest interactions
+            if ( b.getType() == Material.CHEST || b.getType() == Material.TRAPPED_CHEST ) {
+                Chest c = (Chest) b.getState();
+                Inventory i = c.getInventory();
+                ArrayList<Block> ups = new ArrayList<>();
+                if ( i instanceof DoubleChestInventory ) {
+                    DoubleChestInventory doubleChest = (DoubleChestInventory) i;
+                    ups.add( doubleChest.getLeftSide().getLocation().getBlock().getRelative( BlockFace.UP ) );
+                    ups.add( doubleChest.getRightSide().getLocation().getBlock().getRelative( BlockFace.UP ) );
+                } else {
+                    ups.add( c.getBlock().getRelative( BlockFace.UP ) );
+                }
+
+                for ( Block u: ups ) {
+                    if ( WizardLock.isWizardLockSign( u ) ) {
+                        Sign s = (Sign) u.getState();
+                        String owner = BlockManager.getSignOwner( s );
+                        if ( owner.equals( p.getName() ) ) {
+                        } else {
+                            p.sendMessage( ChatColor.RED + "This chest was locked by " + ChatColor.LIGHT_PURPLE +
+                                owner + ChatColor.RED + " and cannot be opened by other players.");
+                            e.setCancelled( true );
+                        }
+
+                    }
+                }
             }
         }
     }

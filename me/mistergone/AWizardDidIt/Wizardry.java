@@ -161,6 +161,7 @@ public class Wizardry {
         signRegistry.add( new WizardElevator() );
         signRegistry.add( new UnseenArchitect() );
         signRegistry.add( new WizardPassage() );
+        signRegistry.add( new WizardLock() );
 
         for ( MagicSign magicSign: signRegistry) {
             this.signList.put( magicSign.signature, magicSign );

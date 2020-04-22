@@ -1,18 +1,24 @@
 package me.mistergone.AWizardDidIt.listeners;
 
 import me.mistergone.AWizardDidIt.Wizardry;
+import me.mistergone.AWizardDidIt.helpers.BlockManager;
 import me.mistergone.AWizardDidIt.signs.WizardElevator;
 import me.mistergone.AWizardDidIt.signs.UnseenArchitect;
 import me.mistergone.AWizardDidIt.signs.WizardPassage;
+import me.mistergone.AWizardDidIt.signs.WizardLock;
 import org.bukkit.*;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
+
+import java.util.ArrayList;
 
 import static me.mistergone.AWizardDidIt.data.UnseenProjectManager.getUnseenPM;
 
@@ -35,6 +41,8 @@ public class SignListener implements Listener {
             WizardElevator.handleSignEvent( event );
         } else if ( lines[0].equals( "[WizardPassage]" ) ) {
             WizardPassage.handleSignEvent( event );
+        } else if ( lines[0].equals( "[WizardLock]" ) ) {
+            WizardLock.handleSignEvent( event );
         }
 
     }
@@ -74,6 +82,40 @@ public class SignListener implements Listener {
                     System.out.println( "<AWDI>: A null project name was found on a sign.");
                 } else {
                     System.out.println( "<AWDI>: A sign was destroyed that referred to a non-existent project.");
+                }
+            }
+
+            // Prevent owned Wizard sign destruction
+            if ( !p.isOp() ) { // Ops can destroy all signs directly
+                if ( WizardLock.isWizardLockSign( b ) && !BlockManager.getSignOwner( sign ).equals( p.getName() ) ) {
+                    p.sendMessage( ChatColor.RED + "You cannot destroy other player's Wizard Signs!" );
+                    e.setCancelled( true );
+                }
+            }
+        }
+
+        // Prevent block destruction if sign is attached.
+        ArrayList<Block> signs = BlockManager.getAttachedSigns( b );
+        for ( Block blocko: signs ) {
+            if ( BlockManager.isWizardSign( blocko ) ) {
+                p.sendMessage( ChatColor.RED + "This block has a Wizard Sign attached and cannot be broken! Please " +
+                        "break the attached sign first." );
+                e.setCancelled( true );
+            }
+        }
+    }
+
+    @EventHandler
+    public void BlockPlaceEvent( BlockPlaceEvent e ) {
+        Material placedType = e.getBlockPlaced().getType();
+        if ( placedType == Material.CHEST || placedType == Material.TRAPPED_CHEST ) {
+            Block up = e.getBlockPlaced().getRelative( BlockFace.UP );
+            Player p = e.getPlayer();
+            if ( WizardLock.isWizardLockSign( up ) ) {
+                Sign s = (Sign) up.getState();
+                if ( !BlockManager.getSignOwner( s ).equals( p.getName() ) ) {
+                    p.sendMessage( ChatColor.RED + "You cannot place a chest under another player's WizardLock!");
+                    e.setCancelled( true );
                 }
             }
         }

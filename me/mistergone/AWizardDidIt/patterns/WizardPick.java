@@ -106,6 +106,19 @@ public class WizardPick extends ToolPattern {
                         Boolean digType = stoneTypes.contains(b.getType()) && stoneTypes.contains(brokenMat);
                         // Let the tool break the original block
                         if ((sameType || digType) && !b.equals(firstBlock) ) {
+                            // Don't break wizard signs
+                            if (BlockManager.isWizardSign(b)) {
+                                player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
+                                continue;
+                            }
+
+                            // Don't break blocks with Wizard Signs attached
+                            if ( BlockManager.hasAttachedWizardSigns( b ) ) {
+                                player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
+                                        "Wizard Sign first!");
+                                continue;
+                            }
+
                             if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
 
                             Material bMat = b.getType();

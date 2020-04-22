@@ -101,6 +101,19 @@ public class WizardAxe extends ToolPattern {
 
                             // Let the tool break the first block
                             if ( !b.equals( firstBlock ) ) {
+                                // Don't break wizard signs
+                                if (BlockManager.isWizardSign(b)) {
+                                    player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
+                                    continue;
+                                }
+
+                                // Don't break blocks with Wizard Signs attached
+                                if ( BlockManager.hasAttachedWizardSigns( b ) ) {
+                                    player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
+                                            "Wizard Sign first!");
+                                    continue;
+                                }
+
                                 b.breakNaturally(player.getInventory().getItemInMainHand());
                             }
 
@@ -147,7 +160,22 @@ public class WizardAxe extends ToolPattern {
                     Material brokenMat = firstBlock.getType();
                     for ( Block b : blockBox ) {
                         if ( ( b.getType() == brokenMat ) && !b.equals( firstBlock ) ) {
+
+                            // Don't break wizard signs
+                            if (BlockManager.isWizardSign(b)) {
+                                player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
+                                continue;
+                            }
+
+                            // Don't break blocks with Wizard Signs attached
+                            if ( BlockManager.hasAttachedWizardSigns( b ) ) {
+                                player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
+                                        "Wizard Sign first!");
+                                continue;
+                            }
+
                             if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
+
                             b.breakNaturally(player.getInventory().getItemInMainHand());
                         }
                     }

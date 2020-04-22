@@ -16,6 +16,8 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.ItemStack;
 
+import java.util.ArrayList;
+
 public class WandListener implements Listener {
     private Wizardry wizardry;
 
@@ -75,16 +77,16 @@ public class WandListener implements Listener {
                     MagicSpell magicSpell = null;
 
                     if ( clickedBlock != null ) {
-
-                        // If you hit a SIGN, then do a sign thing
+                         // If you hit a SIGN, then do a sign thing
                         // If you hit a block with your wand, let's see if there's a WizardPassage on the other side
                         Boolean clickedSign = Tag.WALL_SIGNS.isTagged( clickedMaterial ) || Tag.SIGNS.isTagged( clickedMaterial );
                         Boolean signOtherSide = BlockManager.hasSignOpposite( clickedBlock, e.getBlockFace() );
+                        ArrayList<Block> signs = BlockManager.getAttachedSigns( clickedBlock );
 
                         if ( clickedSign || signOtherSide ) {
                             BlockState state;
                             Block signBlock = clickedBlock;
-                            if ( clickedSign ) {
+                                if ( clickedSign ) {
                                 state = clickedBlock.getState();
                             } else {
                                 signBlock = clickedBlock.getRelative( e.getBlockFace().getOppositeFace(), 1 );
