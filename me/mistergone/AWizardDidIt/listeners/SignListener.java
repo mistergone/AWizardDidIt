@@ -57,6 +57,13 @@ public class SignListener implements Listener {
         if ( Tag.SIGNS.isTagged( b.getType() ) ) {
             Sign sign = (Sign) b.getState();
             String[] lines = sign.getLines();
+            // Prevent owned Wizard sign destruction
+            if ( !p.isOp() ) { // Ops can destroy all signs directly
+                if ( WizardLock.isWizardLockSign( b ) && !SignHelper.getSignOwner( sign ).equals( p.getName() ) ) {
+                    p.sendMessage( ChatColor.RED + "You cannot destroy other player's Wizard Signs!" );
+                    e.setCancelled( true );
+                }
+            }
             // Handle Unseen Assistant signs
             if ( getUnseenPM().isUASign( lines[0] ) ) {
                 if ( lines[3] != null && lines[3] != p.getName() && !p.isOp() ) {
@@ -83,14 +90,6 @@ public class SignListener implements Listener {
                     System.out.println( "<AWDI>: A null project name was found on a sign.");
                 } else {
                     System.out.println( "<AWDI>: A sign was destroyed that referred to a non-existent project.");
-                }
-            }
-
-            // Prevent owned Wizard sign destruction
-            if ( !p.isOp() ) { // Ops can destroy all signs directly
-                if ( WizardLock.isWizardLockSign( b ) && !SignHelper.getSignOwner( sign ).equals( p.getName() ) ) {
-                    p.sendMessage( ChatColor.RED + "You cannot destroy other player's Wizard Signs!" );
-                    e.setCancelled( true );
                 }
             }
         }

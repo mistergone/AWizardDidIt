@@ -1,12 +1,17 @@
 package me.mistergone.AWizardDidIt.helpers;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
+import me.mistergone.AWizardDidIt.signs.WizardLock;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.Directional;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.entity.Player;
+import org.bukkit.inventory.DoubleChestInventory;
+import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -179,5 +184,44 @@ public class BlockHelper {
         }
     }
 
+    // Check if the block is another players sign, or is another player's locked chest, etc
+    public static Boolean isSafeToBreak( Block block, Player player, String spellName ) {
+        // Don't break wizard signs
+        if ( SignHelper.isWizardSign( block ) ) {
+            player.sendMessage( ChatColor.RED + spellName + " cannot break or replace Wizard Signs!" );
+            return false;
+        }
+
+        // Don't break blocks with Wizard Signs attached
+        if ( SignHelper.hasAttachedWizardSigns( block ) ) {
+            player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
+                    "Wizard Sign first!");
+            return false;
+        }
+
+        // Don't break chests if they're WizardLocked
+        Material mat = block.getType();
+        if ( mat == Material.CHEST || mat == Material.TRAPPED_CHEST ) {
+            Chest c = (Chest) block.getState();
+            Inventory i = c.getInventory();
+            ArrayList<Block> ups = new ArrayList<>();
+            if ( i instanceof DoubleChestInventory) {
+                DoubleChestInventory doubleChest = (DoubleChestInventory) i;
+                ups.add( doubleChest.getLeftSide().getLocation().getBlock().getRelative( BlockFace.UP ) );
+                ups.add( doubleChest.getRightSide().getLocation().getBlock().getRelative( BlockFace.UP ) );
+            } else {
+                ups.add( block.getRelative( BlockFace.UP ) );
+            }
+
+            for ( Block u: ups ) {
+                if ( WizardLock.isWizardLockSign( u ) ) {
+                    player.sendMessage( ChatColor.RED + spellName + " found a locked chest and cannot break or replace it." );
+                    return false;
+                }
+            }
+        }
+
+        return true;
+    }
 
 }

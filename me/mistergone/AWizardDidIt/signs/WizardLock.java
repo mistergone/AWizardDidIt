@@ -4,10 +4,7 @@ import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
 import me.mistergone.AWizardDidIt.baseClasses.SignFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import net.minecraft.server.v1_15_R1.DoubleBlockFinder;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.Tag;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
@@ -73,6 +70,7 @@ public class WizardLock extends MagicSign {
 
         lines[0] = "[" + ChatColor.DARK_PURPLE + "WizardLock" + ChatColor.BLACK + "]";
         lines[3] = ChatColor.LIGHT_PURPLE + p.getName();
+        p.playSound( b.getLocation(), Sound.BLOCK_IRON_TRAPDOOR_CLOSE, 0.5F, 1F);
 
 //        if ( ( lines[2] == null ) || Integer.valueOf( lines[2] ) > 10 ) {
 //            lines[2] = "5";

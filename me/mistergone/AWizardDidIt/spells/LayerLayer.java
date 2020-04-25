@@ -92,6 +92,7 @@ public class LayerLayer extends MagicSpell {
 
                 // Handle the blockBox
                 for ( Block b : blockBox ) {
+                    if ( !BlockHelper.isSafeToBreak( b, player, spellName ) ) continue;
                     if ( wizardPlayer.spendToolUse( toolUseCost, spellName ) ) {
                         // Check if player ran out of layerItem
                         if ( b != null && player.getInventory().getItem( layerSlot ) == null ) {

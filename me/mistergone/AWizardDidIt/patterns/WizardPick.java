@@ -8,6 +8,8 @@ import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.event.Event;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -106,32 +108,11 @@ public class WizardPick extends ToolPattern {
                         Boolean digType = stoneTypes.contains(b.getType()) && stoneTypes.contains(brokenMat);
                         // Let the tool break the original block
                         if ((sameType || digType) && !b.equals(firstBlock) ) {
-                            // Don't break wizard signs
-                            if (SignHelper.isWizardSign(b)) {
-                                player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
-                                continue;
-                            }
-
-                            // Don't break blocks with Wizard Signs attached
-                            if ( SignHelper.hasAttachedWizardSigns( b ) ) {
-                                player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
-                                        "Wizard Sign first!");
-                                continue;
-                            }
 
                             if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
+                            if ( !BlockHelper.isSafeToBreak( b, player, patternName ) ) continue;
 
-                            Material bMat = b.getType();
-                            Boolean silky = player.getInventory().getItemInMainHand().getEnchantmentLevel( Enchantment.SILK_TOUCH ) > 0;
-                            Boolean silkTag = Tag.CORAL_BLOCKS.isTagged( bMat ) || Tag.CORALS.isTagged( bMat ) ||
-                                    Tag.ICE.isTagged( bMat) || Tag.LEAVES.isTagged( bMat );
-                            if ( silky && ( silkTag || BlockHelper.isSilkyPickType( b.getType() ) ) ) {
-                                ItemStack drop = new ItemStack( b.getType() );
-                                loc.getWorld().dropItem( loc, drop );
-                                b.setType( Material.AIR );
-                            } else {
-                                b.breakNaturally( player.getInventory().getItemInMainHand() );
-                            }
+                            b.breakNaturally( player.getInventory().getItemInMainHand() );
                         }
                     }
 

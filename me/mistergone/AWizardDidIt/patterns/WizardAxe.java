@@ -161,20 +161,8 @@ public class WizardAxe extends ToolPattern {
                     for ( Block b : blockBox ) {
                         if ( ( b.getType() == brokenMat ) && !b.equals( firstBlock ) ) {
 
-                            // Don't break wizard signs
-                            if (SignHelper.isWizardSign(b)) {
-                                player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
-                                continue;
-                            }
-
-                            // Don't break blocks with Wizard Signs attached
-                            if ( SignHelper.hasAttachedWizardSigns( b ) ) {
-                                player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
-                                        "Wizard Sign first!");
-                                continue;
-                            }
-
                             if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
+                            if ( !BlockHelper.isSafeToBreak( b, player, patternName ) ) continue;
 
                             b.breakNaturally(player.getInventory().getItemInMainHand());
                         }

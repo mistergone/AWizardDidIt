@@ -101,19 +101,7 @@ public class WizardShovel extends ToolPattern {
                         Boolean dirtMatch = dirtTypes.contains( b.getType()) && dirtTypes.contains( brokenMat );
                         if ( ( b.getType() == brokenMat || dirtMatch ) && !b.equals( firstBlock ) ) {
                             if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
-
-                            // Don't break wizard signs
-                            if (SignHelper.isWizardSign(b)) {
-                                player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
-                                continue;
-                            }
-
-                            // Don't break blocks with Wizard Signs attached
-                            if ( SignHelper.hasAttachedWizardSigns( b ) ) {
-                                player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
-                                        "Wizard Sign first!");
-                                continue;
-                            }
+                            if ( !BlockHelper.isSafeToBreak( b, player, patternName ) ) continue;
 
                             b.breakNaturally(player.getInventory().getItemInMainHand());
                         }
