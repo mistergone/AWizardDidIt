@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.BlockHelper;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
@@ -56,7 +56,7 @@ public class LayerLayer extends MagicSpell {
 
                 Location loc = player.getLocation();
                 ArrayList<Block> blockBox = new ArrayList<>();
-                BlockFace facing = BlockManager.yawToFace( loc.getYaw() );
+                BlockFace facing = BlockHelper.yawToFace( loc.getYaw() );
                 Boolean replaceAll = !reagent.getType().toString().contains( "SANDSTONE" );
                 Boolean silkTouch = false;
                 Boolean lowerSlab = reagent.getType().toString().contains( "SMOOTH" );
@@ -73,7 +73,7 @@ public class LayerLayer extends MagicSpell {
                         blockBox.add( targetBlock);
                         blockBox.add( targetBlock.getRelative( BlockFace.UP ) );
                     } else {
-                        blockBox = BlockManager.getSquareBoxFromFace(targetBlock, facing, 3, 1);
+                        blockBox = BlockHelper.getSquareBoxFromFace(targetBlock, facing, 3, 1);
                     }
                 } else if ( reagent.getType() ==  Material.STONE_SLAB ){
                     blockBox.add( clickedBlock );
@@ -86,7 +86,7 @@ public class LayerLayer extends MagicSpell {
                         blockBox.add( targetBlock );
                         blockBox.add( targetBlock.getRelative( facing, 1 ) );
                     } else {
-                        blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
+                        blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
                     }
                 }
 
@@ -107,7 +107,7 @@ public class LayerLayer extends MagicSpell {
                         }
 
                         if ( b != null && player.getInventory().getItem( layerSlot ) != null ) {
-                            Boolean isAir = BlockManager.airTypes.contains( b.getType() );
+                            Boolean isAir = BlockHelper.airTypes.contains( b.getType() );
                             Boolean isSolid = b.getType().isSolid();
                             Boolean sameType = layerType == b.getType();
                             layerItem = player.getInventory().getItem( layerSlot );
@@ -117,7 +117,7 @@ public class LayerLayer extends MagicSpell {
                                     if ( !silkTouch ) {
                                         b.breakNaturally();
                                     } else {
-                                        if ( BlockManager.isSilkyPickType( b.getType() ) ) {
+                                        if ( BlockHelper.isSilkyPickType( b.getType() ) ) {
                                             ItemStack drop = new ItemStack( b.getType() );
                                             loc.getWorld().dropItem( loc, drop );
                                         } else {

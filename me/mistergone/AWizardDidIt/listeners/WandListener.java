@@ -4,7 +4,6 @@ import me.mistergone.AWizardDidIt.*;
 import me.mistergone.AWizardDidIt.baseClasses.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
-import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
@@ -47,7 +46,7 @@ public class WandListener implements Listener {
                     MagicChest magicChest = new MagicChest(chest);
                     String[] pattern = magicChest.getPattern();
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
-                    Boolean wandOrEnchant = magicPattern instanceof EnchantWand || MagicWand.isActuallyAWand(main);
+                    Boolean wandOrEnchant = magicPattern instanceof EnchantWand || WandHelper.isActuallyAWand(main);
 
                     // Run the MagicFunction
                     if ( magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant ) {
@@ -64,13 +63,13 @@ public class WandListener implements Listener {
                     } else if (magicPattern == null) {
                         p.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
                         return;
-                    } else if (MagicWand.isActuallyAWand(main)) {
+                    } else if (WandHelper.isActuallyAWand(main)) {
                         p.sendMessage(ChatColor.RED + "You are not wielding a magic wand!");
                         return;
                     }
 
                 }
-                if ( MagicWand.isActuallyAWand( main ) ) {
+                if ( WandHelper.isActuallyAWand( main ) ) {
 
                     // If you just wave a magic wand around, magic might happen!
                     ItemStack offItem = p.getInventory().getItemInOffHand();
@@ -80,8 +79,8 @@ public class WandListener implements Listener {
                          // If you hit a SIGN, then do a sign thing
                         // If you hit a block with your wand, let's see if there's a WizardPassage on the other side
                         Boolean clickedSign = Tag.WALL_SIGNS.isTagged( clickedMaterial ) || Tag.SIGNS.isTagged( clickedMaterial );
-                        Boolean signOtherSide = BlockManager.hasSignOpposite( clickedBlock, e.getBlockFace() );
-                        ArrayList<Block> signs = BlockManager.getAttachedSigns( clickedBlock );
+                        Boolean signOtherSide = SignHelper.hasSignOpposite( clickedBlock, e.getBlockFace() );
+                        ArrayList<Block> signs = SignHelper.getAttachedSigns( clickedBlock );
 
                         if ( clickedSign || signOtherSide ) {
                             BlockState state;

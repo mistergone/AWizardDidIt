@@ -25,7 +25,7 @@ public class WizardPassage extends MagicSign {
     public WizardPassage() {
         signName = "Wizard Passage";
         signature = "[WizardPassage]";
-        cost = 1;
+        cost = 2;
 
         signFunction = new SignFunction() {
             @Override
@@ -46,6 +46,8 @@ public class WizardPassage extends MagicSign {
 
             // Let's not mess with bedrock
             if ( top.getType() == Material.BEDROCK || bottom.getType() == Material.BEDROCK ) return;
+
+            if ( !wizardPlayer.spendWizardPower( cost, signName ) ) return;
 
             makePassage( signBlock, top, bottom, timer, secondSignBlock );
             }

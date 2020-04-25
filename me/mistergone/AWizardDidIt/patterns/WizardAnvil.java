@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
-import me.mistergone.AWizardDidIt.helpers.ExpManager;
+import me.mistergone.AWizardDidIt.helpers.ExpHelper;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import org.bukkit.ChatColor;
 import org.bukkit.inventory.Inventory;
@@ -35,14 +35,14 @@ public class WizardAnvil extends MagicPattern {
                             int max = item.getType().getMaxDurability();
                             String name = item.getType().toString();
                             String strDam = String.valueOf( damage );
-                            if ( ExpManager.spendExp( player, damage ) ) {
+                            if ( ExpHelper.spendExp( player, damage ) ) {
                                 ((Damageable) meta).setDamage( 0 );
                                 item.setItemMeta( meta );
                                 player.sendMessage(ChatColor.AQUA + "Your magic repaired " + strDam + " damage from " + name );
                             } else {
-                                int exp = ExpManager.getExpTotal( player );
+                                int exp = ExpHelper.getExpTotal( player );
                                 player.sendMessage( ChatColor.RED + "You do not have sufficient EXP to fix " + strDam + " damage on " + name );
-                                if ( exp > 0 && ExpManager.spendExp( player, exp ) ) {
+                                if ( exp > 0 && ExpHelper.spendExp( player, exp ) ) {
                                     ((Damageable) meta).setDamage( damage - exp );
                                     item.setItemMeta( meta );
                                     player.sendMessage( ChatColor.AQUA + "Your magic partially repaired " + String.valueOf( exp ) + " damage (out of " + strDam + " damage) on " + name );

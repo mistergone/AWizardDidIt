@@ -23,7 +23,7 @@ public class WizardElevator extends MagicSign {
     public WizardElevator() {
         signName = "Wizard Elevator";
         signature = "[WizardElevator]";
-        cost = 5;
+        cost = 2;
 
         signFunction = new SignFunction() {
             @Override
@@ -35,6 +35,7 @@ public class WizardElevator extends MagicSign {
 
                 if ( destination == null ) return;
 
+                if ( !wizardPlayer.spendWizardPower( cost, signName ) ) return;
                 moveIt( wizardPlayer, destination, signBlock );
 
             }

@@ -2,7 +2,7 @@ package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
-import me.mistergone.AWizardDidIt.helpers.MagicWand;
+import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.ChatColor;
@@ -85,15 +85,15 @@ public class WizardShovel extends ToolPattern {
                     // Get the tool lore
                     List<String> lore = tool.getItemMeta().getLore();
                     if ( lore.size() == 1 || lore.get( 1 ).equals( "Mode: 3x3 (Centered)" ) ) {
-                        blockBox = BlockManager.getCubeByRadius( firstBlock, 1 );
+                        blockBox = BlockHelper.getCubeByRadius( firstBlock, 1 );
                     } else if ( lore.get( 1 ).equals( "Mode: 1x1" ) ) {
                         blockBox.add( firstBlock );
                     } else if ( lore.get( 1 ).equals( "Mode: 1x3 (Facing)" ) ) {
-                        blockBox = BlockManager.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 1 );
+                        blockBox = BlockHelper.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 1 );
                     } else if ( lore.get( 1 ).equals( "Mode: 2x3 (Facing)" ) ) {
-                        blockBox = BlockManager.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 2 );
+                        blockBox = BlockHelper.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 2 );
                     } else if ( lore.get( 1 ).equals( "Mode: 3x3 (Facing)" ) ) {
-                        blockBox = BlockManager.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 3 );
+                        blockBox = BlockHelper.getSquareBoxFromFace( firstBlock, wizardPlayer.getLastFaceClicked(), 3, 3 );
                     }
 
                     Material brokenMat = firstBlock.getType();
@@ -103,13 +103,13 @@ public class WizardShovel extends ToolPattern {
                             if ( !wizardPlayer.spendToolUse( toolCost, patternName ) ) return;
 
                             // Don't break wizard signs
-                            if (BlockManager.isWizardSign(b)) {
+                            if (SignHelper.isWizardSign(b)) {
                                 player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
                                 continue;
                             }
 
                             // Don't break blocks with Wizard Signs attached
-                            if ( BlockManager.hasAttachedWizardSigns( b ) ) {
+                            if ( SignHelper.hasAttachedWizardSigns( b ) ) {
                                 player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
                                         "Wizard Sign first!");
                                 continue;
@@ -134,7 +134,7 @@ public class WizardShovel extends ToolPattern {
             @Override
             public void run() {
                 ItemStack offHand = playerInteractEvent.getPlayer().getInventory().getItemInOffHand();
-                if ( MagicWand.isActuallyAWand( offHand ) ) {
+                if ( WandHelper.isActuallyAWand( offHand ) ) {
                     ItemMeta meta = tool.getItemMeta();
                     List<String> lore = meta.getLore();
                     if ( lore.size() == 1 ) {

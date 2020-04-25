@@ -6,7 +6,6 @@ import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.WizardSword;
 import me.mistergone.AWizardDidIt.patterns.WizardTrident;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -100,7 +99,7 @@ public class DamageListener implements Listener {
                 if ( damager.getCustomName() == null ) return;
                 String customName = damager.getCustomName();
 
-                if ( MobManager.isMonster( event.getEntity() ) ) {
+                if ( MobHelper.isMonster( event.getEntity() ) ) {
                     if ( customName.equals( "Alf's Action Arrow Projectile" ) ) {
                         double damage =  Math.floor( ( Math.random() * 6 ) + 5 );
                         event.setDamage( damage );
@@ -142,7 +141,7 @@ public class DamageListener implements Listener {
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Fiery Pitchfork)",
                             ChatColor.AQUA + "You have invoked Fiery Pitchfork using your Wizard Trident!", 10 );
                 } else if ( customName.equals( "Monster Slayer" ) ) {
-                    if ( ! MobManager.isMonster( victim ) ) return;
+                    if ( ! MobHelper.isMonster( victim ) ) return;
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Monster Slayer" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
                     SpecialEffects.magicSpiral( victim.getLocation() );
@@ -155,7 +154,7 @@ public class DamageListener implements Listener {
                     SpecialEffects.portalCollapse( victim.getLocation() );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Hunting Spear)",
                             ChatColor.AQUA + "You have invoked Hunting Spear using your Wizard Trident!", 10 );
-                } else if ( customName.contains( "Teletransference" )  && !MobManager.isMonster( victim ) ) {
+                } else if ( customName.contains( "Teletransference" )  && !MobHelper.isMonster( victim ) ) {
                     wizardPlayer.sendMsgWithCooldown( "Teletransference (non-Monster hit)",
                             ChatColor.LIGHT_PURPLE + "Your Teletransference Trident hit a non-Monster entity! Your teletransference has been cancelled.",
                             2 );
@@ -186,7 +185,7 @@ public class DamageListener implements Listener {
             }
 
             // Wands do not hurt
-            if ( main != null &&  MagicWand.isActuallyAWand(main) ) {
+            if ( main != null &&  WandHelper.isActuallyAWand(main) ) {
                 event.setCancelled( true );
             }
         }

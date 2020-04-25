@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.ExpManager;
+import me.mistergone.AWizardDidIt.helpers.ExpHelper;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import net.md_5.bungee.api.ChatColor;
@@ -36,7 +36,7 @@ public class HungerForPower extends MagicSpell {
                         wizardPlayer.addSpell( spellName + "(Exp)" );
                         wizardPlayer.setSpellTimer( spellName + "(Exp)", 100 );
                     } else {
-                        if ( ExpManager.spendExp( player, 50 ) ) {
+                        if ( ExpHelper.spendExp( player, 50 ) ) {
                             wizardPlayer.gainWizardPower( 50 );
                         } else {
                             player.sendMessage( ChatColor.RED + "You do not have sufficient Experience Points!");

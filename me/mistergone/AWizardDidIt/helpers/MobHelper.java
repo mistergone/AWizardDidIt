@@ -2,7 +2,7 @@ package me.mistergone.AWizardDidIt.helpers;
 
 import org.bukkit.entity.*;
 
-public class MobManager {
+public class MobHelper {
 
     public static Boolean isMonster( Entity e ) {
 

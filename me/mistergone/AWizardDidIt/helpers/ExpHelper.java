@@ -3,7 +3,7 @@ package me.mistergone.AWizardDidIt.helpers;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 
-public class ExpManager {
+public class ExpHelper {
 
     public static int getLevelBelow( int exp ) {
         int level = 0;

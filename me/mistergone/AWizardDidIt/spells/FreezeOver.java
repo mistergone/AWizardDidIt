@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.BlockHelper;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
@@ -35,7 +35,7 @@ public class FreezeOver extends MagicSpell {
                 if ( targetBlock.getType() == Material.WATER ) {
                     if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
                     if ( targetBlock.getRelative( BlockFace.UP ).getType() == Material.AIR ) {
-                        blockBox = BlockManager.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
+                        blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, BlockFace.UP, 3, 1 );
                         for ( Block block : blockBox ) {
                             if ( block.getType() == Material.WATER && !block.equals( feet ) && !block.equals( head ) ) {
                                 block.setType( Material.ICE );

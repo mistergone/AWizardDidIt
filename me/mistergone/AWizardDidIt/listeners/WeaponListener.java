@@ -106,7 +106,7 @@ public class WeaponListener implements Listener {
             ItemStack offhand = p.getInventory().getItemInOffHand();
             ItemStack main = p.getInventory().getItemInMainHand();
             // This only works if the offhand is a MagicWand
-            if ( !MagicWand.isActuallyAWand( offhand ) ) return;
+            if ( !WandHelper.isActuallyAWand( offhand ) ) return;
 
             if ( offhand != null && main.getItemMeta() != null ) {
                 List<String> lore = main.getItemMeta().getLore();

@@ -4,7 +4,7 @@ import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
-public class MagicWand {
+public class WandHelper {
 
     public static Boolean isJustAStick( ItemStack wandItem) {
         Boolean isStick = wandItem.getType() == Material.STICK;

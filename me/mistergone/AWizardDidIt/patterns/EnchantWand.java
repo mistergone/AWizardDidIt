@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
-import me.mistergone.AWizardDidIt.helpers.MagicWand;
+import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import org.bukkit.ChatColor;
@@ -26,7 +26,7 @@ public class EnchantWand extends MagicPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run( ) {
-                if ( MagicWand.isJustAStick( magicWand ) ) {
+                if ( WandHelper.isJustAStick( magicWand ) ) {
                     player.sendMessage(ChatColor.BLUE + "I see you have a taste for magic!");
 
                     magicWand.addUnsafeEnchantment( Enchantment.MENDING, 0 );

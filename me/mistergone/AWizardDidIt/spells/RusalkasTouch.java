@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.BlockHelper;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
@@ -39,13 +39,13 @@ public class RusalkasTouch extends MagicSpell {
                     Block targetBlock = player.getTargetBlock( null, 10 );
                     if ( targetBlock.getType() == Material.WATER ) {
                         Location loc = player.getLocation();
-                        BlockFace face = BlockManager.yawToFace( loc.getYaw() );
+                        BlockFace face = BlockHelper.yawToFace( loc.getYaw() );
                         if ( loc.getPitch() > 45 ) {
                             face = BlockFace.DOWN;
                         } else if ( loc.getPitch() < -45 ) {
                             face = BlockFace.UP;
                         }
-                        ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
+                        ArrayList<Block> blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
                         for ( Block block : blockBox ) {
                             if ( block.getType() == Material.WATER ) {
                                 block.setType( Material.AIR );
@@ -57,8 +57,8 @@ public class RusalkasTouch extends MagicSpell {
                         // Repair water!
                         Block targetBlock = player.getTargetBlock( null, 10 );
                         if ( targetBlock.getType() == Material.WATER ) {
-                            BlockFace face = BlockManager.yawToFace( player.getLocation().getYaw() );
-                            ArrayList<Block> blockBox = BlockManager.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
+                            BlockFace face = BlockHelper.yawToFace( player.getLocation().getYaw() );
+                            ArrayList<Block> blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
                             for ( Block block : blockBox ) {
                                 if ( block.getType() == Material.WATER ) {
                                     block.setType( Material.WATER );

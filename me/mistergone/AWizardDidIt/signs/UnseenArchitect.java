@@ -2,10 +2,9 @@ package me.mistergone.AWizardDidIt.signs;
 
 import me.mistergone.AWizardDidIt.listeners.SignListener;
 import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
+import me.mistergone.AWizardDidIt.helpers.BlockHelper;
 import me.mistergone.AWizardDidIt.baseClasses.SignFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
@@ -128,7 +127,7 @@ public class UnseenArchitect extends MagicSign {
                 otherPoint = 0;
             }
             if ( points != null && points[index] != null ) {
-                p.sendMessage(ChatColor.LIGHT_PURPLE + "This point already exists at (" + BlockManager.locToString(points[index])
+                p.sendMessage(ChatColor.LIGHT_PURPLE + "This point already exists at (" + BlockHelper.locToString(points[index])
                         + "). The sign there will be wiped!");
                 SignListener.wipeSign(points[index]);
             }

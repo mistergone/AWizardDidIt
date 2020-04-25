@@ -8,14 +8,11 @@ import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.block.data.BlockData;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.*;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
@@ -111,7 +108,7 @@ public class WizardBow extends WeaponPattern {
                     Block torch = projectileHitEvent.getHitBlock().getRelative( faceHit );
 
                     if ( faceHit == BlockFace.UP || faceHit == BlockFace.DOWN ) {
-                        if ( BlockManager.airTypes.contains( projectileHitEvent.getHitBlock().getRelative( BlockFace.UP ).getType() ) ) {
+                        if ( BlockHelper.airTypes.contains( projectileHitEvent.getHitBlock().getRelative( BlockFace.UP ).getType() ) ) {
                             if ( !wizardPlayer.spendWizardPower( getModeCost( spellName ), spellName ) ) return;
                             wizardPlayer.sendMsgWithCooldown( spellName,
                                     ChatColor.AQUA + "You have incoked " + spellName + "! A torch has been placed where your arrow landed!",
@@ -144,7 +141,7 @@ public class WizardBow extends WeaponPattern {
             @Override
             public void run() {
                 ItemStack offHand = playerInteractEvent.getPlayer().getInventory().getItemInOffHand();
-                if ( MagicWand.isActuallyAWand( offHand ) ) {
+                if ( WandHelper.isActuallyAWand( offHand ) ) {
                     ItemMeta meta = weapon.getItemMeta();
                     List<String> lore = meta.getLore();
                     if ( lore.size() == 1 ) {
@@ -178,7 +175,7 @@ public class WizardBow extends WeaponPattern {
         Block b = hitBlock.getRelative( BlockFace.UP );
         int limit = 20;
 
-        while ( !MoveManager.isItSafe( b ) ) {
+        while ( !MoveHelper.isItSafe( b ) ) {
             if ( b == null ) {
                 return null;
             }

@@ -2,7 +2,7 @@ package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
-import me.mistergone.AWizardDidIt.helpers.MagicWand;
+import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.*;
@@ -88,15 +88,15 @@ public class WizardPick extends ToolPattern {
                     // Get the tool lore
                     List<String> lore = tool.getItemMeta().getLore();
                     if (lore.size() == 1 || lore.get(1).equals("Mode: 3x3 (Centered)")) {
-                        blockBox = BlockManager.getCubeByRadius(firstBlock, 1);
+                        blockBox = BlockHelper.getCubeByRadius(firstBlock, 1);
                     } else if (lore.get(1).equals("Mode: 1x1")) {
                         blockBox.add(firstBlock);
                     } else if (lore.get(1).equals("Mode: 1x3 (Facing)")) {
-                        blockBox = BlockManager.getSquareBoxFromFace(firstBlock, wizardPlayer.getLastFaceClicked(), 3, 1);
+                        blockBox = BlockHelper.getSquareBoxFromFace(firstBlock, wizardPlayer.getLastFaceClicked(), 3, 1);
                     } else if (lore.get(1).equals("Mode: 2x3 (Facing)")) {
-                        blockBox = BlockManager.getSquareBoxFromFace(firstBlock, wizardPlayer.getLastFaceClicked(), 3, 2);
+                        blockBox = BlockHelper.getSquareBoxFromFace(firstBlock, wizardPlayer.getLastFaceClicked(), 3, 2);
                     } else if (lore.get(1).equals("Mode: 3x3 (Facing)")) {
-                        blockBox = BlockManager.getSquareBoxFromFace(firstBlock, wizardPlayer.getLastFaceClicked(), 3, 3);
+                        blockBox = BlockHelper.getSquareBoxFromFace(firstBlock, wizardPlayer.getLastFaceClicked(), 3, 3);
                     }
 
                     Material brokenMat = blockBreakEvent.getBlock().getType();
@@ -107,13 +107,13 @@ public class WizardPick extends ToolPattern {
                         // Let the tool break the original block
                         if ((sameType || digType) && !b.equals(firstBlock) ) {
                             // Don't break wizard signs
-                            if (BlockManager.isWizardSign(b)) {
+                            if (SignHelper.isWizardSign(b)) {
                                 player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
                                 continue;
                             }
 
                             // Don't break blocks with Wizard Signs attached
-                            if ( BlockManager.hasAttachedWizardSigns( b ) ) {
+                            if ( SignHelper.hasAttachedWizardSigns( b ) ) {
                                 player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
                                         "Wizard Sign first!");
                                 continue;
@@ -125,7 +125,7 @@ public class WizardPick extends ToolPattern {
                             Boolean silky = player.getInventory().getItemInMainHand().getEnchantmentLevel( Enchantment.SILK_TOUCH ) > 0;
                             Boolean silkTag = Tag.CORAL_BLOCKS.isTagged( bMat ) || Tag.CORALS.isTagged( bMat ) ||
                                     Tag.ICE.isTagged( bMat) || Tag.LEAVES.isTagged( bMat );
-                            if ( silky && ( silkTag || BlockManager.isSilkyPickType( b.getType() ) ) ) {
+                            if ( silky && ( silkTag || BlockHelper.isSilkyPickType( b.getType() ) ) ) {
                                 ItemStack drop = new ItemStack( b.getType() );
                                 loc.getWorld().dropItem( loc, drop );
                                 b.setType( Material.AIR );
@@ -152,7 +152,7 @@ public class WizardPick extends ToolPattern {
             @Override
             public void run() {
                 ItemStack offHand = playerInteractEvent.getPlayer().getInventory().getItemInOffHand();
-                if ( MagicWand.isActuallyAWand( offHand ) ) {
+                if ( WandHelper.isActuallyAWand( offHand ) ) {
                     ItemMeta meta = tool.getItemMeta();
                     List<String> lore = meta.getLore();
                     if ( lore.size() == 1 ) {

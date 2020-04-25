@@ -120,7 +120,7 @@ public class WizardCrossbow extends WeaponPattern {
             @Override
             public void run() {
                 ItemStack offHand = playerInteractEvent.getPlayer().getInventory().getItemInOffHand();
-                if ( MagicWand.isActuallyAWand( offHand ) ) {
+                if ( WandHelper.isActuallyAWand( offHand ) ) {
                     ItemMeta meta = weapon.getItemMeta();
                     List<String> lore = meta.getLore();
                     if ( lore.size() == 1 ) {
@@ -155,7 +155,7 @@ public class WizardCrossbow extends WeaponPattern {
         Block b = hitBlock.getRelative( BlockFace.UP );
         int limit = 20;
 
-        while ( !MoveManager.isItSafe( b ) ) {
+        while ( !MoveHelper.isItSafe( b ) ) {
             if ( b == null ) {
                 return null;
             }

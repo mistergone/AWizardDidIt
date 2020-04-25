@@ -2,7 +2,7 @@ package me.mistergone.AWizardDidIt.spells;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
-import me.mistergone.AWizardDidIt.helpers.MobManager;
+import me.mistergone.AWizardDidIt.helpers.MobHelper;
 import me.mistergone.AWizardDidIt.helpers.Targeter;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
@@ -34,11 +34,11 @@ public class TollOfMadness extends MagicSpell {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 org.bukkit.entity.Entity target = Targeter.getTargetEntity( player );
                 if ( target != null ) {
-                    if ( MobManager.isMonster( target ) ) {
+                    if ( MobHelper.isMonster( target ) ) {
                         List<Entity> entities = target.getNearbyEntities( 15D, 10D, 15D );
                         ArrayList<Entity> monsters = new ArrayList<Entity>();
                         for ( Entity e : entities) {
-                            if ( MobManager.isMonster( e ) ) {
+                            if ( MobHelper.isMonster( e ) ) {
                                 monsters.add( e );
                             }
                         }

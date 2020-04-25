@@ -14,7 +14,7 @@ import java.util.Collection;
 import java.util.List;
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
-public class BlockManager {
+public class BlockHelper {
     // BlockManager is a set of methods for making a "box" of Blocks, which is an ArrayList
     // that represents a rectangular prism of Blocks in the World. It also contains some helpful
     // statics
@@ -179,57 +179,5 @@ public class BlockManager {
         }
     }
 
-
-    // sign helpers
-    public static Boolean isWizardSign( Block b ) {
-        if ( !( b.getType().toString().contains( "SIGN" ) ) ) return false;
-        Sign sign = (Sign) b.getState();
-        String[] lines = sign.getLines();
-        String signature = ChatColor.stripColor(lines[0].trim());
-        MagicSign magicSign = getWizardry().getMagicSign(signature);
-        if ( magicSign != null ) return true;
-
-        return false;
-    }
-
-    public static ArrayList<Block> getAttachedSigns( Block b ) {
-        ArrayList<Block> signs = new ArrayList<>();
-        for ( BlockFace face: sides ) {
-            Block check = b.getRelative( face );
-            if ( Tag.WALL_SIGNS.isTagged( check.getType() ) ) {
-                WallSign sign = (WallSign) check.getBlockData();
-                if ( sign.getFacing() == face ) {
-                    signs.add( check );
-                }
-            }
-        }
-        return signs;
-    }
-
-    public static Boolean hasAttachedWizardSigns( Block b ) {
-        ArrayList<Block> signs = getAttachedSigns( b );
-        for ( Block signBlock : signs ) {
-            if ( isWizardSign( signBlock) ) return true;
-        }
-
-        return false;
-    }
-
-
-    public static Boolean hasSignOpposite( Block b, BlockFace clickedFace ) {
-        Block check = b.getRelative( clickedFace.getOppositeFace() );
-        if ( Tag.WALL_SIGNS.isTagged( check.getType() ) ) {
-            WallSign sign = (WallSign) check.getBlockData();
-            if ( sign.getFacing() == clickedFace.getOppositeFace() ) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    public static String getSignOwner( Sign s ) {
-        String[] lines = s.getLines();
-        return  ChatColor.stripColor( lines[3] );
-    }
 
 }

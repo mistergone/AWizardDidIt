@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
-import me.mistergone.AWizardDidIt.helpers.ExpManager;
+import me.mistergone.AWizardDidIt.helpers.ExpHelper;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
@@ -82,7 +82,7 @@ public class WizardFood extends MagicPattern {
                 wizardFood.setType( Material.TROPICAL_FISH );
                 wizardFood.setAmount( 5 );
             }
-            if ( expCost == 0 || ExpManager.spendExp( player, expCost ) ) {
+            if ( expCost == 0 || ExpHelper.spendExp( player, expCost ) ) {
                 SpecialEffects.enchantEffect( magicChest.getChest().getLocation() );
                 wizardFood.addUnsafeEnchantment( Enchantment.MENDING, 1 );
                 meta.addItemFlags( ItemFlag.HIDE_ENCHANTS );

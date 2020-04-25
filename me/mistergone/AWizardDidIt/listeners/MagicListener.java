@@ -1,13 +1,11 @@
 package me.mistergone.AWizardDidIt.listeners;
 
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
-import me.mistergone.AWizardDidIt.helpers.MagicWand;
+import me.mistergone.AWizardDidIt.helpers.SignHelper;
+import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import me.mistergone.AWizardDidIt.signs.WizardLock;
-import net.minecraft.server.v1_15_R1.BlockChest;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -133,7 +131,7 @@ public class MagicListener implements Listener {
         // Prevent consumption when wand is out
         if ( main.getType() == Material.STICK ) {
             Boolean isReagent = getWizardry().getReagentList().contains( off.getType().toString() );
-            Boolean isWand = MagicWand.isActuallyAWand( main );
+            Boolean isWand = WandHelper.isActuallyAWand( main );
             if ( isWand && isReagent ) {
                 event.setCancelled( true );
             } else if ( isWand && WizardFood.isWizardFood( off ) ) {
@@ -218,7 +216,7 @@ public class MagicListener implements Listener {
                 for ( Block u: ups ) {
                     if ( WizardLock.isWizardLockSign( u ) ) {
                         Sign s = (Sign) u.getState();
-                        String owner = BlockManager.getSignOwner( s );
+                        String owner = SignHelper.getSignOwner( s );
                         if ( owner.equals( p.getName() ) ) {
                         } else {
                             p.sendMessage( ChatColor.RED + "This chest was locked by " + ChatColor.LIGHT_PURPLE +

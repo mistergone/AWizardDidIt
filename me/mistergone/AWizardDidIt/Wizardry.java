@@ -4,6 +4,7 @@ import me.mistergone.AWizardDidIt.baseClasses.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.*;
 import me.mistergone.AWizardDidIt.signs.*;
+import me.mistergone.AWizardDidIt.signs.SortingChest;
 import me.mistergone.AWizardDidIt.spells.*;
 import org.bukkit.Bukkit;
 
@@ -129,7 +130,6 @@ public class Wizardry {
         ArrayList<MagicPattern> patternRegistry = new ArrayList<>();
         patternRegistry.add( new EnchantWand() );
         patternRegistry.add( new FontOfPower() );
-        patternRegistry.add( new SortingChest() );
         patternRegistry.add( new WizardAnvil() );
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardBow() );
@@ -158,8 +158,9 @@ public class Wizardry {
 
     private void addSigns() {
         ArrayList<MagicSign> signRegistry = new ArrayList<>();
-        signRegistry.add( new WizardElevator() );
+        signRegistry.add( new SortingChest() );
         signRegistry.add( new UnseenArchitect() );
+        signRegistry.add( new WizardElevator() );
         signRegistry.add( new WizardPassage() );
         signRegistry.add( new WizardLock() );
 

@@ -94,7 +94,7 @@ public class WizardHoe extends ToolPattern {
                         player.sendMessage(ChatColor.AQUA + "You have invoked Wizard Hoe!");
                         wizardPlayer.addMsgCooldown( patternName, 30);
                     }
-                    BlockFace newFace = BlockManager.yawToFace( player.getEyeLocation().getYaw() );
+                    BlockFace newFace = BlockHelper.yawToFace( player.getEyeLocation().getYaw() );
 
                     Block block = playerInteractEvent.getClickedBlock();
                     for ( int i = 0; i <= 20; i++ ) {

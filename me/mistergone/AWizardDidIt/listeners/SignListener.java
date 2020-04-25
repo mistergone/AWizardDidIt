@@ -1,11 +1,8 @@
 package me.mistergone.AWizardDidIt.listeners;
 
 import me.mistergone.AWizardDidIt.Wizardry;
-import me.mistergone.AWizardDidIt.helpers.BlockManager;
-import me.mistergone.AWizardDidIt.signs.WizardElevator;
-import me.mistergone.AWizardDidIt.signs.UnseenArchitect;
-import me.mistergone.AWizardDidIt.signs.WizardPassage;
-import me.mistergone.AWizardDidIt.signs.WizardLock;
+import me.mistergone.AWizardDidIt.helpers.SignHelper;
+import me.mistergone.AWizardDidIt.signs.*;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -35,14 +32,18 @@ public class SignListener implements Listener {
         Block b = event.getBlock();
         if ( lines == null || b == null ) return;
 
-        if ( lines[0].equals("[UnseenArchitect]") ) {
+        String check = ChatColor.stripColor( lines[0] );
+
+        if ( check.equals("[UnseenArchitect]") ) {
             UnseenArchitect.handleSignEvent( event );
-        } else if ( lines[0].equals("[WizardElevator]") ) {
+        } else if ( check.equals("[WizardElevator]") ) {
             WizardElevator.handleSignEvent( event );
-        } else if ( lines[0].equals( "[WizardPassage]" ) ) {
+        } else if ( check.equals( "[WizardPassage]" ) ) {
             WizardPassage.handleSignEvent( event );
-        } else if ( lines[0].equals( "[WizardLock]" ) ) {
+        } else if ( check.equals( "[WizardLock]" ) ) {
             WizardLock.handleSignEvent( event );
+        } else if ( check.equals( "[SortingChest]") ) {
+            SortingChest.handleSignEvent( event );
         }
 
     }
@@ -87,7 +88,7 @@ public class SignListener implements Listener {
 
             // Prevent owned Wizard sign destruction
             if ( !p.isOp() ) { // Ops can destroy all signs directly
-                if ( WizardLock.isWizardLockSign( b ) && !BlockManager.getSignOwner( sign ).equals( p.getName() ) ) {
+                if ( WizardLock.isWizardLockSign( b ) && !SignHelper.getSignOwner( sign ).equals( p.getName() ) ) {
                     p.sendMessage( ChatColor.RED + "You cannot destroy other player's Wizard Signs!" );
                     e.setCancelled( true );
                 }
@@ -95,9 +96,9 @@ public class SignListener implements Listener {
         }
 
         // Prevent block destruction if sign is attached.
-        ArrayList<Block> signs = BlockManager.getAttachedSigns( b );
+        ArrayList<Block> signs = SignHelper.getAttachedSigns( b );
         for ( Block blocko: signs ) {
-            if ( BlockManager.isWizardSign( blocko ) ) {
+            if ( SignHelper.isWizardSign( blocko ) ) {
                 p.sendMessage( ChatColor.RED + "This block has a Wizard Sign attached and cannot be broken! Please " +
                         "break the attached sign first." );
                 e.setCancelled( true );
@@ -113,7 +114,7 @@ public class SignListener implements Listener {
             Player p = e.getPlayer();
             if ( WizardLock.isWizardLockSign( up ) ) {
                 Sign s = (Sign) up.getState();
-                if ( !BlockManager.getSignOwner( s ).equals( p.getName() ) ) {
+                if ( !SignHelper.getSignOwner( s ).equals( p.getName() ) ) {
                     p.sendMessage( ChatColor.RED + "You cannot place a chest under another player's WizardLock!");
                     e.setCancelled( true );
                 }

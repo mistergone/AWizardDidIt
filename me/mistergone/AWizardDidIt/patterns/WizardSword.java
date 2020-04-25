@@ -89,7 +89,7 @@ public class WizardSword extends WeaponPattern {
             @Override
             public void run() {
                 ItemStack offHand = playerInteractEvent.getPlayer().getInventory().getItemInOffHand();
-                if ( MagicWand.isActuallyAWand( offHand ) ) {
+                if ( WandHelper.isActuallyAWand( offHand ) ) {
                     ItemMeta meta = weapon.getItemMeta();
                     List<String> lore = meta.getLore();
                     if ( lore.size() == 1 ) {
