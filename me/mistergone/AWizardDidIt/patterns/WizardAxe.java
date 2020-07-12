@@ -44,6 +44,10 @@ public class WizardAxe extends ToolPattern {
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "DIAMOND_AXE", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
+        patterns.add( new String[]
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "NETHERITE_AXE", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         patternFunction = new PatternFunction() {
             @Override

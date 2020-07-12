@@ -5,6 +5,7 @@ import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -41,6 +42,10 @@ public class WizardSword extends WeaponPattern {
         patterns.add( new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "DIAMOND_SWORD", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
+        patterns.add( new String[]
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "NETHERITE_SWORD", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         modeCosts.put( "Whirlwind Slash", 5 );

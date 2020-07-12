@@ -1,7 +1,12 @@
 package me.mistergone.AWizardDidIt.helpers;
 
+import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Particle;
+import org.bukkit.block.Block;
+import org.bukkit.util.BlockIterator;
+import org.bukkit.util.Vector;
 
 import java.util.Locale;
 
@@ -68,6 +73,19 @@ public class SpecialEffects {
             loc.add(x, y, z);
             loc.getWorld().spawnParticle( Particle.SPELL_WITCH, loc, 2);
             loc.subtract(x, y, z);
+        }
+    }
+
+    public static void magicLine(Location startLoc, Vector v, Particle p ) {
+        v.multiply( 10 );
+        double y = startLoc.getY();
+        Location end = startLoc.clone().add( v );
+        v.normalize();
+        for ( int i = 0; i < 10; i++ ) {
+            Location loc = startLoc.add( v );
+            loc.getWorld().spawnParticle( p, loc.getX(), y, loc.getZ(),
+                    4, 0, 0, 0, 0 );
+
         }
     }
 }

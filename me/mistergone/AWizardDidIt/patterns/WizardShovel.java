@@ -42,6 +42,10 @@ public class WizardShovel extends ToolPattern {
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "DIAMOND_SHOVEL", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
+        patterns.add( new String[]
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "NETHERITE_SHOVEL", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         patternFunction = new PatternFunction() {
             @Override

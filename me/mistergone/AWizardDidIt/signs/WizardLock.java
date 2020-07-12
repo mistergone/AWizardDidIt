@@ -3,7 +3,6 @@ package me.mistergone.AWizardDidIt.signs;
 import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
 import me.mistergone.AWizardDidIt.baseClasses.SignFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import net.minecraft.server.v1_15_R1.DoubleBlockFinder;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

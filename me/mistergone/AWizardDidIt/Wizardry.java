@@ -134,6 +134,7 @@ public class Wizardry {
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardBow() );
         patternRegistry.add( new WizardCrossbow() );
+        patternRegistry.add( new WizardDust() );
         patternRegistry.add( new WizardHoe() );
 //        patternRegistry.add( new WizardFood() );
         patternRegistry.add( new WizardPick() );

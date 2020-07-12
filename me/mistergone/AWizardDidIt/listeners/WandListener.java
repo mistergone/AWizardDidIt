@@ -4,6 +4,7 @@ import me.mistergone.AWizardDidIt.*;
 import me.mistergone.AWizardDidIt.baseClasses.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.EnchantWand;
+import me.mistergone.AWizardDidIt.patterns.WizardDust;
 import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.Player;
@@ -13,7 +14,10 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 
@@ -36,20 +40,22 @@ public class WandListener implements Listener {
             Block clickedBlock = e.getClickedBlock();
             Material clickedMaterial = clickedBlock != null  ? clickedBlock.getType() : null;
 
-            if ( main != null &&  main.getType() == Material.STICK &&  main.getAmount() == 1 ) {
+            if ( main != null && ( main.getType() == Material.STICK ) &&  main.getAmount() == 1 ) {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer(e.getPlayer().getUniqueId());
 
                 // If a stick is used on a chest, it might be a Magic Pattern
                 if ( clickedMaterial == Material.CHEST ) {
                     e.setCancelled(true);
                     Chest chest = (Chest) clickedBlock.getState();
+
                     MagicChest magicChest = new MagicChest(chest);
                     String[] pattern = magicChest.getPattern();
                     MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
-                    Boolean wandOrEnchant = magicPattern instanceof EnchantWand || WandHelper.isActuallyAWand(main);
+                    Boolean wandOrEnchantOrDust = magicPattern instanceof EnchantWand || WandHelper.isActuallyAWand(main)
+                            || magicPattern instanceof WizardDust;
 
                     // Run the MagicFunction
-                    if ( magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchant ) {
+                    if ( magicPattern != null && magicPattern.getMagicFunction() != null && wandOrEnchantOrDust ) {
                         try {
                             PatternFunction function = magicPattern.getMagicFunction();
                             function.setPlayer(p);
@@ -115,10 +121,19 @@ public class WandListener implements Listener {
                             }
                         }
                     }
-                    // If you swing a wand in the air with no reagent, show the WizardBar
+                    // If you swing a wand in the air with no reagent, do some stuff
                     if ( offItem == null || offItem.getType() == Material.AIR ) {
-//                            e.setCancelled( true );
+                        // Show the wizard bar
                         wizardPlayer.showWizardBar();
+                        // Show the direction to your spawn
+                        Location spawn = p.getBedSpawnLocation();
+                        if ( spawn == null ) spawn = p.getWorld().getSpawnLocation();
+                        Location ploc = p.getEyeLocation();
+                        double y = ploc.getY() - .25;
+                        ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
+                        ploc.setY( y );
+                        Vector v = spawn.toVector().subtract( ploc.toVector() );
+                        SpecialEffects.magicLine( ploc, v, Particle.SPELL_WITCH );
                         return;
                     }
 
