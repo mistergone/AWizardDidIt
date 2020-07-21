@@ -136,6 +136,11 @@ public class Wizardry {
         patternRegistry.add( new WizardSword() );
         patternRegistry.add( new WizardTrident() );
 
+        patternRegistry.add( new WizardHelmet() );
+        patternRegistry.add( new WizardChestplate() );
+        patternRegistry.add( new WizardLeggings() );
+        patternRegistry.add( new WizardBoots() );
+
         for ( MagicPattern magicPattern : patternRegistry ) {
             Material[] keys = magicPattern.getKeys();
             for ( Material m: keys ) {

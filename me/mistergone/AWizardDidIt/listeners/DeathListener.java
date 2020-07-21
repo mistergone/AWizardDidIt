@@ -36,16 +36,21 @@ public class DeathListener implements Listener {
         if ( list == null ) return;
         World world = event.getEntity().getWorld();
         Location loc = event.getEntity().getLocation();
+        int saved = 0;
 
         for ( ItemStack i : list ) {
-            if ( WandHelper.isActuallyAWand( i ) ) {
+            if ( saved >= 13 ) {
+                world.dropItemNaturally( loc, i );
+            } else if ( WandHelper.isActuallyAWand( i ) ) {
                 wizardry.getWizardPlayer(id).addDeathItem(i);
+                saved++;
             } else if ( i.getType() == Material.FEATHER ) {
                 i.setAmount( i.getAmount() - 1 );
                 world.dropItemNaturally( loc, i );
                 ItemStack f = new ItemStack( Material.FEATHER );
                 f.setAmount( 1 );
                 wizardry.getWizardPlayer(id).addDeathItem(f);
+                saved++;
             } else if ( ItemHelper.hasWizardLore( i ) ) {
                 ItemMeta meta = i.getItemMeta();
                 if ( meta instanceof Damageable) {
@@ -61,6 +66,7 @@ public class DeathListener implements Listener {
                     i.setItemMeta( meta );
                 }
                 wizardry.getWizardPlayer(id).addDeathItem(i);
+                saved++;
             } else {
                 world.dropItemNaturally( loc, i );
             }

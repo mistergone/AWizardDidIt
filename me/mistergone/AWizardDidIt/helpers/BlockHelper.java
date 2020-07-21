@@ -24,6 +24,12 @@ public class BlockHelper {
     // that represents a rectangular prism of Blocks in the World. It also contains some helpful
     // statics
 
+    public static final List EMPTY_BLOCK_TYPES = Arrays.asList( new Material[] {
+            Material.AIR,
+            Material.VOID_AIR,
+            Material.CAVE_AIR
+    } );
+
     // Things that Silk Touch works on, for a pick
     public static final List SILKY_PICK_TYPES = Arrays.asList( new Material[] {
             Material.BLUE_ICE,
@@ -222,6 +228,15 @@ public class BlockHelper {
         }
 
         return true;
+    }
+
+    /* Check if type is empty */
+    public static Boolean isEmptyBlockType( Material material ) {
+        if (EMPTY_BLOCK_TYPES.contains(material)) {
+            return true;
+        } else {
+            return false;
+        }
     }
 
 }

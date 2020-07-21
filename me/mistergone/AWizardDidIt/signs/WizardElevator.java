@@ -4,6 +4,7 @@ import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
 import me.mistergone.AWizardDidIt.baseClasses.SignFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import net.minecraft.server.v1_16_R1.IBlockFragilePlantElement;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
@@ -28,14 +29,17 @@ public class WizardElevator extends MagicSign {
         signFunction = new SignFunction() {
             @Override
             public void run() {
-                WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                wizardPlayer.addSpell( signName );
+                if ( signPlacement( signBlock, player ) == false ) return;
+
                 int direction = player.isSneaking() ? -1 : 1;
                 Block destination = findDestination( signBlock, direction, player );
 
                 if ( destination == null ) return;
 
+                WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 if ( !wizardPlayer.spendWizardPower( cost, signName ) ) return;
+
+                wizardPlayer.addSpell( signName );
                 moveIt( wizardPlayer, destination, signBlock );
 
             }
@@ -125,6 +129,20 @@ public class WizardElevator extends MagicSign {
         }
 
         return destination;
+    }
+
+    private Boolean signPlacement( Block b, Player p ) {
+        Material footType = b.getRelative( BlockFace.DOWN ).getType();
+        Material floorType = b.getRelative( BlockFace.DOWN ).getRelative( BlockFace.DOWN ).getType();
+        if ( footType.isSolid() ) {
+            p.sendMessage( "A WizardElevator sign must be placed exactly one block above the ground!" );
+            return false;
+        } else if ( footType == Material.LAVA || footType == Material.FIRE ||  floorType == Material.MAGMA_BLOCK ) {
+            p.sendMessage( "A WizardElevator sign must not be placed over damaging blocks!" );
+            return false;
+        } else {
+            return true;
+        }
     }
 
     private Boolean isElevatorSign( Block b ) {
