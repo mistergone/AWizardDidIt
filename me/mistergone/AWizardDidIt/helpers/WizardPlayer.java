@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt.helpers;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
+import net.minecraft.server.v1_16_R1.ItemSaddle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -11,6 +12,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
 import java.io.File;
@@ -22,6 +24,7 @@ import java.util.Map;
 public class WizardPlayer {
     Player player;
     ArrayList<String> activeSpells;
+    ArrayList<ItemStack> deathItems;
     Map< String, Long > messageCooldowns;
     Map< String, Long > spellCooldowns;
     BossBar wizardBar;
@@ -43,6 +46,7 @@ public class WizardPlayer {
         this.activeSpells = new ArrayList<>();
         this.spellCooldowns = new HashMap<>();
         this.messageCooldowns = new HashMap<>();
+        this.deathItems = new ArrayList<>();
         this.unseenAssistant = new UnseenAssistant( this );
         this.wizardBar = Bukkit.createBossBar( "Wizard Power", BarColor.BLUE, BarStyle.SEGMENTED_20 );
         this.wizardBar.addPlayer( this.player );
@@ -198,6 +202,78 @@ public class WizardPlayer {
         }
     }
 
+    /**
+     * Set a spell cooldown
+     * @param name The name (String) of the spell
+     * @param l The time (in seconds) to wait before the spell can be cast again
+     */
+    public void addSpellCooldown( String name, long l ) {
+        this.spellCooldowns.put(
+                name,
+                System.currentTimeMillis() + ( l * 1000 )
+        );
+    }
+
+    /**
+     * Check if a spell is on cooldown.
+     * NOTE: This method will also remove the entry from the array if the cooldown has passed.
+     * @param name The name (String) of the spell
+     * @return True if the spell is on cooldown, false if it is not
+     */
+    public Boolean checkSpellCooldown( String name ) {
+        if ( this.spellCooldowns.containsKey( name ) ) {
+            long expiration = this.spellCooldowns.get(name);
+            if ( expiration < System.currentTimeMillis() ) {
+                this.spellCooldowns.remove( name );
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Remove a spell cooldown
+     * @param name The name (String) of the spell
+     * @return
+     */
+    public Boolean removeSpellCooldown( String name ) {
+        if ( this.spellCooldowns.containsKey( name ) ) {
+            this.spellCooldowns.remove( name );
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+
+
+
+    /**********##### Death items #####***********/
+    /**********##### Death items #####***********/
+    /**
+     * Add item to deathList
+     */
+    public void addDeathItem( ItemStack i ) {
+        this.deathItems.add( i );
+    }
+
+    /**
+     * Get deathItems
+     */
+    public ArrayList<ItemStack> getDeathItems() {
+        return this.deathItems;
+    }
+
+    /**
+     * Clear deathItems
+     */
+    public void clearDeathItems() {
+        this.deathItems.clear();
+    }
+
     /*****##### WIZARD POWER! methods #####*****/
 
     /**
@@ -280,8 +356,10 @@ public class WizardPlayer {
      * @param amount The amount of Wizard Power to add
      */
      public void gainWizardPower( int amount ) {
-         wizardPower = Math.min( 1000, wizardPower + amount );
-         showWizardBar();
+         if ( wizardPower < 1000 ) {
+             wizardPower = Math.min( 1000, wizardPower + amount );
+             showWizardBar();
+         }
      }
 
     /**
@@ -322,6 +400,7 @@ public class WizardPlayer {
             try {
                 playerDataConfig.createSection("Wizard Power");
                 playerDataConfig.createSection("Active Spells");
+                playerDataConfig.createSection("Death Items");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -333,6 +412,7 @@ public class WizardPlayer {
         try {
             playerDataConfig.set("Wizard Power", getWizardPower() );
             playerDataConfig.set( "Active Spells", getSpells() );
+            playerDataConfig.set( "Death Items", getDeathItems() );
             playerDataConfig.save( playerDataFile );
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -359,6 +439,7 @@ public class WizardPlayer {
                 fileConfiguration.load( playerDataFile );
                 String power = fileConfiguration.getString( "Wizard Power");
                 List<String> activeSpells = fileConfiguration.getStringList( "Active Spells" );
+                List<ItemStack> list = (List<ItemStack>) fileConfiguration.getList("Death Items");
                 try {
                     this.wizardPower = Integer.parseInt( power );
                     for ( String str: activeSpells ) {
@@ -366,6 +447,14 @@ public class WizardPlayer {
                     }
 
                 } catch (Exception e) {
+                    e.printStackTrace();
+                }
+                try {
+                    for ( ItemStack i: list ) {
+                        this.addDeathItem( i );
+                    }
+                }
+                catch (Exception e) {
                     e.printStackTrace();
                 }
             } catch (Exception e ) {

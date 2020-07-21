@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
 import me.mistergone.AWizardDidIt.helpers.WandHelper;
@@ -13,6 +14,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
@@ -20,38 +22,27 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 public class WizardAxe extends ToolPattern {
     public WizardAxe() {
         patternName = "Wizard Axe";
-        patterns =  new ArrayList<String[]>();
+        keys = new Material[]{ Material.WOODEN_AXE, Material.IRON_AXE, Material.GOLDEN_AXE,
+            Material.DIAMOND_AXE, Material.NETHERITE_AXE };
+        patterns =  new HashMap<String, String[]>();
+        patterns.put( "Wizard Axe", new String[]
+                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
+                    "GLOWSTONE_DUST", "ANY", "GLOWSTONE_DUST",
+                    "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" }  );
         toolCost = 1;
-        int lumberjackCost = 5;
-
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "WOODEN_AXE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "STONE_AXE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "IRON_AXE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GOLDEN_AXE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "DIAMOND_AXE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "NETHERITE_AXE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
+        int lumberjackCost = 25;
 
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 ItemStack axe = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = axe.getItemMeta();
                 // TODO - Remove this legacy support for updating the old name, "Magic Axe"

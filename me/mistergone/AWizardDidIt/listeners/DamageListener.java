@@ -1,11 +1,14 @@
 package me.mistergone.AWizardDidIt.listeners;
 
 import me.mistergone.AWizardDidIt.Wizardry;
+import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
+import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
 import me.mistergone.AWizardDidIt.patterns.WizardSword;
 import me.mistergone.AWizardDidIt.patterns.WizardTrident;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -93,25 +96,26 @@ public class DamageListener implements Listener {
             Player p = (Player) projectile.getShooter();
             WizardPlayer wizardPlayer = Wizardry.getWizardry().getWizardPlayer( p.getUniqueId() );
             Entity damager = event.getDamager();
+            Entity target = event.getEntity();
 
             // ***** Arrows ***** //
             if ( damager instanceof Arrow) {
                 if ( damager.getCustomName() == null ) return;
                 String customName = damager.getCustomName();
 
-                if ( MobHelper.isMonster( event.getEntity() ) ) {
+                if ( MobHelper.isMonster( target ) ) {
                     if ( customName.equals( "Alf's Action Arrow Projectile" ) ) {
                         double damage =  Math.floor( ( Math.random() * 6 ) + 5 );
                         event.setDamage( damage );
                     } else if ( customName.equals( "Slow Bolt" ) ) {
                         PotionEffect slow = new PotionEffect( PotionEffectType.SLOW, 60, 2 );
-                        ((Monster) event.getEntity()).addPotionEffect( slow );
+                        ((Monster) target).addPotionEffect( slow );
                         wizardPlayer.sendMsgWithCooldown( "Slow Bolt",
                                 ChatColor.AQUA + "You have invoked Slow Bolt with your Wizard Crossbow!",
                                 5 );
                     } else if ( customName.equals( "Poison Bolt" ) ) {
                         PotionEffect poison = new PotionEffect( PotionEffectType.POISON, 60, 4 );
-                        ((Monster) event.getEntity()).addPotionEffect( poison );
+                        ((Monster) target).addPotionEffect( poison );
                         wizardPlayer.sendMsgWithCooldown( "Poison Bolt",
                                 ChatColor.AQUA + "You have invoked Poison Bolt with your Wizard Crossbow!",
                                 5 );
@@ -132,29 +136,28 @@ public class DamageListener implements Listener {
 
                 String customName = trident.getCustomName();
                 if ( customName == null ) return;
-                Entity victim = event.getEntity();
 
                 if ( customName.equals( "Fiery Pitchfork" ) ) {
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Fiery Pitchfork" ) , null ) ) return;
-                    victim.setFireTicks( 80 );
-                    SpecialEffects.flamesEffect( victim.getLocation().add( -.5, 0, -.5 ) );
+                    target.setFireTicks( 80 );
+                    SpecialEffects.flamesEffect( target.getLocation().add( -.5, 0, -.5 ) );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Fiery Pitchfork)",
                             ChatColor.AQUA + "You have invoked Fiery Pitchfork using your Wizard Trident!", 10 );
                 } else if ( customName.equals( "Monster Slayer" ) ) {
-                    if ( ! MobHelper.isMonster( victim ) ) return;
+                    if ( ! MobHelper.isMonster( target ) ) return;
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Monster Slayer" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
-                    SpecialEffects.magicSpiral( victim.getLocation() );
+                    SpecialEffects.magicSpiral( target.getLocation() );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Monstery Slayer)",
                             ChatColor.AQUA + "You have invoked Monstery Slayer using your Wizard Trident!", 10 );
                 } else if ( customName.equals( "Hunting Spear" ) ) {
-                    if ( ! ( victim instanceof Animals ) ) return;
+                    if ( ! ( target instanceof Animals ) ) return;
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Hunting Spear" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
-                    SpecialEffects.portalCollapse( victim.getLocation() );
+                    SpecialEffects.portalCollapse( target.getLocation() );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Hunting Spear)",
                             ChatColor.AQUA + "You have invoked Hunting Spear using your Wizard Trident!", 10 );
-                } else if ( customName.contains( "Teletransference" )  && !MobHelper.isMonster( victim ) ) {
+                } else if ( customName.contains( "Teletransference" )  && !MobHelper.isMonster( target ) ) {
                     wizardPlayer.sendMsgWithCooldown( "Teletransference (non-Monster hit)",
                             ChatColor.LIGHT_PURPLE + "Your Teletransference Trident hit a non-Monster entity! Your teletransference has been cancelled.",
                             2 );
@@ -166,6 +169,7 @@ public class DamageListener implements Listener {
 
         } else if ( event.getDamager() instanceof Player ){
             Player p = (Player) event.getDamager();
+            Entity target = event.getEntity();
             ItemStack main = p.getInventory().getItemInMainHand();
             if ( main != null && main.getType().toString().contains( "SWORD" ) && main.getItemMeta() != null ) {
                 if ( main.getItemMeta().getLore() == null ) return;
@@ -184,9 +188,31 @@ public class DamageListener implements Listener {
                 }
             }
 
-            // Wands do not hurt
             if ( main != null &&  WandHelper.isActuallyAWand(main) ) {
+                // Wands do not hurt
                 event.setCancelled( true );
+
+                ItemStack offItem = p.getInventory().getItemInOffHand();
+                MagicSpell magicSpell = null;
+
+                // Now we check for a magic spell with the reagent
+                magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
+                if (magicSpell == null) {
+                    p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
+                    return;
+                } else if ( magicSpell != null && magicSpell.getSpellFunction() != null ) {
+                    try {
+                        SpellFunction function = magicSpell.getSpellFunction();
+                        function.setPlayer(p);
+                        function.setClickedEntity( target );
+                        function.setMagicWand( main );
+                        function.setReagent( offItem );
+                        function.call();
+                    } catch ( Exception ex ) {
+                        ex.printStackTrace();
+                    }
+                    return;
+                }
             }
         }
     }

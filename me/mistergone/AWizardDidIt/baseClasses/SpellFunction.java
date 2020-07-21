@@ -2,12 +2,14 @@ package me.mistergone.AWizardDidIt.baseClasses;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicFunction;
 import org.bukkit.block.Block;
+import org.bukkit.entity.Entity;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class SpellFunction extends MagicFunction {
     public ItemStack reagent;
     public Block clickedBlock;
+    public Entity clickedEntity;
     public PlayerInteractEvent event;
 
     public Boolean expendReagent() {
@@ -30,6 +32,10 @@ public class SpellFunction extends MagicFunction {
 
     public void setClickedBlock( Block block) {
         this.clickedBlock = block;
+    }
+
+    public void setClickedEntity( Entity entity ) {
+        this.clickedEntity = entity;
     }
 
     public void setEvent( PlayerInteractEvent event ) {

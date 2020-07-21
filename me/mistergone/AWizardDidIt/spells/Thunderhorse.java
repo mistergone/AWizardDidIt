@@ -24,7 +24,7 @@ public class Thunderhorse extends MagicSpell {
         spellName = "Thunderhorse";
         reagents = new ArrayList<>();
         reagents.add( "SADDLE" );
-        cost = 20;
+        cost = 40;
 
         spellFunction = new SpellFunction() {
             @Override

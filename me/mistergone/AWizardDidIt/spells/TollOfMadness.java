@@ -26,7 +26,7 @@ public class TollOfMadness extends MagicSpell {
         spellName = "Toll of Madness";
         reagents = new ArrayList<String>();
         reagents.add( "PHANTOM_MEMBRANE" );
-        cost = 10;
+        cost = 20;
 
         spellFunction = new SpellFunction() {
             @Override

@@ -19,6 +19,10 @@ public class MagicFunction implements Callable<Boolean> {
         this.player = player;
     }
 
+    public void setWizardPlayer( WizardPlayer wizardPlayer ) {
+        this.wizardPlayer = wizardPlayer;
+    }
+
     public void setMagicWand( ItemStack magicWand ) {
         this.magicWand = magicWand;
     }

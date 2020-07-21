@@ -3,6 +3,8 @@ package me.mistergone.AWizardDidIt;
 import me.mistergone.AWizardDidIt.listeners.*;
 import me.mistergone.AWizardDidIt.helpers.MagicCommands;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
@@ -15,6 +17,7 @@ public class AWizardDidIt extends JavaPlugin{
 
         getServer().getPluginManager().registerEvents(new BlockListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new DamageListener( Wizardry.getWizardry() ), this);
+        getServer().getPluginManager().registerEvents(new DeathListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new MagicListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new SignListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new ToolListener( Wizardry.getWizardry() ), this);
@@ -23,6 +26,19 @@ public class AWizardDidIt extends JavaPlugin{
 
         MagicCommands commandHandler = new MagicCommands(this );
         getCommand( "wizardry" ).setExecutor( commandHandler );
+
+        Bukkit.getScheduler().scheduleSyncRepeatingTask(
+                (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt"),
+                new Runnable() {
+                    @Override
+                    public void run() {
+                        for ( WizardPlayer wiz: Wizardry.getWizardry().getWizardList().values() ) {
+                            double d = (double)wiz.getPlayer().getFoodLevel() / 20 * 50;
+                            wiz.gainWizardPower( (int)Math.round( d ) );
+                        }
+                    }
+                }, 1200, 1200 );
+
     }
 
     @Override

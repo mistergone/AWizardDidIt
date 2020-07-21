@@ -6,19 +6,22 @@ import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 public class EnchantWand extends MagicPattern {
 
     public EnchantWand() {
         patternName = "Enchant Wand";
-        patterns =  new ArrayList<String[]>();
-        patterns.add( new String[]
+        keys = new Material[]{ Material.GLOWSTONE_DUST };
+        patterns =  new HashMap<String, String[]>();
+        patterns.put( "Enchant Wand", new String[]
                 { "GLOWSTONE_DUST", "NONE", "GLOWSTONE_DUST",
                 "NONE", "GLOWSTONE_DUST", "NONE",
                 "GLOWSTONE_DUST", "NONE", "GLOWSTONE_DUST" } );
@@ -26,6 +29,14 @@ public class EnchantWand extends MagicPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run( ) {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 if ( WandHelper.isJustAStick( magicWand ) ) {
                     player.sendMessage(ChatColor.BLUE + "I see you have a taste for magic!");
 

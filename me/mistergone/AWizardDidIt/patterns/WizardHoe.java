@@ -1,5 +1,6 @@
 package me.mistergone.AWizardDidIt.patterns;
 
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.ToolFunction;
 import me.mistergone.AWizardDidIt.baseClasses.ToolPattern;
@@ -26,37 +27,27 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 public class WizardHoe extends ToolPattern {
     public WizardHoe() {
         patternName = "Wizard Hoe";
-        patterns =  new ArrayList<String[]>();
+        keys = new Material[]{ Material.WOODEN_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
+                Material.DIAMOND_HOE, Material.NETHERITE_HOE };
+        patterns =  new HashMap<String, String[]>();
         toolCost = 1;
 
-        patterns.add( new String[]
+        patterns.put( "Wizard Hoe", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "WOODEN_HOE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "STONE_HOE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "IRON_HOE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GOLDEN_HOE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "DIAMOND_HOE", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "NETHERITE_HOE", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "ANY", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 ItemStack hoe = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = hoe.getItemMeta();
 

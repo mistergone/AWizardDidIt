@@ -7,11 +7,14 @@ import me.mistergone.AWizardDidIt.patterns.EnchantWand;
 import me.mistergone.AWizardDidIt.patterns.WizardDust;
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
+import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -49,8 +52,8 @@ public class WandListener implements Listener {
                     Chest chest = (Chest) clickedBlock.getState();
 
                     MagicChest magicChest = new MagicChest(chest);
-                    String[] pattern = magicChest.getPattern();
-                    MagicPattern magicPattern = wizardry.getMagicPattern(pattern);
+                    Material key = magicChest.getKey();
+                    MagicPattern magicPattern = wizardry.getMagicPattern( key );
                     Boolean wandOrEnchantOrDust = magicPattern instanceof EnchantWand || WandHelper.isActuallyAWand(main)
                             || magicPattern instanceof WizardDust;
 
@@ -140,6 +143,7 @@ public class WandListener implements Listener {
                     // Now we check for a magic spell with the reagent
                     magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                     if (magicSpell == null) {
+                        p.sendMessage( offItem.getType().toString());
                         p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
                         return;
                     } else if ( magicSpell != null && magicSpell.getSpellFunction() != null ) {
@@ -147,6 +151,7 @@ public class WandListener implements Listener {
                         try {
                             SpellFunction function = magicSpell.getSpellFunction();
                             function.setPlayer(p);
+                            function.setWizardPlayer( wizardPlayer );
                             function.setClickedBlock( clickedBlock );
                             function.setEvent( e );
                             function.setMagicWand( main );
@@ -164,5 +169,6 @@ public class WandListener implements Listener {
 
         }
     }
+
 
 }

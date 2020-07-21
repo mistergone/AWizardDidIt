@@ -7,6 +7,7 @@ import me.mistergone.AWizardDidIt.signs.*;
 import me.mistergone.AWizardDidIt.signs.SortingChest;
 import me.mistergone.AWizardDidIt.spells.*;
 import org.bukkit.Bukkit;
+import org.bukkit.Material;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -19,7 +20,7 @@ public class Wizardry {
     private static Wizardry wizardry = new Wizardry();
     private Map< UUID, WizardPlayer> wizardList;
     private Map< String, MagicSpell> spellList;
-    private Map< String, MagicPattern> patternList;
+    private Map< Material, MagicPattern> patternList;
     private Map< String, MagicSign> signList;
     private ArrayList<String> reagentList;
     Map< String, ToolPattern> toolLoreMap;
@@ -28,7 +29,7 @@ public class Wizardry {
     private Wizardry() {
         this.wizardList = new HashMap< UUID, WizardPlayer >();
         this.spellList = new HashMap< String, MagicSpell>();
-        this.patternList = new HashMap< String, MagicPattern>();
+        this.patternList = new HashMap< Material, MagicPattern>();
         this.signList = new HashMap< String, MagicSign>();
         this.toolLoreMap = new HashMap<>();
         this.weaponLoreMap = new HashMap<>();
@@ -41,20 +42,12 @@ public class Wizardry {
         getUnseenPM().loadUnseenProjectList();
     }
 
-
     public static Wizardry getWizardry() {
         return wizardry;
     }
 
-    public MagicPattern getMagicPattern( String[] needle ) {
-        String pattern = new String();
-        for ( int i = 0; i < needle.length; i++ ) {
-            pattern += needle[i];
-            if (i < needle.length - 1) {
-                pattern += ",";
-            }
-        }
-        return patternList.get( pattern );
+    public MagicPattern getMagicPattern( Material key ) {
+        return patternList.get( key );
     }
 
     public MagicSpell getMagicSpell( String reagent ) {
@@ -99,7 +92,8 @@ public class Wizardry {
     private void addSpells( ) {
         // TODO: Is there a better way to access all these classes? Should they be static?
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
-        spellRegistry.add( new AlfsActionArrow()    );
+        spellRegistry.add( new AlfsActionArrow() );
+        spellRegistry.add( new BringTheDawn() );
         spellRegistry.add( new CharmVillager() );
         spellRegistry.add( new CloudRider() );
         spellRegistry.add( new EnderPocket() );
@@ -111,6 +105,7 @@ public class Wizardry {
         spellRegistry.add( new LampLighter() );
         spellRegistry.add( new LayerLayer() );
         spellRegistry.add( new MightyLeap() );
+        spellRegistry.add( new Recyclotron() );
         spellRegistry.add( new RoadToNowhere() );
         spellRegistry.add( new RusalkasTouch() );
         spellRegistry.add( new TerracottaTurner() );
@@ -129,29 +124,22 @@ public class Wizardry {
     private void addPatterns( ) {
         ArrayList<MagicPattern> patternRegistry = new ArrayList<>();
         patternRegistry.add( new EnchantWand() );
-        patternRegistry.add( new FontOfPower() );
         patternRegistry.add( new WizardAnvil() );
         patternRegistry.add( new WizardAxe() );
         patternRegistry.add( new WizardBow() );
         patternRegistry.add( new WizardCrossbow() );
         patternRegistry.add( new WizardDust() );
         patternRegistry.add( new WizardHoe() );
-//        patternRegistry.add( new WizardFood() );
         patternRegistry.add( new WizardPick() );
+        patternRegistry.add( new WizardRod() );
         patternRegistry.add( new WizardShovel() );
         patternRegistry.add( new WizardSword() );
         patternRegistry.add( new WizardTrident() );
 
         for ( MagicPattern magicPattern : patternRegistry ) {
-            for ( String[] p : magicPattern.getPatterns() ) {
-                String pattern = new String();
-                for ( int i = 0; i < p.length; i++ ) {
-                    pattern += p[i];
-                    if (i < p.length - 1) {
-                        pattern += ",";
-                    }
-                }
-                this.patternList.put( pattern, magicPattern);
+            Material[] keys = magicPattern.getKeys();
+            for ( Material m: keys ) {
+                this.patternList.put( m, magicPattern );
             }
         }
 
@@ -160,7 +148,7 @@ public class Wizardry {
     private void addSigns() {
         ArrayList<MagicSign> signRegistry = new ArrayList<>();
         signRegistry.add( new SortingChest() );
-        signRegistry.add( new UnseenArchitect() );
+        // signRegistry.add( new UnseenArchitect() );
         signRegistry.add( new WizardElevator() );
         signRegistry.add( new WizardPassage() );
         signRegistry.add( new WizardLock() );

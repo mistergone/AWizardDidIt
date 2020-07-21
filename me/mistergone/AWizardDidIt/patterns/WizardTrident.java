@@ -1,13 +1,11 @@
 package me.mistergone.AWizardDidIt.patterns;
 import me.mistergone.AWizardDidIt.AWizardDidIt;
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
@@ -30,11 +28,12 @@ public class WizardTrident extends WeaponPattern {
 
     public WizardTrident() {
         patternName = "Wizard Trident";
-        patterns =  new ArrayList<String[]>();
+        keys = new Material[]{ Material.TRIDENT };
+        patterns =  new HashMap<String, String[]>();
         weaponCost = 0;
         modeCosts = new HashMap<String, Integer >();
 
-        patterns.add( new String[]
+        patterns.put( "Wizard Trident", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "TRIDENT", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
@@ -47,6 +46,14 @@ public class WizardTrident extends WeaponPattern {
         patternFunction = new PatternFunction(){
             @Override
             public void run() {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 ItemStack trident = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = trident.getItemMeta();
 

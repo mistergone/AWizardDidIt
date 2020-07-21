@@ -4,7 +4,6 @@ import me.mistergone.AWizardDidIt.helpers.SignHelper;
 import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import me.mistergone.AWizardDidIt.patterns.WizardFood;
 import me.mistergone.AWizardDidIt.signs.WizardLock;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -94,7 +93,7 @@ public class MagicListener implements Listener {
             // "Grounded" status prevents a race condition with damage prevention event handler
             wizardPlayer.addSpell( "Cloud Rider (Grounded)" );
         } else if ( wizardPlayer.checkSpell( "Cloud Rider (Grounded)") ) {
-            wizardPlayer.removeSpell(" Cloud Rider (Grounded)" );
+            wizardPlayer.removeSpell("Cloud Rider (Grounded)" );
         } else if ( wizardPlayer.checkSpell( "Teletransference" ) ) {
             wizardPlayer.removeSpell( "Teletransference" );
         }
@@ -134,14 +133,8 @@ public class MagicListener implements Listener {
             Boolean isWand = WandHelper.isActuallyAWand( main );
             if ( isWand && isReagent ) {
                 event.setCancelled( true );
-            } else if ( isWand && WizardFood.isWizardFood( off ) ) {
-                off.setAmount( off.getAmount() - 1 );
-                WizardFood.eatWizardFood( off, getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ) );
             }
         }
-
-        // Check for Wizard Food
-        WizardFood.eatWizardFood( event.getItem(), getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ) );
 
         // Potions give back Wizard Power
         if ( item.getType() == Material.POTION && item.getItemMeta() instanceof PotionMeta ) {
@@ -152,10 +145,10 @@ public class MagicListener implements Listener {
             }
         }
 
-        // Poison Potatoes give back 100  Wizard Power!
+        // Poison Potatoes give back 200  Wizard Power!
         if ( item.getType() == Material.POISONOUS_POTATO ) {
             WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() );
-            wizardPlayer.gainWizardPower( 100 );
+            wizardPlayer.gainWizardPower( 200 );
         }
     }
 

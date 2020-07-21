@@ -15,6 +15,7 @@ import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.UUID;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
@@ -23,8 +24,9 @@ public class WizardDust extends MagicPattern {
 
     public WizardDust() {
         patternName = "Wizard Dust";
-        patterns = new ArrayList<String[]>();
-        patterns.add(new String[]
+        keys = new Material[]{ Material.BONE_MEAL };
+        patterns =  new HashMap<String, String[]>();
+        patterns.put( "Wizard Dust", new String[]
                 {"NONE", "NONE", "NONE",
                         "NONE", "BONE_MEAL", "NONE",
                         "NONE", "NONE", "NONE"});
@@ -32,9 +34,17 @@ public class WizardDust extends MagicPattern {
         patternFunction = new PatternFunction() {
             @Override
             public void run() {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 if ( WandHelper.isJustAStick(magicWand) || WandHelper.isActuallyAWand( magicWand )) {
                     WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                    if ( !wizardPlayer.spendWizardPower( 200 , patternName ) ) return;
+                    if ( !wizardPlayer.spendWizardPower( 150 , patternName ) ) return;
                     player.sendMessage(ChatColor.BLUE + "You have invoked " + patternName + "!");
 
                     ItemStack bonemeal = magicChest.getChest().getInventory().getItem( 10 );

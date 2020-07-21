@@ -1,6 +1,7 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
@@ -27,21 +28,30 @@ public class WizardBow extends WeaponPattern {
 
     public WizardBow() {
         patternName = "Wizard Bow";
-        patterns =  new ArrayList<String[]>();
+        keys = new Material[]{ Material.BOW };
+        patterns =  new HashMap<String, String[]>();
         weaponCost = 0;
         modeCosts = new HashMap<String, Integer >();
 
-        patterns.add( new String[]
+        patterns.put( "Wizard Bow", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "BOW", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
+                    "GLOWSTONE_DUST", "BOW", "GLOWSTONE_DUST",
+                    "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
-        modeCosts.put( "Bow of Teletransference", 15 );
-        modeCosts.put( "Bane of Darkness", 3 );
+        modeCosts.put( "Bow of Teletransference", 50 );
+        modeCosts.put( "Bane of Darkness", 10 );
 
         patternFunction = new PatternFunction(){
             @Override
             public void run() {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 ItemStack bow = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = bow.getItemMeta();
 

@@ -1,14 +1,12 @@
 package me.mistergone.AWizardDidIt.patterns;
 
 import me.mistergone.AWizardDidIt.AWizardDidIt;
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
-import org.bukkit.Bukkit;
-import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
-import org.bukkit.Location;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Arrow;
@@ -31,22 +29,31 @@ public class WizardCrossbow extends WeaponPattern {
 
     public WizardCrossbow() {
         patternName = "Wizard Crossbow";
-        patterns =  new ArrayList<String[]>();
+        keys = new Material[]{ Material.BOW };
+        patterns =  new HashMap<String, String[]>();
         weaponCost = 0;
         modeCosts = new HashMap<String, Integer >();
 
-        patterns.add( new String[]
+        patterns.put( "Wizard Crossbow", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "CROSSBOW", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
-        modeCosts.put( "Slow Bolt", 3 );
-        modeCosts.put( "Poison Bolt", 5 );
-        modeCosts.put( "Teletransference Bolt", 15 );
+        modeCosts.put( "Slow Bolt", 7 );
+        modeCosts.put( "Poison Bolt", 10 );
+        modeCosts.put( "Teletransference Bolt", 25 );
 
         patternFunction = new PatternFunction(){
             @Override
             public void run() {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 ItemStack crossbow = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = crossbow.getItemMeta();
 

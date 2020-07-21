@@ -68,7 +68,6 @@ public class SignHelper {
     public static Block getAttachedBlock( Block signBlock ) {
         if ( !Tag.WALL_SIGNS.isTagged( signBlock.getType() ) ) return null;
         WallSign sign = (WallSign) signBlock.getBlockData();
-        Bukkit.broadcastMessage( "TEST!" + signBlock.getRelative( sign.getFacing().getOppositeFace() ).toString() );
         Block b = null;
 
         return b;

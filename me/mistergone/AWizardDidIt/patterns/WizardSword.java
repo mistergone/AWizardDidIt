@@ -1,5 +1,6 @@
 package me.mistergone.AWizardDidIt.patterns;
 
+import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
@@ -19,43 +20,33 @@ public class WizardSword extends WeaponPattern {
 
     public WizardSword() {
         patternName = "Wizard Sword";
-        patterns =  new ArrayList<String[]>();
+        keys = new Material[]{ Material.WOODEN_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD,
+                Material.DIAMOND_SWORD, Material.NETHERITE_SWORD };
+        patterns =  new HashMap<String, String[]>();
         weaponCost = 0;
         modeCosts = new HashMap<String, Integer >();
 
-        patterns.add( new String[]
+        patterns.put( "Wizard Sword", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "WOODEN_SWORD", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "STONE_SWORD", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "IRON_SWORD", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GOLDEN_SWORD", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "DIAMOND_SWORD", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
-        patterns.add( new String[]
-                { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
-                        "GLOWSTONE_DUST", "NETHERITE_SWORD", "GLOWSTONE_DUST",
+                        "GLOWSTONE_DUST", "ANY", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
-        modeCosts.put( "Whirlwind Slash", 5 );
-        modeCosts.put( "Lifestealer", 15 );
-        modeCosts.put( "Moonblade", 0    );
+        modeCosts.put( "Whirlwind Slash", 10 );
+        modeCosts.put( "Lifestealer", 30 );
+        modeCosts.put( "Moonblade", 0 );
 
 
         patternFunction = new PatternFunction(){
             @Override
             public void run() {
+                String[] pattern = magicChest.getPattern();
+                String name = MagicPattern.getPatternName( pattern, patterns );
+
+                if ( name == null ) {
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    return;
+                }
+
                 ItemStack sword = magicChest.getChest().getInventory().getItem( 10 );
                 ItemMeta meta = sword.getItemMeta();
 
