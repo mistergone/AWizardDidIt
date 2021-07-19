@@ -30,7 +30,7 @@ public class WizardHoe extends ToolPattern {
         keys = new Material[]{ Material.WOODEN_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
                 Material.DIAMOND_HOE, Material.NETHERITE_HOE };
         patterns =  new HashMap<String, String[]>();
-        toolCost = 1;
+        toolCost = 5;
 
         patterns.put( "Wizard Hoe", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",

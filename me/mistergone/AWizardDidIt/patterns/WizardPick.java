@@ -27,7 +27,7 @@ public class WizardPick extends ToolPattern {
         keys = new Material[]{ Material.WOODEN_PICKAXE, Material.STONE_PICKAXE, Material.IRON_PICKAXE,
             Material.GOLDEN_PICKAXE, Material.DIAMOND_PICKAXE, Material.NETHERITE_PICKAXE };
         patterns =  new HashMap<String, String[]>();
-        toolCost = 1;
+        toolCost = 3;
 
         patterns.put( "Wizard Pick", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",

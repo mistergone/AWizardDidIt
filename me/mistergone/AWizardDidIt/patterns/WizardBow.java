@@ -39,7 +39,7 @@ public class WizardBow extends WeaponPattern {
                     "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
         modeCosts.put( "Bow of Teletransference", 50 );
-        modeCosts.put( "Bane of Darkness", 10 );
+        modeCosts.put( "Bane of Darkness", 20 );
 
         patternFunction = new PatternFunction(){
             @Override
@@ -48,7 +48,7 @@ public class WizardBow extends WeaponPattern {
                 String name = MagicPattern.getPatternName( pattern, patterns );
 
                 if ( name == null ) {
-                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest2!");
                     return;
                 }
 
@@ -121,7 +121,7 @@ public class WizardBow extends WeaponPattern {
                         if ( BlockHelper.airTypes.contains( projectileHitEvent.getHitBlock().getRelative( BlockFace.UP ).getType() ) ) {
                             if ( !wizardPlayer.spendWizardPower( getModeCost( spellName ), spellName ) ) return;
                             wizardPlayer.sendMsgWithCooldown( spellName,
-                                    ChatColor.AQUA + "You have incoked " + spellName + "! A torch has been placed where your arrow landed!",
+                                    ChatColor.AQUA + "You have invoked " + spellName + "! A torch has been placed where your arrow landed!",
                                     5 );
                             torch = projectileHitEvent.getHitBlock().getRelative( BlockFace.UP );
                             torch.setType( Material.TORCH );
@@ -129,7 +129,7 @@ public class WizardBow extends WeaponPattern {
                     } else {
                         if ( !wizardPlayer.spendWizardPower( getModeCost( spellName ), spellName ) ) return;
                         wizardPlayer.sendMsgWithCooldown( spellName,
-                                ChatColor.AQUA + "You have incoked " + spellName + "! A torch has been placed where your arrow landed!",
+                                ChatColor.AQUA + "You have invoked " + spellName + "! A torch has been placed where your arrow landed!",
                                 5 );
                         torch.setType( Material.WALL_TORCH );
                         Directional direction = (Directional)torch.getBlockData();

@@ -33,11 +33,11 @@ public class AWizardDidIt extends JavaPlugin{
                     @Override
                     public void run() {
                         for ( WizardPlayer wiz: Wizardry.getWizardry().getWizardList().values() ) {
-                            double d = (double)wiz.getPlayer().getFoodLevel() / 20 * 50;
+                            double d = (double)wiz.getPlayer().getFoodLevel() / 20 * 100;
                             wiz.gainWizardPower( (int)Math.round( d ) );
                         }
                     }
-                }, 1200, 1200 );
+                }, 600, 600 );
 
     }
 

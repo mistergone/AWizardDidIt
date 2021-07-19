@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class LampLighter extends MagicSpell {
     public LampLighter() {
         spellName = "Lamp Lighter";
-        cost = 1;
+        cost = 5;
         reagents = new ArrayList<String>();
         reagents.add( "TORCH" );
         ArrayList<Material> airTypes = new ArrayList<>();

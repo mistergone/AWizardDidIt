@@ -1,5 +1,6 @@
 package me.mistergone.AWizardDidIt.baseClasses;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.block.Chest;
 import org.bukkit.block.DoubleChest;
@@ -25,6 +26,9 @@ public class MagicChest {
 
     public Material getKey() {
         ItemStack[] stuff = this.chest.getInventory().getContents();
+        if ( stuff[10] == null ) {
+            return null;
+        }
         return stuff[10].getType();
     }
 

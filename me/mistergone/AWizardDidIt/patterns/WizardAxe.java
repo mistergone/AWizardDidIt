@@ -29,8 +29,8 @@ public class WizardAxe extends ToolPattern {
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
                     "GLOWSTONE_DUST", "ANY", "GLOWSTONE_DUST",
                     "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" }  );
-        toolCost = 1;
-        int lumberjackCost = 25;
+        toolCost = 3;
+        int lumberjackCost = 50;
 
         patternFunction = new PatternFunction() {
             @Override
@@ -78,65 +78,80 @@ public class WizardAxe extends ToolPattern {
                 List<String> lore = tool.getItemMeta().getLore();
 
                 // **** Lumberjack Mode! **** //
-                if ( lore.size() == 1 || lore.get(1).equals("Mode: Lumberjack" ) ) {
-                    if ( !Tag.LOGS.isTagged( choppedType ) ) return;
+                if ( lore.size() == 1 || lore.get(1).equals( "Mode: Lumberjack" ) ) {
+                    if ( !Tag.LOGS.isTagged( choppedType ) &&
+                         !Tag.CRIMSON_STEMS.isTagged( choppedType ) &&
+                         !Tag.WARPED_STEMS.isTagged( choppedType ) &&
+                         choppedType != Material.MUSHROOM_STEM ) return;
 
+                    Material leafType = null;
+                    if ( Tag.CRIMSON_STEMS.isTagged( choppedType ) ) {
+                        leafType = Material.NETHER_WART_BLOCK;
+                    } else if ( Tag.WARPED_STEMS.isTagged( choppedType ) ) {
+                        leafType = Material.WARPED_WART_BLOCK;
+                    } else if ( Tag.LOGS.isTagged( choppedType ) ) {
                         String leafString = choppedType.toString().substring( 0, choppedType.toString().length() -4 ) + "_LEAVES";
-                        Material leafType = Material.valueOf( leafString );
-                        ArrayList<Block> blocks = new ArrayList<>();
-                        ArrayList<Block> leaves = new ArrayList<>();
-                        player.playSound( player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, .3F, 2F  );
-                        blocks.add( firstBlock );
+                        leafType = Material.valueOf( leafString );
+                    }
+                    ArrayList<Block> blocks = new ArrayList<>();
+                    ArrayList<Block> leaves = new ArrayList<>();
+                    player.playSound( player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, .3F, 2F  );
+                    blocks.add( firstBlock );
 
-                        if ( !wizardPlayer.spendWizardPower( lumberjackCost, patternName ) ) return;
+                    if ( !wizardPlayer.spendWizardPower( lumberjackCost, patternName ) ) return;
 
-                        for (int i = 0; i < 1000 && i < blocks.size(); i++) {
-                            Block b = blocks.get(i);
-                            Location loc = b.getLocation();
+                    for (int i = 0; i < 1000 && i < blocks.size(); i++) {
+                        Block b = blocks.get(i);
+                        Location loc = b.getLocation();
 
-                            // Let the tool break the first block
-                            if ( !b.equals( firstBlock ) ) {
-                                // Don't break wizard signs
-                                if (SignHelper.isWizardSign(b)) {
-                                    player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
-                                    continue;
-                                }
-
-                                // Don't break blocks with Wizard Signs attached
-                                if ( SignHelper.hasAttachedWizardSigns( b ) ) {
-                                    player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
-                                            "Wizard Sign first!");
-                                    continue;
-                                }
-
-                                b.breakNaturally(player.getInventory().getItemInMainHand());
+                        // Let the tool break the first block
+                        if ( !b.equals( firstBlock ) ) {
+                            // Don't break wizard signs
+                            if (SignHelper.isWizardSign(b)) {
+                                player.sendMessage( ChatColor.RED + patternName + " cannot break Wizard Signs!" );
+                                continue;
                             }
 
-                            for (int x = loc.getBlockX() - 1; x <= loc.getBlockX() + 1; x++) {
-                                for (int y = loc.getBlockY() - 1; y <= loc.getBlockY() + 1; y++) {
-                                    for (int z = loc.getBlockZ() - 1; z <= loc.getBlockZ() + 1; z++) {
-                                        Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
-                                        if ( blocks.contains( blockCheck) ) continue;
-                                        if ( blockCheck.getType() == choppedType ) {
-                                            blocks.add( blockCheck );
-                                        } else if ( blockCheck.getType() == leafType  ) {
-                                            leaves.add( blockCheck );
-                                        }
+                            // Don't break blocks with Wizard Signs attached
+                            if ( SignHelper.hasAttachedWizardSigns( b ) ) {
+                                player.sendMessage( ChatColor.RED + "A Wizard Sign is attached to one of these blocks! Please break the " +
+                                        "Wizard Sign first!");
+                                continue;
+                            }
+
+                            b.breakNaturally(player.getInventory().getItemInMainHand());
+                        }
+
+                        for (int x = loc.getBlockX() - 1; x <= loc.getBlockX() + 1; x++) {
+                            for (int y = loc.getBlockY() - 1; y <= loc.getBlockY() + 1; y++) {
+                                for (int z = loc.getBlockZ() - 1; z <= loc.getBlockZ() + 1; z++) {
+                                    Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
+                                    Material checkType = blockCheck.getType();
+                                    if ( blocks.contains( blockCheck) ) continue;
+                                    if ( checkType == choppedType ) {
+                                        blocks.add(blockCheck);
+                                    } else if ( choppedType == Material.MUSHROOM_STEM &&
+                                            ( checkType == Material.RED_MUSHROOM_BLOCK ||
+                                              checkType == Material.BROWN_MUSHROOM_BLOCK ) ) {
+                                        leaves.add( blockCheck);
+                                    } else if ( leafType != null && checkType == leafType  ) {
+                                        leaves.add( blockCheck );
                                     }
                                 }
                             }
                         }
+                    }
 
-                        Bukkit.getServer().getScheduler().runTaskLater(
-                                (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt"),
-                                new Runnable() {
-                                    @Override
-                                    public void run() {
-                                        removeLeaves( leaves );
-                                    }
-                                },
-                                20
-                        );
+                    Bukkit.getServer().getScheduler().runTaskLater(
+                            (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt"),
+                            new Runnable() {
+                                @Override
+                                public void run() {
+                                    removeLeaves( leaves );
+                                }
+                            },
+                            20
+                    );
                 } else {
 
                     // **** "Digging" mode **** //
@@ -216,9 +231,11 @@ public class WizardAxe extends ToolPattern {
                         Block blockCheck = loc.getWorld().getBlockAt(x, y, z);
                         if ( leaves.contains( blockCheck ) ) continue;
                         if ( blockCheck.getType() == leafType ) {
-                            Leaves data = (Leaves)blockCheck.getBlockData();
-                            if ( data.isPersistent() ) continue;
-                            if ( data.getDistance() < 5 ) continue;
+                            if ( Tag.LEAVES.isTagged( leafType ) ) {
+                                Leaves data = (Leaves)blockCheck.getBlockData();
+                                if ( data.isPersistent() ) continue;
+                                if ( data.getDistance() < 5 ) continue;
+                            }
                             leaves.add( blockCheck );
                         }
                     }

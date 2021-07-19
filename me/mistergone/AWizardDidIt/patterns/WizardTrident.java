@@ -38,10 +38,10 @@ public class WizardTrident extends WeaponPattern {
                         "GLOWSTONE_DUST", "TRIDENT", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
-        modeCosts.put( "Fiery Pitchfork", 2 );
-        modeCosts.put( "Monster Slayer", 5 );
-        modeCosts.put( "Hunting Spear", 5 );
-        modeCosts.put( "Teletransference Trident", 25 );
+        modeCosts.put( "Fiery Pitchfork", 5 );
+        modeCosts.put( "Monster Slayer", 10 );
+        modeCosts.put( "Hunting Spear", 10 );
+        modeCosts.put( "Teletransference Trident", 50 );
 
         patternFunction = new PatternFunction(){
             @Override

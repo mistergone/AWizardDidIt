@@ -71,7 +71,7 @@ public class WizardElevator extends MagicSign {
                     stuckCount.set( 0 );
                 }
                 if ( stuckCount.intValue() > 10 ) {
-                    p.teleport( p.getLocation().add( 0, .5, 0 ) );
+                    p.teleport( p.getLocation().add( 0, .66, 0 ) );
                 }
                 wizardPlayer.setLastKnownLocation( p.getLocation() );
 
@@ -87,12 +87,12 @@ public class WizardElevator extends MagicSign {
                     cancel();
                     return;
                 } else if ( newLoc.getY() > p.getLocation().getY() ) {
-                    p.setVelocity( new Vector(0, 0.5,0) );
+                    p.setVelocity( new Vector(0, 0.75,0) );
                     if ( p.getLocation().add( 0, 2, 0).getBlock().getType().isSolid() ) {
                         p.teleport( p.getLocation().add( 0, 1, 0 ) );
                     }
                 } else if ( newLoc.getY() < p.getLocation().getY() ) {
-                    p.setVelocity(new Vector(0, -0.5,0));
+                    p.setVelocity(new Vector(0, -0.75,0));
                     if ( p.getLocation().add( 0,-1,0 ).getBlock().getType().isSolid() ) {
                         p.teleport( p.getLocation().add( 0, -1, 0 ) );
                     }

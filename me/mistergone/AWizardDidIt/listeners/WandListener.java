@@ -9,6 +9,7 @@ import org.bukkit.*;
 import org.bukkit.block.*;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
+import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -53,6 +54,10 @@ public class WandListener implements Listener {
 
                     MagicChest magicChest = new MagicChest(chest);
                     Material key = magicChest.getKey();
+                    if ( key == null ) {
+                        p.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                        return;
+                    }
                     MagicPattern magicPattern = wizardry.getMagicPattern( key );
                     Boolean wandOrEnchantOrDust = magicPattern instanceof EnchantWand || WandHelper.isActuallyAWand(main)
                             || magicPattern instanceof WizardDust;
@@ -62,6 +67,7 @@ public class WandListener implements Listener {
                         try {
                             PatternFunction function = magicPattern.getMagicFunction();
                             function.setPlayer(p);
+                            function.setWizardPlayer( wizardPlayer );
                             function.setMagicWand(main);
                             function.setMagicChest(magicChest);
                             function.call();
@@ -132,18 +138,39 @@ public class WandListener implements Listener {
                         Location spawn = p.getBedSpawnLocation();
                         if ( spawn == null ) spawn = p.getWorld().getSpawnLocation();
                         Location ploc = p.getEyeLocation();
-                        double y = ploc.getY() - .25;
+                        ploc.setY( ploc.getY() - .25 );
                         ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
-                        ploc.setY( y );
-                        Vector v = spawn.toVector().subtract( ploc.toVector() );
-                        SpecialEffects.magicLine( ploc, v, Particle.SPELL_WITCH );
+                        Vector spawnVector = spawn.toVector().subtract( ploc.toVector() );
+                        SpecialEffects.magicLine( ploc, spawnVector, Particle.HEART );
+
+                        Location dLoc = wizardPlayer.getLastDeathLocation();
+                        if ( dLoc != null ) {
+                            ploc = p.getEyeLocation();
+                            ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
+                            ploc.setY( ploc.getY() - 0 );
+                            Vector deathVector = dLoc.toVector().subtract( ploc.toVector() );
+                            SpecialEffects.magicLine( ploc, deathVector, Particle.SPELL_WITCH );
+                        }
+
+                        // Message player with info.
+                        int wp = wizardPlayer.getWizardPower();
+                        p.sendMessage( ChatColor.LIGHT_PURPLE + "You have " + String.valueOf( wp ) +
+                                " points of Wizard Power." );
+                        p.sendMessage( ChatColor.YELLOW + "Your spawn location is at " + String.valueOf( spawn.getBlockX() ) +
+                                ", " + String.valueOf( spawn.getBlockY() ) + ", " + String.valueOf( spawn.getBlockZ() ) +
+                                ChatColor.ITALIC + " (Follow the line of hearts.)");
+                        if ( dLoc != null ) {
+                            p.sendMessage( ChatColor.RED + "Your last death was at " + String.valueOf( dLoc.getBlockX() ) +
+                                    ", " + String.valueOf( dLoc.getBlockY() ) + ", " + String.valueOf( dLoc.getBlockZ() ) +
+                                    ChatColor.ITALIC + " (Follow the line of purple sparks.)");
+                        }
+
                         return;
                     }
 
                     // Now we check for a magic spell with the reagent
                     magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
                     if (magicSpell == null) {
-                        p.sendMessage( offItem.getType().toString());
                         p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
                         return;
                     } else if ( magicSpell != null && magicSpell.getSpellFunction() != null ) {

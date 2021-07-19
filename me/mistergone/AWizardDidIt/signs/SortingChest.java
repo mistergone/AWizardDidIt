@@ -2,6 +2,7 @@ package me.mistergone.AWizardDidIt.signs;
 
 import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
 import me.mistergone.AWizardDidIt.baseClasses.SignFunction;
+import me.mistergone.AWizardDidIt.helpers.BlockHelper;
 import me.mistergone.AWizardDidIt.helpers.SignHelper;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
@@ -9,6 +10,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
+import org.bukkit.block.Sign;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -16,6 +18,8 @@ import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -41,15 +45,67 @@ public class SortingChest extends MagicSign {
                 Chest distChest = (Chest) under.getState();
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
 
-                HashMap<Material, Chest> chestIndex = new HashMap<>();
-                // create the chestIndex
+                HashMap<Material, ArrayList<Chest>> chestIndex = new HashMap<>();
+
+                // add Item Frames to chestIndex
                 List<Entity> entities = player.getNearbyEntities( 20, 10, 20 );
                 for ( Entity e : entities ) {
                     if ( e instanceof ItemFrame) {
-                        Block b = e.getWorld().getBlockAt( e.getLocation() ).getRelative( BlockFace.DOWN );
-                        if (  b.getType() == Material.CHEST ) {
+                        Block chestCheck = e.getWorld().getBlockAt( e.getLocation() ).getRelative( BlockFace.DOWN );
+                        if (  chestCheck.getType() == Material.CHEST ) {
                             ItemStack inFrame = ( (ItemFrame)e ).getItem();
-                            chestIndex.put( inFrame.getType(), (Chest)b.getState() );
+                            if ( inFrame == null ) continue;
+                            Material frameMat = inFrame.getType();
+                            ArrayList<Chest> chests = chestIndex.get( frameMat );
+                            if ( chests == null ) {
+                                chests = new ArrayList<Chest>();
+                            }
+                            chests.add( (Chest)chestCheck.getState() );
+                            chestIndex.put( frameMat, chests );
+                        }
+                    }
+                }
+
+                // add Signs to chestIndex
+                Location signLoc = signBlock.getLocation();
+                Block start = player.getWorld().getBlockAt(
+                        signLoc.getBlockX() - 20,
+                        signLoc.getBlockY() - 10,
+                        signLoc.getBlockZ() - 20
+                );
+
+                List<Block> blocks = BlockHelper.getBoxByDimensions( start, 40, 20, 40 );
+                for( Block b : blocks ) {
+                    if ( !SortingPoint.isSortingPointSign( b ) ) continue;
+                    Block chestCheck = b.getRelative(BlockFace.DOWN );
+                    if ( chestCheck.getType() != Material.CHEST ) continue;
+
+                    Sign sign = (Sign)b.getState();
+                    String[] lines = sign.getLines();
+                    Chest chest = (Chest) chestCheck.getState();
+                    if ( ChatColor.stripColor( lines[1] ).equals("Automatic") ) {
+                        Inventory sorter = chest.getInventory();
+                        for (  ItemStack i: sorter.getContents() ) {
+                            if ( i == null ) continue;
+                            Material m = i.getType();
+                            ArrayList<Chest> chests = chestIndex.get( m );
+                            if ( chests == null ) {
+                                chests = new ArrayList<Chest>();
+                            }
+                            chests.add( chest );
+                            chestIndex.put( m, chests );
+                        }
+                    } else {
+                        for ( int x = 1; x <=3; x++ ) {
+                            String line = ChatColor.stripColor( lines[x] ).toUpperCase();
+                            Material m = Material.matchMaterial( line );
+                            if ( m == null ) continue;
+                            ArrayList<Chest> chests = chestIndex.get( m );
+                            if ( chests == null ) {
+                                chests = new ArrayList<Chest>();
+                            }
+                            chests.add( chest );
+                            chestIndex.put( m, chests );
                         }
                     }
                 }
@@ -62,33 +118,91 @@ public class SortingChest extends MagicSign {
                 Inventory distInv = distChest.getInventory();
                 for ( int i = 0; i < distInv.getSize(); i ++ ) {
                     ItemStack item = distInv.getContents()[i];
-                    if ( item != null && chestIndex.keySet().contains( item.getType() ) ) {
-                        if ( !wizardPlayer.spendWizardPower( cost, signName ) ) return;
+                    if (item != null && chestIndex.keySet().contains(item.getType())) {
+                        if (!wizardPlayer.spendWizardPower(cost, signName)) return;
                         // Special effects!
-                        SpecialEffects.portalCollapse( signBlock.getLocation() );
-                        player.playSound( player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 3F, 2F );
-
-                        Chest chest = chestIndex.get( item.getType() );
-                        Inventory inv = chest.getInventory();
+                        SpecialEffects.portalCollapse(signBlock.getLocation());
+                        player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 3F, 2F);
+                        ArrayList<Chest> chests = chestIndex.get(item.getType());
                         int startingAmt = item.getAmount();
-                        HashMap<Integer, ItemStack> leftovers = inv.addItem( item );
-                        if ( leftovers.size() > 0 ) {
-                            ItemStack left = leftovers.get(0);
-                            if ( left.getAmount() == startingAmt ) {
-                                failedMoves++;
+
+                        while (item.getAmount() > 0 && chests.size() > 0) {
+                            // try to add the item to chests[0]
+                            Chest chest = chests.get(0);
+                            Inventory inv = chest.getInventory();
+                            HashMap<Integer, ItemStack> leftovers = inv.addItem(item);
+
+                            // There were leftovers
+                            if (leftovers.size() > 0) {
+                                // Chest is full, remove the chest
+                                chests.remove(0);
+
+                                // Set itemstack to leftover amount
+                                ItemStack left = leftovers.get(0);
+                                item.setAmount(left.getAmount());
                             } else {
-                                leftoverItems++;
+                                // No leftovers! Finish up.
+                                distChest.getInventory().setItem(i, null);
                                 movedItems++;
+                                item.setAmount(0);
                             }
-                            item.setAmount( left.getAmount() );
-                        } else {
-                            distChest.getInventory().setItem( i, null );
-                            movedItems++;
                         }
+                        // If items are left, then all chests were full!
+                        if ( item.getAmount() > 0 ) {
+                            if ( item.getAmount() != startingAmt ) {
+                                movedItems++;
+                                leftoverItems++;
+                            } else {
+                                failedMoves++;
+                            }
+                            distChest.getInventory().setItem( i, item );
+                        }
+
                     } else if ( item != null ) {
                         notFound++;
                     }
                 }
+
+//                        Chest chest = chests.get(0);
+//                        Inventory inv = chest.getInventory();
+//                        int startingAmt = item.getAmount();
+//                        HashMap<Integer, ItemStack> leftovers = inv.addItem( item );
+//
+//                        if ( leftovers.size() == 0 ) {
+//                            distChest.getInventory().setItem( i, null );
+//                            movedItems++;
+//                        } else {
+//                            // if leftovers, try next chest
+//                            while ( leftovers.size() > 0 ) {
+//                                chests.remove(0);
+//                                if ( chests.size() == 0 ) {
+//                                    // No place to put these items!
+//                                    ItemStack left = leftovers.get(0);
+//                                    if ( left.getAmount() == startingAmt ) {
+//                                        failedMoves++;
+//                                    } else {
+//                                        leftoverItems++;
+//                                        movedItems++;
+//                                    }
+//                                    item.setAmount( left.getAmount() );
+//                                    leftovers.clear();
+//                                } else {
+//                                    chest = chests.get(0);
+//                                    inv = chest.getInventory();
+//                                    startingAmt = item.getAmount();
+//                                    leftovers = inv.addItem( item );
+//                                    if ( leftovers.size() == 0 ) {
+//                                        distChest.getInventory().setItem( i, null );
+//                                        movedItems++;
+//                                    }
+//                                }
+//                            }
+//
+//                        }
+//                    } else if ( item != null ) {
+//                        notFound++;
+//                    }
+//                }
 
                 if ( movedItems > 0 || failedMoves > 0 || notFound > 0 ) {
                     player.sendMessage( ChatColor.GREEN + "You have invoked " + signName + "!" );

@@ -6,7 +6,6 @@ import me.mistergone.AWizardDidIt.patterns.*;
 import me.mistergone.AWizardDidIt.signs.*;
 import me.mistergone.AWizardDidIt.signs.SortingChest;
 import me.mistergone.AWizardDidIt.spells.*;
-import org.bukkit.Bukkit;
 import org.bukkit.Material;
 
 import java.util.ArrayList;
@@ -93,7 +92,7 @@ public class Wizardry {
         // TODO: Is there a better way to access all these classes? Should they be static?
         ArrayList< MagicSpell > spellRegistry = new ArrayList<>();
         spellRegistry.add( new AlfsActionArrow() );
-        spellRegistry.add( new BringTheDawn() );
+        spellRegistry.add( new RainbowInTheDark() );
         spellRegistry.add( new CharmVillager() );
         spellRegistry.add( new CloudRider() );
         spellRegistry.add( new EnderPocket() );
@@ -153,6 +152,7 @@ public class Wizardry {
     private void addSigns() {
         ArrayList<MagicSign> signRegistry = new ArrayList<>();
         signRegistry.add( new SortingChest() );
+        signRegistry.add( new SortingPoint() );
         // signRegistry.add( new UnseenArchitect() );
         signRegistry.add( new WizardElevator() );
         signRegistry.add( new WizardPassage() );

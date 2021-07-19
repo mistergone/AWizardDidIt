@@ -24,7 +24,7 @@ public class WizardShovel extends ToolPattern {
         keys = new Material[]{ Material.WOODEN_SHOVEL, Material.IRON_SHOVEL, Material.GOLDEN_SHOVEL,
                 Material.DIAMOND_SHOVEL, Material.NETHERITE_SHOVEL };
         patterns =  new HashMap<String, String[]>();
-        toolCost = 1;
+        toolCost = 3;
 
         patterns.put( "Wizard Shovel", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",

@@ -44,8 +44,9 @@ public class SignListener implements Listener {
             WizardLock.handleSignEvent( event );
         } else if ( check.equals( "[SortingChest]") ) {
             SortingChest.handleSignEvent( event );
+        } else if ( check.equals( "[SortingPoint]" ) ) {
+            SortingPoint.handleSignEvent( event );
         }
-
     }
 
     @EventHandler(priority= EventPriority.HIGH)

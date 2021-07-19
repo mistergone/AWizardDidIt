@@ -32,6 +32,8 @@ public class BlockHelper {
 
     // Things that Silk Touch works on, for a pick
     public static final List SILKY_PICK_TYPES = Arrays.asList( new Material[] {
+            Material.BEE_NEST,
+            Material.BEEHIVE,
             Material.BLUE_ICE,
             Material.BOOKSHELF,
             Material.CAMPFIRE,
@@ -44,15 +46,21 @@ public class BlockHelper {
             Material.GLASS_PANE,
             Material.GLOWSTONE,
             Material.GRASS_BLOCK,
+            Material.GRAVEL,
             Material.ICE,
             Material.LAPIS_ORE,
             Material.ENDER_CHEST,
             Material.MELON,
+            // MUSHROOM blocks
             Material.BROWN_MUSHROOM_BLOCK,
             Material.RED_MUSHROOM_BLOCK,
             Material.REDSTONE_ORE,
             Material.MYCELIUM,
             Material.NETHER_QUARTZ_ORE,
+            Material.NETHER_GOLD_ORE,
+            // NYLIUM types
+            Material.CRIMSON_NYLIUM,
+            Material.WARPED_NYLIUM,
             Material.PODZOL,
             Material.REDSTONE_ORE,
             Material.SEA_LANTERN,
@@ -78,6 +86,7 @@ public class BlockHelper {
             // Coral is silk pickable!
             return true;
         } else if ( Tag.LEAVES.isTagged( material ) ) {
+            // Leaves are silk pickable
             return true;
         }
 

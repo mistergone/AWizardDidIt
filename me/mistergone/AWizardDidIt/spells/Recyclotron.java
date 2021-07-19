@@ -17,7 +17,7 @@ public class Recyclotron extends MagicSpell {
         spellName = "Recyclotron";
         reagents = new ArrayList<String>();
         reagents.add("IRON_INGOT");
-        cost = 50;
+        cost = 100;
 
         spellFunction = new SpellFunction() {
             @Override

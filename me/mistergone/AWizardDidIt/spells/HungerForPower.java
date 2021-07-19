@@ -32,12 +32,12 @@ public class HungerForPower extends MagicSpell {
                 if ( reagent.getType() == Material.BONE ) {
                     if ( !wizardPlayer.checkSpell( spellName + "(Exp)" ) ) {
                         player.sendMessage(ChatColor.YELLOW + "You have invoked " + spellName
-                                + "! If you wish to trade 50 Experience Points for 50 Wizard Points, swing your wand again!");
+                                + "! If you wish to trade 50 Experience Points for 100 Wizard Points, swing your wand again!");
                         wizardPlayer.addSpell( spellName + "(Exp)" );
                         wizardPlayer.setSpellTimer( spellName + "(Exp)", 100 );
                     } else {
                         if ( ExpHelper.spendExp( player, 50 ) ) {
-                            wizardPlayer.gainWizardPower( 50 );
+                            wizardPlayer.gainWizardPower( 100 );
                         } else {
                             player.sendMessage( ChatColor.RED + "You do not have sufficient Experience Points!");
                         }
@@ -46,13 +46,13 @@ public class HungerForPower extends MagicSpell {
                 } else if ( reagent.getType() == Material.ROTTEN_FLESH ) {
                     if ( !wizardPlayer.checkSpell( spellName + "(Health)" ) ) {
                         player.sendMessage(ChatColor.YELLOW + "You have invoked " + spellName
-                                + "! If you wish to trade 1 Heart of Health for 25 Wizard Points, swing your wand again!");
+                                + "! If you wish to trade 1 Heart of Health for 50 Wizard Points, swing your wand again!");
                         wizardPlayer.addSpell( spellName + "(Health)" );
                         wizardPlayer.setSpellTimer( spellName + "(Health)", 100 );
                     } else {
                         if ( player.getHealth() > 2 ) {
                             player.damage( 2 );
-                            wizardPlayer.gainWizardPower( 25 );
+                            wizardPlayer.gainWizardPower( 50 );
                         } else {
                             player.sendMessage( ChatColor.RED + "You do not have sufficient Health!");
                         }

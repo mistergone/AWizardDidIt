@@ -18,7 +18,7 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 public class FreezeOver extends MagicSpell {
     public FreezeOver() {
         spellName = "Freeze Over";
-        cost = 5;
+        cost = 20;
         reagents = new ArrayList<String>();
         reagents.add( "SNOWBALL" );
 

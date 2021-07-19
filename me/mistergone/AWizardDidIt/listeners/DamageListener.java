@@ -74,9 +74,12 @@ public class DamageListener implements Listener {
             } else if ( wizardPlayer.checkSpell( "Cloud Rider" ) || wizardPlayer.checkSpell( "Cloud Rider (Gliding)" )
                     || wizardPlayer.checkSpell( "Cloud Rider (Grounded)" ) ) {
 
+                player.sendMessage(  ChatColor.RED + "Ouch! " + ChatColor.AQUA + "The magic of Cloud Rider has protected you!" );
+
+                event.setDamage( Math.min( event.getDamage(), 2 ) );
+
                 if ( event.getDamage() >= player.getHealth() ) {
-                    event.setDamage( player.getHealth() - 0.5 );
-                    player.sendMessage(  ChatColor.RED + "Ouch! " + ChatColor.AQUA + "The magic of Cloud Rider has protected you!" );
+                    event.setDamage( 0 );
                 }
                 if ( wizardPlayer.checkSpell( "Cloud Rider" ) ) {
                     wizardPlayer.removeSpell( "Cloud Rider" );
@@ -148,8 +151,8 @@ public class DamageListener implements Listener {
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Monster Slayer" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
                     SpecialEffects.magicSpiral( target.getLocation() );
-                    wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Monstery Slayer)",
-                            ChatColor.AQUA + "You have invoked Monstery Slayer using your Wizard Trident!", 10 );
+                    wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Monster Slayer)",
+                            ChatColor.AQUA + "You have invoked Monster Slayer using your Wizard Trident!", 10 );
                 } else if ( customName.equals( "Hunting Spear" ) ) {
                     if ( ! ( target instanceof Animals ) ) return;
                     if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Hunting Spear" ), null ) ) return;
@@ -227,9 +230,13 @@ public class DamageListener implements Listener {
             WizardPlayer wizardPlayer = Wizardry.getWizardry().getWizardPlayer( p.getUniqueId() );
 
             if ( entity instanceof SmallFireball && entity.getCustomName().equals( "Incinerate Projectile" ) ) {
-                if (event.getHitEntity() != null && event.getHitEntity() instanceof LivingEntity) {
-                    event.getHitEntity().setFireTicks(60);
-                    ((LivingEntity) event.getHitEntity()).damage(15);
+                Entity victim = event.getHitEntity();
+                if ( victim instanceof Player ) {
+                    return;
+                }
+                if ( victim != null && victim instanceof LivingEntity) {
+                    victim.setFireTicks(60);
+                    ((LivingEntity) victim).damage(8 );
                 }
                 entity.getWorld().createExplosion(entity.getLocation(), 0, false);
             } else if ( entity instanceof Trident ) {

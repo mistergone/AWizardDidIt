@@ -40,7 +40,7 @@ public class WizardRod extends ToolPattern {
 
                 if ( meta.getLore() == null ) {
                     ArrayList<String> lore = new ArrayList<String>();
-                    lore.add( "Wizard Pole" );
+                    lore.add( "Wizard Rod" );
                     meta.setLore( lore );
                     rod.setItemMeta( meta );
                     player.sendMessage( ChatColor.GOLD + "This fishing rod has been empowered!" );

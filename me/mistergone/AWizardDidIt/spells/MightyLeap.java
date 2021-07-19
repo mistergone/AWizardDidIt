@@ -22,7 +22,7 @@ public class MightyLeap extends MagicSpell {
         spellName = "Mighty Leap";
         reagents = new ArrayList<String>();
         reagents.add( "SLIME_BALL" );
-        cost = 10;
+        cost = 25;
 
         spellFunction = new SpellFunction() {
             @Override

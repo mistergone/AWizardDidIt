@@ -29,7 +29,7 @@ public class WizardCrossbow extends WeaponPattern {
 
     public WizardCrossbow() {
         patternName = "Wizard Crossbow";
-        keys = new Material[]{ Material.BOW };
+        keys = new Material[]{ Material.CROSSBOW };
         patterns =  new HashMap<String, String[]>();
         weaponCost = 0;
         modeCosts = new HashMap<String, Integer >();
@@ -39,9 +39,9 @@ public class WizardCrossbow extends WeaponPattern {
                         "GLOWSTONE_DUST", "CROSSBOW", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" } );
 
-        modeCosts.put( "Slow Bolt", 7 );
-        modeCosts.put( "Poison Bolt", 10 );
-        modeCosts.put( "Teletransference Bolt", 25 );
+        modeCosts.put( "Slow Bolt", 15 );
+        modeCosts.put( "Poison Bolt", 20 );
+        modeCosts.put( "Teletransference Bolt", 50 );
 
         patternFunction = new PatternFunction(){
             @Override
@@ -50,7 +50,7 @@ public class WizardCrossbow extends WeaponPattern {
                 String name = MagicPattern.getPatternName( pattern, patterns );
 
                 if ( name == null ) {
-                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest!");
+                    player.sendMessage(ChatColor.RED + "No magic pattern was found inside this chest3!");
                     return;
                 }
 

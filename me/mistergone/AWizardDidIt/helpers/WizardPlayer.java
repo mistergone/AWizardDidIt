@@ -35,6 +35,7 @@ public class WizardPlayer {
     BlockFace lastFaceToolClicked;
     Location lastKnownLocation;
     Location intendedDestination;
+    Location lastDeathLocation;
     int wizardToolUses;
     int unseenEnergy;
     long lastSaved;
@@ -56,6 +57,7 @@ public class WizardPlayer {
         this.lastSaved = System.currentTimeMillis();
         this.wizardToolUses = 0;
         this.lastKnownLocation = player.getLocation();
+        this.lastDeathLocation = null;
     }
 
     /**
@@ -401,6 +403,7 @@ public class WizardPlayer {
                 playerDataConfig.createSection("Wizard Power");
                 playerDataConfig.createSection("Active Spells");
                 playerDataConfig.createSection("Death Items");
+                playerDataConfig.createSection("Last Death Location");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -413,6 +416,7 @@ public class WizardPlayer {
             playerDataConfig.set("Wizard Power", getWizardPower() );
             playerDataConfig.set( "Active Spells", getSpells() );
             playerDataConfig.set( "Death Items", getDeathItems() );
+            playerDataConfig.set( "Last Death Location", getLastDeathLocation() );
             playerDataConfig.save( playerDataFile );
         } catch (Exception ex) {
             ex.printStackTrace();
@@ -440,8 +444,10 @@ public class WizardPlayer {
                 String power = fileConfiguration.getString( "Wizard Power");
                 List<String> activeSpells = fileConfiguration.getStringList( "Active Spells" );
                 List<ItemStack> list = (List<ItemStack>) fileConfiguration.getList("Death Items");
+                Location deathLoc = (Location) fileConfiguration.getLocation( "Last Death Location" );
                 try {
                     this.wizardPower = Integer.parseInt( power );
+                    this.setLastDeathLocation( deathLoc );
                     for ( String str: activeSpells ) {
                         this.addSpell( str );
                     }
@@ -519,6 +525,11 @@ public class WizardPlayer {
 
     public void setIntendedDestination( Location loc ) { this.intendedDestination = loc; }
 
+    /*****##### Intended destination #####*****/
+    // This lets us tell the player where they died last
 
+    public Location getLastDeathLocation() { return this.lastDeathLocation; }
+
+    public void setLastDeathLocation( Location loc ) { this.lastDeathLocation = loc; }
 
 }

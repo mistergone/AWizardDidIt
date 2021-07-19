@@ -21,7 +21,7 @@ public class CharmVillager extends MagicSpell {
 
     public CharmVillager() {
         spellName = "Charm Villager";
-        cost = 25;
+        cost = 50;
         reagents = new ArrayList<String>();
         reagents.add( "EMERALD" );
 

@@ -17,7 +17,7 @@ public class EnderPocket extends MagicSpell {
         spellName = "Ender Pocket";
         reagents = new ArrayList<String>();
         reagents.add( "ENDER_PEARL" );
-        cost = 10;
+        cost = 50;
 
         spellFunction = new SpellFunction() {
             @Override

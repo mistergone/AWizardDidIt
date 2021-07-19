@@ -33,7 +33,7 @@ public class ExpHelper {
     public static int getExpTotal( Player p ) {
         int level = p.getLevel();
         int levelExp = getExpForLevel( level );
-        int toLevel = (int)( p.getExpToLevel() * p.getExp() );
+        int toLevel = (int)Math.ceil( p.getExpToLevel() * p.getExp() );
         int totalExp = levelExp + toLevel;
 
         return totalExp;

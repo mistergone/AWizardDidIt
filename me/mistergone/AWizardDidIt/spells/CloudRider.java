@@ -1,19 +1,24 @@
 package me.mistergone.AWizardDidIt.spells;
 
+import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
+import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
-import org.bukkit.Sound;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.entity.Boat;
+import org.bukkit.entity.Entity;
+import org.bukkit.entity.Player;
+import org.bukkit.entity.Vehicle;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import org.bukkit.scheduler.BukkitRunnable;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
+import java.util.concurrent.atomic.AtomicInteger;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
@@ -23,11 +28,14 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
  */
 
 public class CloudRider extends MagicSpell {
+    String boatSpellName = "Wave Rider";
 
     public CloudRider() {
         spellName = "Cloud Rider";
-        cost = 25;
+        cost = 100;
         int slowFallCost = 5;
+        int waveRiderCost = 10;
+
         reagents = new ArrayList<String>();
         reagents.add("FEATHER");
 
@@ -38,8 +46,9 @@ public class CloudRider extends MagicSpell {
                 Block feet = player.getWorld().getBlockAt(player.getLocation());
                 Block head = player.getWorld().getBlockAt(player.getLocation()).getRelative(BlockFace.UP);
                 Boolean isFloating = feet.getType() == Material.WATER && head.getType() == Material.AIR;
+                Boolean isInVehicle = player.isInsideVehicle();
 
-                if ((player.isOnGround() || isFloating)) {
+                if ((player.isOnGround() || isFloating) && !isInVehicle ) {
                     if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
 
                     wizardPlayer.addSpell(spellName);
@@ -57,7 +66,7 @@ public class CloudRider extends MagicSpell {
                     double angle = Math.round(player.getLocation().getYaw());
 
                     double speed = 2;
-                    double pitch = 45;
+                    double pitch = 60;
                     if (angle >= 270) {
                         angle = Math.toRadians(Math.abs(angle - 360));
                     } else if (angle >= 180) {
@@ -84,7 +93,7 @@ public class CloudRider extends MagicSpell {
                     player.setVelocity(v);
                     player.sendMessage(ChatColor.DARK_AQUA + "Swing your wand again to begin gliding!");
 
-                } else if (!player.isGliding() && !player.isSwimming() && wizardPlayer.getSpells().contains(spellName)) {
+                } else if (!player.isGliding() && !player.isSwimming() && !isInVehicle && wizardPlayer.getSpells().contains(spellName)) {
                     player.setGliding(true);
                     player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.2F, .8F);
 
@@ -127,15 +136,108 @@ public class CloudRider extends MagicSpell {
 
                     player.sendMessage(ChatColor.AQUA + "You are now gliding!");
 
-                } else if (!player.isOnGround() && !player.isGliding() && !wizardPlayer.getSpells().contains(spellName)
+                } else if (!player.isOnGround() && !player.isGliding() && !isInVehicle && !wizardPlayer.getSpells().contains(spellName)
                         && !wizardPlayer.getSpells().contains(spellName + " (Gliding)") ) {
                     if ( !wizardPlayer.spendWizardPower( slowFallCost, spellName ) ) return;
                     PotionEffect slowFall = new PotionEffect(PotionEffectType.SLOW_FALLING, 200, 1);
                     player.addPotionEffect(slowFall);
 
                     player.sendMessage(ChatColor.AQUA + "You have invoked " + spellName + " to slow your fall!");
+                } else if ( isInVehicle ) {
+                    Entity vehicle = player.getVehicle();
+                    if ( vehicle instanceof Boat ) {
+                        if ( wizardPlayer.checkSpell( boatSpellName ) ) {
+                            wizardPlayer.addSpell( boatSpellName + " - Jump" );
+                        } else  if ( wizardPlayer.spendWizardPower( cost, spellName )) {
+                            player.sendMessage(ChatColor.AQUA + "You have invoked " + boatSpellName +"!");
+                            doBoating( (Boat)vehicle, wizardPlayer );
+                        }
+
+                    }
                 }
             }
         };
+    }
+
+    private void doBoating( Boat boat, WizardPlayer wizardPlayer ) {
+        Player player = wizardPlayer.getPlayer();
+        final AtomicInteger time = new AtomicInteger();
+        AWizardDidIt plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
+        player.setAllowFlight( true );
+        wizardPlayer.addSpell( boatSpellName );
+        time.set( 0 );
+
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                if ( !boat.getPassengers().contains( player )
+                        || !WandHelper.isActuallyAWand( player.getInventory().getItemInMainHand() ) ) {
+                    player.sendMessage(ChatColor.AQUA + boatSpellName + ChatColor.YELLOW + " has ended.");
+                    player.setAllowFlight( false );
+                    wizardPlayer.removeSpell( boatSpellName );
+                    wizardPlayer.removeSpell( boatSpellName + " - Jump" );
+                    cancel();
+                    return;
+                }
+
+                Location loc = boat.getLocation();
+                Vector v = boat.getVelocity();
+                double angle = Math.round(boat.getLocation().getYaw());
+
+                int xFactor = 1;
+                int zFactor = 1;
+                double speed = 1;
+                Block b = boat.getLocation().getBlock();
+                if ( b.getType() != Material.WATER ) {
+                    speed = .5;
+                }
+
+
+                // Determine Y
+                if ( wizardPlayer.checkSpell( boatSpellName + " - Jump" ) ) {
+                    time.getAndIncrement();
+                    double y = Math.sin( Math.toRadians( 60 ) ) - ( .1 * time.intValue() );
+
+                    if ( y < 0
+                            && ( b.getType() == Material.WATER || b.getRelative( BlockFace.DOWN ).getType() != Material.AIR ) ) {
+                        time.set( 0 );
+                        y = 0;
+                        wizardPlayer.removeSpell( boatSpellName + " - Jump" );
+                    }
+                    y = Math.max( y, -1 );
+
+                    v.setY( y );
+
+                } else {
+                    if ( b.getType() == Material.AIR ) {
+                        time.set( 8 );
+                        wizardPlayer.addSpell( boatSpellName + " - Jump" );
+                    }
+                    v.setY(0);
+                }
+
+                // Determine X and Z
+                if (angle >= 270) {
+                    angle = Math.toRadians(Math.abs(angle - 360));
+                } else if (angle >= 180) {
+                    zFactor = -1;
+                    angle = Math.toRadians(angle - 180);
+                } else if (angle > 90) {
+                    xFactor = -1;
+                    zFactor = -1;
+                    angle = Math.toRadians(Math.abs(angle - 180));
+                } else {
+                    xFactor = -1;
+                    angle = Math.toRadians(angle);
+                }
+
+                v.setX(Math.sin(angle) * speed * xFactor);
+                v.setZ(Math.cos(angle) * speed * zFactor);
+
+                boat.setVelocity(v);
+
+            }
+        }.runTaskTimer( plugin, 0, 1 );
+
     }
 }

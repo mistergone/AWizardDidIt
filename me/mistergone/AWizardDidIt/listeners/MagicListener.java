@@ -1,10 +1,12 @@
 package me.mistergone.AWizardDidIt.listeners;
 
+import me.mistergone.AWizardDidIt.helpers.ChestHelper;
 import me.mistergone.AWizardDidIt.helpers.SignHelper;
 import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import me.mistergone.AWizardDidIt.signs.WizardLock;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -26,6 +28,7 @@ import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
+import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
 import java.util.UUID;
@@ -63,6 +66,7 @@ public class MagicListener implements Listener {
             wizardPlayer.removeSpell( "Teletransference" );
             wizardPlayer.removeSpell( "Wizard Elevator" );
         }
+        wizardPlayer.removeSpell( "Wave Rider");
 
         wizardPlayer.savePlayerData();
         wizardry.removeWizardPlayer( uuid );
@@ -103,7 +107,7 @@ public class MagicListener implements Listener {
     public void onPlayerXP( PlayerExpChangeEvent event ) {
         int amount = event.getAmount();
         WizardPlayer wizardPlayer = wizardry.getWizardPlayer( event.getPlayer().getUniqueId() );
-        wizardPlayer.gainWizardPower( amount );
+        wizardPlayer.gainWizardPower( amount * 10 );
         wizardPlayer.showWizardBar();
     }
 
@@ -141,14 +145,14 @@ public class MagicListener implements Listener {
             final PotionMeta meta = (PotionMeta) item.getItemMeta();
             if ( meta.getBasePotionData().getType() != PotionType.WATER ) {
                 event.getPlayer().sendMessage( "Gaining Wizard Power..." );
-                getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( 50 );
+                getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() ).gainWizardPower( 250 );
             }
         }
 
         // Poison Potatoes give back 200  Wizard Power!
         if ( item.getType() == Material.POISONOUS_POTATO ) {
             WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( event.getPlayer().getUniqueId() );
-            wizardPlayer.gainWizardPower( 200 );
+            wizardPlayer.gainWizardPower( 500 );
         }
     }
 
@@ -159,7 +163,7 @@ public class MagicListener implements Listener {
             int foodChange = event.getFoodLevel() - p.getFoodLevel();
             if ( foodChange > 0 ) {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( p.getUniqueId() );
-                wizardPlayer.gainWizardPower( foodChange * 3 );
+                wizardPlayer.gainWizardPower( foodChange * 20 );
             }
         }
 
@@ -196,28 +200,9 @@ public class MagicListener implements Listener {
             // Chest interactions
             if ( b.getType() == Material.CHEST || b.getType() == Material.TRAPPED_CHEST ) {
                 Chest c = (Chest) b.getState();
-                Inventory i = c.getInventory();
-                ArrayList<Block> ups = new ArrayList<>();
-                if ( i instanceof DoubleChestInventory ) {
-                    DoubleChestInventory doubleChest = (DoubleChestInventory) i;
-                    ups.add( doubleChest.getLeftSide().getLocation().getBlock().getRelative( BlockFace.UP ) );
-                    ups.add( doubleChest.getRightSide().getLocation().getBlock().getRelative( BlockFace.UP ) );
-                } else {
-                    ups.add( c.getBlock().getRelative( BlockFace.UP ) );
-                }
-
-                for ( Block u: ups ) {
-                    if ( WizardLock.isWizardLockSign( u ) ) {
-                        Sign s = (Sign) u.getState();
-                        String owner = SignHelper.getSignOwner( s );
-                        if ( owner.equals( p.getName() ) ) {
-                        } else {
-                            p.sendMessage( ChatColor.RED + "This chest was locked by " + ChatColor.LIGHT_PURPLE +
-                                owner + ChatColor.RED + " and cannot be opened by other players.");
-                            e.setCancelled( true );
-                        }
-
-                    }
+                if ( ChestHelper.isWizardLocked( c, p ) ) {
+                    p.sendMessage( ChatColor.RED + "This chest was locked and cannot be opened by other players." );
+                    e.setCancelled( true );
                 }
             }
         }

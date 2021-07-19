@@ -24,7 +24,7 @@ public class RusalkasTouch extends MagicSpell {
 
     public RusalkasTouch() {
         spellName = "Rusalka's Touch";
-        cost = 1;
+        cost = 10;
         reagents = new ArrayList<String>();
         reagents.add( "BUCKET" );
         reagents.add( "WATER_BUCKET" );
@@ -45,7 +45,7 @@ public class RusalkasTouch extends MagicSpell {
                         } else if ( loc.getPitch() < -45 ) {
                             face = BlockFace.UP;
                         }
-                        ArrayList<Block> blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
+                        ArrayList<Block> blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 5, 5 );
                         for ( Block block : blockBox ) {
                             if ( block.getType() == Material.WATER ) {
                                 block.setType( Material.AIR );
@@ -58,7 +58,7 @@ public class RusalkasTouch extends MagicSpell {
                         Block targetBlock = player.getTargetBlock( null, 10 );
                         if ( targetBlock.getType() == Material.WATER ) {
                             BlockFace face = BlockHelper.yawToFace( player.getLocation().getYaw() );
-                            ArrayList<Block> blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 3, 3 );
+                            ArrayList<Block> blockBox = BlockHelper.getSquareBoxFromFace( targetBlock, face.getOppositeFace(), 5, 5 );
                             for ( Block block : blockBox ) {
                                 if ( block.getType() == Material.WATER ) {
                                     block.setType( Material.WATER );

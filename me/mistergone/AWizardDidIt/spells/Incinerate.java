@@ -18,7 +18,7 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 public class Incinerate extends MagicSpell {
     public Incinerate() {
         spellName = "Incinerate";
-        cost = 25;
+        cost = 50;
         reagents = new ArrayList<String>();
         reagents.add( "FIREWORK_STAR" );
 
