@@ -14,11 +14,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WizardSword extends WeaponPattern {
+public class EnchantSword extends WeaponPattern {
 
     public static HashMap<String, Integer> modeCosts;
 
-    public WizardSword() {
+    public EnchantSword() {
         patternName = "Wizard Sword";
         keys = new Material[]{ Material.WOODEN_SWORD, Material.IRON_SWORD, Material.GOLDEN_SWORD,
                 Material.DIAMOND_SWORD, Material.NETHERITE_SWORD };

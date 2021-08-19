@@ -25,7 +25,7 @@ public class WizardPassage extends MagicSign {
     public WizardPassage() {
         signName = "Wizard Passage";
         signature = "[WizardPassage]";
-        cost = 2;
+        cost = 10;
 
         signFunction = new SignFunction() {
             @Override

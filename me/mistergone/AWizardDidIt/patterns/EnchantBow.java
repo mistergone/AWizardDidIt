@@ -22,11 +22,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicInteger;
 
-public class WizardBow extends WeaponPattern {
+public class EnchantBow extends WeaponPattern {
 
     public static HashMap<String, Integer> modeCosts;
 
-    public WizardBow() {
+    public EnchantBow() {
         patternName = "Wizard Bow";
         keys = new Material[]{ Material.BOW };
         patterns =  new HashMap<String, String[]>();

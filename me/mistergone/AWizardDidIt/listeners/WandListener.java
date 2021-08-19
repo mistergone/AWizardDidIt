@@ -84,6 +84,9 @@ public class WandListener implements Listener {
                     }
 
                 }
+
+
+                //
                 if ( WandHelper.isActuallyAWand( main ) ) {
 
                     // If you just wave a magic wand around, magic might happen!

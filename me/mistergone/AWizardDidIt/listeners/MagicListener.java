@@ -1,18 +1,13 @@
 package me.mistergone.AWizardDidIt.listeners;
 
 import me.mistergone.AWizardDidIt.helpers.ChestHelper;
-import me.mistergone.AWizardDidIt.helpers.SignHelper;
 import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import me.mistergone.AWizardDidIt.signs.WizardLock;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
@@ -20,17 +15,13 @@ import org.bukkit.event.entity.*;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.player.*;
 import org.bukkit.event.vehicle.VehicleExitEvent;
-import org.bukkit.inventory.DoubleChestInventory;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.PotionMeta;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.potion.PotionType;
-import org.bukkit.util.Vector;
 
-import java.util.ArrayList;
 import java.util.UUID;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
@@ -193,18 +184,5 @@ public class MagicListener implements Listener {
 
     @EventHandler
     public void onPlayerInteractEvent( PlayerInteractEvent e ) {
-        Player p = e.getPlayer();
-        // Block interaction events
-        if ( e != null && e.hasBlock() ) {
-            Block b = e.getClickedBlock();
-            // Chest interactions
-            if ( b.getType() == Material.CHEST || b.getType() == Material.TRAPPED_CHEST ) {
-                Chest c = (Chest) b.getState();
-                if ( ChestHelper.isWizardLocked( c, p ) ) {
-                    p.sendMessage( ChatColor.RED + "This chest was locked and cannot be opened by other players." );
-                    e.setCancelled( true );
-                }
-            }
-        }
     }
 }

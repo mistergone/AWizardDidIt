@@ -12,8 +12,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-public class WizardRod extends ToolPattern {
-    public WizardRod() {
+public class EnchantRod extends ToolPattern {
+    public EnchantRod() {
         patternName = "Wizard Rod";
         keys = new Material[]{ Material.FISHING_ROD };
         patterns =  new HashMap<String, String[]>();

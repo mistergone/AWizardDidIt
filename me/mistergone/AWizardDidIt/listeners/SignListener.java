@@ -40,12 +40,12 @@ public class SignListener implements Listener {
             WizardElevator.handleSignEvent( event );
         } else if ( check.equals( "[WizardPassage]" ) ) {
             WizardPassage.handleSignEvent( event );
-        } else if ( check.equals( "[WizardLock]" ) ) {
-            WizardLock.handleSignEvent( event );
         } else if ( check.equals( "[SortingChest]") ) {
             SortingChest.handleSignEvent( event );
         } else if ( check.equals( "[SortingPoint]" ) ) {
             SortingPoint.handleSignEvent( event );
+        } else if ( check.equals( "[WizardVault]" ) ) {
+            WizardVault.handleSignEvent( event );
         }
     }
 
@@ -58,13 +58,7 @@ public class SignListener implements Listener {
         if ( Tag.SIGNS.isTagged( b.getType() ) ) {
             Sign sign = (Sign) b.getState();
             String[] lines = sign.getLines();
-            // Prevent owned Wizard sign destruction
-            if ( !p.isOp() ) { // Ops can destroy all signs directly
-                if ( WizardLock.isWizardLockSign( b ) && !SignHelper.getSignOwner( sign ).equals( p.getName() ) ) {
-                    p.sendMessage( ChatColor.RED + "You cannot destroy other player's Wizard Signs!" );
-                    e.setCancelled( true );
-                }
-            }
+
             // Handle Unseen Assistant signs
             if ( getUnseenPM().isUASign( lines[0] ) ) {
                 if ( lines[3] != null && lines[3] != p.getName() && !p.isOp() ) {
@@ -102,22 +96,6 @@ public class SignListener implements Listener {
                 p.sendMessage( ChatColor.RED + "This block has a Wizard Sign attached and cannot be broken! Please " +
                         "break the attached sign first." );
                 e.setCancelled( true );
-            }
-        }
-    }
-
-    @EventHandler
-    public void BlockPlaceEvent( BlockPlaceEvent e ) {
-        Material placedType = e.getBlockPlaced().getType();
-        if ( placedType == Material.CHEST || placedType == Material.TRAPPED_CHEST ) {
-            Block up = e.getBlockPlaced().getRelative( BlockFace.UP );
-            Player p = e.getPlayer();
-            if ( WizardLock.isWizardLockSign( up ) ) {
-                Sign s = (Sign) up.getState();
-                if ( !SignHelper.getSignOwner( s ).equals( p.getName() ) ) {
-                    p.sendMessage( ChatColor.RED + "You cannot place a chest under another player's WizardLock!");
-                    e.setCancelled( true );
-                }
             }
         }
     }

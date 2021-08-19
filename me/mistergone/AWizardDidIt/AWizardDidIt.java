@@ -5,6 +5,7 @@ import me.mistergone.AWizardDidIt.helpers.MagicCommands;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.block.Chest;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import java.util.Map;
@@ -16,6 +17,7 @@ public class AWizardDidIt extends JavaPlugin{
     public void onEnable(){
 
         getServer().getPluginManager().registerEvents(new BlockListener( Wizardry.getWizardry() ), this);
+        getServer().getPluginManager().registerEvents(new ChestListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new DamageListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new DeathListener( Wizardry.getWizardry() ), this);
         getServer().getPluginManager().registerEvents(new MagicListener( Wizardry.getWizardry() ), this);

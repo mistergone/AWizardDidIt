@@ -1,7 +1,7 @@
 package me.mistergone.AWizardDidIt.helpers;
 
+import com.mysql.fabric.xmlrpc.base.Array;
 import me.mistergone.AWizardDidIt.AWizardDidIt;
-import net.minecraft.server.v1_16_R1.ItemSaddle;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
@@ -12,6 +12,7 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
 
@@ -25,6 +26,7 @@ public class WizardPlayer {
     Player player;
     ArrayList<String> activeSpells;
     ArrayList<ItemStack> deathItems;
+    ArrayList<Inventory> wizardVaults;
     Map< String, Long > messageCooldowns;
     Map< String, Long > spellCooldowns;
     BossBar wizardBar;
@@ -48,6 +50,7 @@ public class WizardPlayer {
         this.spellCooldowns = new HashMap<>();
         this.messageCooldowns = new HashMap<>();
         this.deathItems = new ArrayList<>();
+        this.wizardVaults = new ArrayList<>();
         this.unseenAssistant = new UnseenAssistant( this );
         this.wizardBar = Bukkit.createBossBar( "Wizard Power", BarColor.BLUE, BarStyle.SEGMENTED_20 );
         this.wizardBar.addPlayer( this.player );
@@ -58,6 +61,11 @@ public class WizardPlayer {
         this.wizardToolUses = 0;
         this.lastKnownLocation = player.getLocation();
         this.lastDeathLocation = null;
+
+        //set up wizardVaults
+        for( int i = 0; i < 10; i++ ) {
+            wizardVaults.add( Bukkit.createInventory( this.player, 54 ) );
+        }
     }
 
     /**
@@ -254,7 +262,6 @@ public class WizardPlayer {
 
 
     /**********##### Death items #####***********/
-    /**********##### Death items #####***********/
     /**
      * Add item to deathList
      */
@@ -267,6 +274,34 @@ public class WizardPlayer {
      */
     public ArrayList<ItemStack> getDeathItems() {
         return this.deathItems;
+    }
+
+    /**
+     * Get WizardVaults
+     */
+    public ArrayList<Inventory> getWizardVaults() {
+        return this.wizardVaults;
+    }
+
+    /**
+     * Get WizardVaultsAs
+     */
+    public ArrayList<ItemStack> getWizardVaultsAsItemStacks() {
+        ArrayList<ItemStack> stacks = new ArrayList<>();
+        for ( Inventory v: this.wizardVaults ) {
+            ItemStack[] items = v.getContents();
+            for ( ItemStack s: items ) {
+                stacks.add( s );
+            }
+        }
+        return stacks;
+    }
+
+    /**
+     * Get a specific Wizard Vault
+     */
+    public Inventory getWizardVaultByNumber( int i ) {
+        return this.wizardVaults.get( i );
     }
 
     /**
@@ -403,6 +438,7 @@ public class WizardPlayer {
                 playerDataConfig.createSection("Wizard Power");
                 playerDataConfig.createSection("Active Spells");
                 playerDataConfig.createSection("Death Items");
+                playerDataConfig.createSection("Wizard Vaults");
                 playerDataConfig.createSection("Last Death Location");
             } catch (Exception ex) {
                 ex.printStackTrace();
@@ -416,6 +452,7 @@ public class WizardPlayer {
             playerDataConfig.set("Wizard Power", getWizardPower() );
             playerDataConfig.set( "Active Spells", getSpells() );
             playerDataConfig.set( "Death Items", getDeathItems() );
+            playerDataConfig.set( "Wizard Vaults", getWizardVaultsAsItemStacks() );
             playerDataConfig.set( "Last Death Location", getLastDeathLocation() );
             playerDataConfig.save( playerDataFile );
         } catch (Exception ex) {
@@ -444,6 +481,7 @@ public class WizardPlayer {
                 String power = fileConfiguration.getString( "Wizard Power");
                 List<String> activeSpells = fileConfiguration.getStringList( "Active Spells" );
                 List<ItemStack> list = (List<ItemStack>) fileConfiguration.getList("Death Items");
+                List<ItemStack> vaults = (List<ItemStack>) fileConfiguration.getList( "Wizard Vaults");
                 Location deathLoc = (Location) fileConfiguration.getLocation( "Last Death Location" );
                 try {
                     this.wizardPower = Integer.parseInt( power );
@@ -458,6 +496,17 @@ public class WizardPlayer {
                 try {
                     for ( ItemStack i: list ) {
                         this.addDeathItem( i );
+                    }
+
+                    int vaultNumber = 0;
+                    int index = 0;
+                    for ( ItemStack stack: vaults ) {
+                        wizardVaults.get( vaultNumber ).setItem( index, stack );
+                        index++;
+                        if ( index == 54 ) {
+                            index = 0;
+                            vaultNumber++;
+                        }
                     }
                 }
                 catch (Exception e) {

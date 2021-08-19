@@ -97,39 +97,7 @@ public class CloudRider extends MagicSpell {
                     player.setGliding(true);
                     player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.2F, .8F);
 
-                    // TODO - Make this code reusable, duh
-                    Location loc = player.getLocation();
-                    Vector v = player.getVelocity();
-                    int xFactor = 1;
-                    int zFactor = 1;
-                    double angle = Math.round(player.getLocation().getYaw());
-
-                    double speed = 3;
-                    double pitch = 15;
-                    if (angle >= 270) {
-                        angle = Math.toRadians(Math.abs(angle - 360));
-                    } else if (angle >= 180) {
-                        zFactor = -1;
-                        angle = Math.toRadians(angle - 180);
-                    } else if (angle > 90) {
-                        xFactor = -1;
-                        zFactor = -1;
-                        angle = Math.toRadians(Math.abs(angle - 180));
-                    } else {
-                        xFactor = -1;
-                        angle = Math.toRadians(angle);
-                    }
-
-                    double sprinting = 1;
-                    if (player.isSprinting()) {
-                        sprinting = 1.5;
-                    }
-
-                    v.setX(Math.sin(angle) * speed * sprinting * xFactor);
-                    v.setY(Math.sin(Math.toRadians(pitch)) * (sprinting + 0.5) * speed);
-                    v.setZ(Math.cos(angle) * speed * sprinting * zFactor);
-
-                    player.setVelocity(v);
+                    doStartingBurst( player );
 
                     wizardPlayer.removeSpell("Cloud Rider");
                     wizardPlayer.addSpell("Cloud Rider (Gliding)");
@@ -239,5 +207,58 @@ public class CloudRider extends MagicSpell {
             }
         }.runTaskTimer( plugin, 0, 1 );
 
+    }
+
+    private void doStartingBurst( Player player ) {
+        final AtomicInteger time = new AtomicInteger();
+        AWizardDidIt plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
+        time.set( 0 );
+
+        new BukkitRunnable(){
+            @Override
+            public void run() {
+                time.incrementAndGet();
+                glidingBurst( player );
+                if ( time.get() > 2 ) {
+                    cancel();
+                }
+            }
+        }.runTaskTimer( plugin, 0, 10 );
+    }
+
+    private void glidingBurst( Player player ) {
+        // TODO - Make this code reusable, duh
+        Location loc = player.getLocation();
+        Vector v = player.getVelocity();
+        int xFactor = 1;
+        int zFactor = 1;
+        double angle = Math.round(player.getLocation().getYaw());
+
+        double speed = 3;
+        double pitch = 15;
+        if (angle >= 270) {
+            angle = Math.toRadians(Math.abs(angle - 360));
+        } else if (angle >= 180) {
+            zFactor = -1;
+            angle = Math.toRadians(angle - 180);
+        } else if (angle > 90) {
+            xFactor = -1;
+            zFactor = -1;
+            angle = Math.toRadians(Math.abs(angle - 180));
+        } else {
+            xFactor = -1;
+            angle = Math.toRadians(angle);
+        }
+
+        double sprinting = 1;
+        if (player.isSprinting()) {
+            sprinting = 1.5;
+        }
+
+        v.setX(Math.sin(angle) * speed * sprinting * xFactor);
+        v.setY(Math.sin(Math.toRadians(pitch)) * (sprinting + 0.5) * speed);
+        v.setZ(Math.cos(angle) * speed * sprinting * zFactor);
+
+        player.setVelocity(v);
     }
 }

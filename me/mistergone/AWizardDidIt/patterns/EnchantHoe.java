@@ -24,8 +24,8 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
  * Plants whatever's in your off-hand in any contiguous farmland in front of you.
  */
 
-public class WizardHoe extends ToolPattern {
-    public WizardHoe() {
+public class EnchantHoe extends ToolPattern {
+    public EnchantHoe() {
         patternName = "Wizard Hoe";
         keys = new Material[]{ Material.WOODEN_HOE, Material.IRON_HOE, Material.GOLDEN_HOE,
                 Material.DIAMOND_HOE, Material.NETHERITE_HOE };

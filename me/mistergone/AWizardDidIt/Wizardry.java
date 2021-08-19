@@ -124,21 +124,21 @@ public class Wizardry {
         ArrayList<MagicPattern> patternRegistry = new ArrayList<>();
         patternRegistry.add( new EnchantWand() );
         patternRegistry.add( new WizardAnvil() );
-        patternRegistry.add( new WizardAxe() );
-        patternRegistry.add( new WizardBow() );
-        patternRegistry.add( new WizardCrossbow() );
+        patternRegistry.add( new EnchantAxe() );
+        patternRegistry.add( new EnchantBow() );
+        patternRegistry.add( new EnchantCrossbow() );
         patternRegistry.add( new WizardDust() );
-        patternRegistry.add( new WizardHoe() );
-        patternRegistry.add( new WizardPick() );
-        patternRegistry.add( new WizardRod() );
-        patternRegistry.add( new WizardShovel() );
-        patternRegistry.add( new WizardSword() );
-        patternRegistry.add( new WizardTrident() );
+        patternRegistry.add( new EnchantHoe() );
+        patternRegistry.add( new EnchantPick() );
+        patternRegistry.add( new EnchantRod() );
+        patternRegistry.add( new EnchantShovel() );
+        patternRegistry.add( new EnchantSword() );
+        patternRegistry.add( new EnchantTrident() );
 
-        patternRegistry.add( new WizardHelmet() );
-        patternRegistry.add( new WizardChestplate() );
-        patternRegistry.add( new WizardLeggings() );
-        patternRegistry.add( new WizardBoots() );
+        patternRegistry.add( new EnchantHelmet() );
+        patternRegistry.add( new EnchantChestplate() );
+        patternRegistry.add( new EnchantLeggings() );
+        patternRegistry.add( new EnchantBoots() );
 
         for ( MagicPattern magicPattern : patternRegistry ) {
             Material[] keys = magicPattern.getKeys();
@@ -153,10 +153,9 @@ public class Wizardry {
         ArrayList<MagicSign> signRegistry = new ArrayList<>();
         signRegistry.add( new SortingChest() );
         signRegistry.add( new SortingPoint() );
-        // signRegistry.add( new UnseenArchitect() );
         signRegistry.add( new WizardElevator() );
         signRegistry.add( new WizardPassage() );
-        signRegistry.add( new WizardLock() );
+        signRegistry.add( new WizardVault() );
 
         for ( MagicSign magicSign: signRegistry) {
             this.signList.put( magicSign.signature, magicSign );
@@ -164,17 +163,17 @@ public class Wizardry {
     }
 
     private void addToolLore() {
-        this.toolLoreMap.put( "Wizard Pick", new WizardPick() );
-        this.toolLoreMap.put( "Wizard Shovel", new WizardShovel() );
-        this.toolLoreMap.put( "Wizard Axe", new WizardAxe() );
-        this.toolLoreMap.put( "Wizard Hoe", new WizardHoe() );
+        this.toolLoreMap.put( "Wizard Pick", new EnchantPick() );
+        this.toolLoreMap.put( "Wizard Shovel", new EnchantShovel() );
+        this.toolLoreMap.put( "Wizard Axe", new EnchantAxe() );
+        this.toolLoreMap.put( "Wizard Hoe", new EnchantHoe() );
     }
 
     private void addWeaponLore() {
-        this.weaponLoreMap.put( "Wizard Bow", new WizardBow() );
-        this.weaponLoreMap.put( "Wizard Crossbow", new WizardCrossbow() );
-        this.weaponLoreMap.put( "Wizard Sword", new WizardSword() );
-        this.weaponLoreMap.put( "Wizard Trident", new WizardTrident() );
+        this.weaponLoreMap.put( "Wizard Bow", new EnchantBow() );
+        this.weaponLoreMap.put( "Wizard Crossbow", new EnchantCrossbow() );
+        this.weaponLoreMap.put( "Wizard Sword", new EnchantSword() );
+        this.weaponLoreMap.put( "Wizard Trident", new EnchantTrident() );
     }
 
 }

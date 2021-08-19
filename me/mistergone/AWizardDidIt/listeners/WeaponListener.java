@@ -5,9 +5,9 @@ import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
-import me.mistergone.AWizardDidIt.patterns.WizardBow;
-import me.mistergone.AWizardDidIt.patterns.WizardCrossbow;
-import me.mistergone.AWizardDidIt.patterns.WizardTrident;
+import me.mistergone.AWizardDidIt.patterns.EnchantBow;
+import me.mistergone.AWizardDidIt.patterns.EnchantCrossbow;
+import me.mistergone.AWizardDidIt.patterns.EnchantTrident;
 import org.bukkit.Bukkit;
 import org.bukkit.Material;
 import org.bukkit.entity.AbstractArrow;
@@ -61,7 +61,7 @@ public class WeaponListener implements Listener {
                                 if ( itemType == Material.TRIDENT && loreOne.equals( "Wizard Trident" ) ) {
                                     if ( !mode.equals( "Normal" ) ) {
                                         WizardPlayer wizardPlayer = Wizardry.getWizardry().getWizardPlayer( p.getUniqueId() );
-                                        int cost = WizardTrident.getModeCost( mode );
+                                        int cost = EnchantTrident.getModeCost( mode );
                                         if ( cost > wizardPlayer.getWizardPower() ) {
                                             wizardPlayer.spendWizardPower( cost, "Wizard Trident (" + mode + ")" );
                                             return;
@@ -71,7 +71,7 @@ public class WeaponListener implements Listener {
                                 } else if ( itemType == Material.CROSSBOW && loreOne.equals( "Wizard Crossbow" ) ) {
                                     if ( !mode.equals( "Normal" ) ) {
                                         WizardPlayer wizardPlayer = Wizardry.getWizardry().getWizardPlayer( p.getUniqueId() );
-                                        int cost = WizardCrossbow.getModeCost( mode );
+                                        int cost = EnchantCrossbow.getModeCost( mode );
                                         if ( cost > wizardPlayer.getWizardPower() ) {
                                             wizardPlayer.spendWizardPower( cost, "Wizard Crossbow (" + mode + ")" );
                                             return;
@@ -81,7 +81,7 @@ public class WeaponListener implements Listener {
                                 } else if ( itemType == Material.BOW && loreOne.equals( "Wizard Bow" ) ) {
                                     if ( !mode.equals( "Normal" ) ) {
                                         WizardPlayer wizardPlayer = Wizardry.getWizardry().getWizardPlayer( p.getUniqueId() );
-                                        int cost = WizardBow.getModeCost( mode );
+                                        int cost = EnchantBow.getModeCost( mode );
                                         if ( cost > wizardPlayer.getWizardPower() ) {
                                             wizardPlayer.spendWizardPower( cost, "Wizard Bow (" + mode + ")" );
                                             return;

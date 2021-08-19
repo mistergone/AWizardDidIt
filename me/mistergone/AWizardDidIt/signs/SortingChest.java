@@ -163,47 +163,6 @@ public class SortingChest extends MagicSign {
                     }
                 }
 
-//                        Chest chest = chests.get(0);
-//                        Inventory inv = chest.getInventory();
-//                        int startingAmt = item.getAmount();
-//                        HashMap<Integer, ItemStack> leftovers = inv.addItem( item );
-//
-//                        if ( leftovers.size() == 0 ) {
-//                            distChest.getInventory().setItem( i, null );
-//                            movedItems++;
-//                        } else {
-//                            // if leftovers, try next chest
-//                            while ( leftovers.size() > 0 ) {
-//                                chests.remove(0);
-//                                if ( chests.size() == 0 ) {
-//                                    // No place to put these items!
-//                                    ItemStack left = leftovers.get(0);
-//                                    if ( left.getAmount() == startingAmt ) {
-//                                        failedMoves++;
-//                                    } else {
-//                                        leftoverItems++;
-//                                        movedItems++;
-//                                    }
-//                                    item.setAmount( left.getAmount() );
-//                                    leftovers.clear();
-//                                } else {
-//                                    chest = chests.get(0);
-//                                    inv = chest.getInventory();
-//                                    startingAmt = item.getAmount();
-//                                    leftovers = inv.addItem( item );
-//                                    if ( leftovers.size() == 0 ) {
-//                                        distChest.getInventory().setItem( i, null );
-//                                        movedItems++;
-//                                    }
-//                                }
-//                            }
-//
-//                        }
-//                    } else if ( item != null ) {
-//                        notFound++;
-//                    }
-//                }
-
                 if ( movedItems > 0 || failedMoves > 0 || notFound > 0 ) {
                     player.sendMessage( ChatColor.GREEN + "You have invoked " + signName + "!" );
                     String message = ChatColor.GREEN + "";

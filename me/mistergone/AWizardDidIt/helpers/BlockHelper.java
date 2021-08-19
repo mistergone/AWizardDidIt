@@ -1,23 +1,16 @@
 package me.mistergone.AWizardDidIt.helpers;
 
-import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
-import me.mistergone.AWizardDidIt.signs.WizardLock;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
-import org.bukkit.block.Sign;
-import org.bukkit.block.data.Directional;
-import org.bukkit.block.data.type.WallSign;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.DoubleChestInventory;
 import org.bukkit.inventory.Inventory;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
-import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class BlockHelper {
     // BlockManager is a set of methods for making a "box" of Blocks, which is an ArrayList
@@ -228,12 +221,6 @@ public class BlockHelper {
                 ups.add( block.getRelative( BlockFace.UP ) );
             }
 
-            for ( Block u: ups ) {
-                if ( WizardLock.isWizardLockSign( u ) ) {
-                    player.sendMessage( ChatColor.RED + spellName + " found a locked chest and cannot break or replace it." );
-                    return false;
-                }
-            }
         }
 
         return true;

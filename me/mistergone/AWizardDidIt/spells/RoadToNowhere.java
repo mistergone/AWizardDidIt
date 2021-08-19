@@ -34,17 +34,17 @@ public class RoadToNowhere extends MagicSpell {
                 if ( clickedBlock != null ) {
                     WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                     Block target = player.getWorld().getBlockAt( clickedBlock.getX(), clickedBlock.getY(), clickedBlock.getZ() );
-                    if ( clickedBlock.getType() == Material.GRASS_PATH ) {
+                    if ( clickedBlock.getType() == Material.DIRT_PATH ) {
                         if ( !wizardPlayer.spendToolUse( cost, spellName ) ) return;
                         target.setType( Material.GRASS_BLOCK );
                         SpecialEffects.magicPoof( clickedBlock.getLocation() );
                     } else if ( clickedBlock.getType() == Material.GRASS_BLOCK ) {
                         if ( !wizardPlayer.spendToolUse( cost, spellName ) ) return;
-                        target.setType( Material.GRASS_PATH );
+                        target.setType( Material.DIRT_PATH );
                         SpecialEffects.magicPoof( clickedBlock.getLocation() );
                     } else if ( clickedBlock.getType() == Material.DIRT ) {
                         if ( !wizardPlayer.spendToolUse( cost, spellName ) ) return;
-                        target.setType( Material.GRASS_PATH );
+                        target.setType( Material.DIRT_PATH );
                         SpecialEffects.magicPoof( clickedBlock.getLocation() );
                     }
                 }

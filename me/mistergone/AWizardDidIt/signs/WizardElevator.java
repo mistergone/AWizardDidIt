@@ -4,7 +4,6 @@ import me.mistergone.AWizardDidIt.AWizardDidIt;
 import me.mistergone.AWizardDidIt.baseClasses.MagicSign;
 import me.mistergone.AWizardDidIt.baseClasses.SignFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import net.minecraft.server.v1_16_R1.IBlockFragilePlantElement;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;

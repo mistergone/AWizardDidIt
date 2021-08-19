@@ -21,21 +21,8 @@ public class BlockListener implements Listener {
     public BlockListener( Wizardry wizardry ) {
         this.wizardry = wizardry;
     }
-
-    // Prevent hoppers from taking items from Locked Chests
+    
     @EventHandler
     public void onItemMove ( InventoryMoveItemEvent e ) {
-        InventoryHolder holder = e.getSource().getHolder();
-        if ( holder instanceof Chest || holder instanceof DoubleChest) {
-            Chest c = null;
-            if ( holder instanceof  DoubleChest ) {
-                c = (Chest)((DoubleChest) holder).getLeftSide();
-            } else {
-                c = (Chest) holder;
-            }
-            if (ChestHelper.isWizardLocked( c, null) ) {
-                e.setCancelled( true );
-            }
-        }
     }
 }

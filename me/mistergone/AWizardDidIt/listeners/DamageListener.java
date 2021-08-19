@@ -6,9 +6,8 @@ import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponFunction;
 import me.mistergone.AWizardDidIt.baseClasses.WeaponPattern;
 import me.mistergone.AWizardDidIt.helpers.*;
-import me.mistergone.AWizardDidIt.patterns.WizardSword;
-import me.mistergone.AWizardDidIt.patterns.WizardTrident;
-import org.bukkit.Bukkit;
+import me.mistergone.AWizardDidIt.patterns.EnchantSword;
+import me.mistergone.AWizardDidIt.patterns.EnchantTrident;
 import org.bukkit.ChatColor;
 import org.bukkit.entity.*;
 import org.bukkit.event.EventHandler;
@@ -141,21 +140,21 @@ public class DamageListener implements Listener {
                 if ( customName == null ) return;
 
                 if ( customName.equals( "Fiery Pitchfork" ) ) {
-                    if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Fiery Pitchfork" ) , null ) ) return;
+                    if ( !wizardPlayer.spendWizardPower( EnchantTrident.getModeCost( "Fiery Pitchfork" ) , null ) ) return;
                     target.setFireTicks( 80 );
                     SpecialEffects.flamesEffect( target.getLocation().add( -.5, 0, -.5 ) );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Fiery Pitchfork)",
                             ChatColor.AQUA + "You have invoked Fiery Pitchfork using your Wizard Trident!", 10 );
                 } else if ( customName.equals( "Monster Slayer" ) ) {
                     if ( ! MobHelper.isMonster( target ) ) return;
-                    if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Monster Slayer" ), null ) ) return;
+                    if ( !wizardPlayer.spendWizardPower( EnchantTrident.getModeCost( "Monster Slayer" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
                     SpecialEffects.magicSpiral( target.getLocation() );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Monster Slayer)",
                             ChatColor.AQUA + "You have invoked Monster Slayer using your Wizard Trident!", 10 );
                 } else if ( customName.equals( "Hunting Spear" ) ) {
                     if ( ! ( target instanceof Animals ) ) return;
-                    if ( !wizardPlayer.spendWizardPower( WizardTrident.getModeCost( "Hunting Spear" ), null ) ) return;
+                    if ( !wizardPlayer.spendWizardPower( EnchantTrident.getModeCost( "Hunting Spear" ), null ) ) return;
                     event.setDamage( event.getDamage() * 2 );
                     SpecialEffects.portalCollapse( target.getLocation() );
                     wizardPlayer.sendMsgWithCooldown( "Wizard Trident (Hunting Spear)",
@@ -182,7 +181,7 @@ public class DamageListener implements Listener {
                 WizardPlayer wizardPlayer = wizardry.getWizardPlayer( p.getUniqueId() );
                 String mode = lore.get(1).substring( 6 );
                 if ( mode.equals( "Lifestealer" ) ) {
-                    if ( !wizardPlayer.spendWizardPower( WizardSword.getModeCost( "Lifestealer" ), "Wizard Sword (Lifestealer)" ) ) return;
+                    if ( !wizardPlayer.spendWizardPower( EnchantSword.getModeCost( "Lifestealer" ), "Wizard Sword (Lifestealer)" ) ) return;
                     PotionEffect effect = new PotionEffect( PotionEffectType.REGENERATION, 30, 2 );
                     p.addPotionEffect( effect );
 

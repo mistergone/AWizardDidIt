@@ -13,8 +13,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WizardHelmet extends ArmorPattern {
-    public WizardHelmet() {
+public class EnchantHelmet extends ArmorPattern {
+    public EnchantHelmet() {
         keys = new Material[]{ Material.LEATHER_HELMET, Material.CHAINMAIL_HELMET, Material.IRON_HELMET,
                 Material.GOLDEN_HELMET, Material.DIAMOND_HELMET, Material.NETHERITE_HELMET, Material.TURTLE_HELMET };
         patterns =  new HashMap<String, String[]>();

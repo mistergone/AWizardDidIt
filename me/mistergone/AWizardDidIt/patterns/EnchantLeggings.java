@@ -13,11 +13,11 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WizardBoots extends ArmorPattern {
-    public WizardBoots() {
+public class EnchantLeggings extends ArmorPattern {
 
-        keys = new Material[]{ Material.LEATHER_BOOTS, Material.CHAINMAIL_BOOTS, Material.IRON_BOOTS,
-                Material.GOLDEN_BOOTS, Material.DIAMOND_BOOTS, Material.NETHERITE_BOOTS };
+    public EnchantLeggings() {
+        keys = new Material[]{ Material.LEATHER_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.IRON_LEGGINGS,
+                Material.GOLDEN_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.NETHERITE_LEGGINGS };
         patterns =  new HashMap<String, String[]>();
         patterns.put( "Wizard Helmet", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
@@ -37,21 +37,21 @@ public class WizardBoots extends ArmorPattern {
                     return;
                 }
 
-                ItemStack boots = magicChest.getChest().getInventory().getItem( 10 );
-                ItemMeta meta = boots.getItemMeta();
+                ItemStack leggings = magicChest.getChest().getInventory().getItem( 10 );
+                ItemMeta meta = leggings.getItemMeta();
                 List<String> loreCheck = meta.getLore();
                 if ( meta.getLore() == null ) {
                     ArrayList<String> lore = new ArrayList<String>();
-                    lore.add( "Wizard Boots" );
+                    lore.add( "Wizard Leggings" );
                     meta.setLore( lore );
-                    boots.setItemMeta( meta );
-                    player.sendMessage( ChatColor.GOLD + "These boots has been empowered!" );
+                    leggings.setItemMeta( meta );
+                    player.sendMessage( ChatColor.GOLD + "These leggings has been empowered!" );
                     SpecialEffects.enchantEffect( magicChest.getChest().getLocation() );
 
                     int[] skipCenter = { 10 };
                     magicChest.clearPattern( skipCenter );
                 } else {
-                    player.sendMessage( ChatColor.RED + "These boots cannot be further empowered!" );
+                    player.sendMessage( ChatColor.RED + "These leggings cannot be further empowered!" );
                 }
             }
         };

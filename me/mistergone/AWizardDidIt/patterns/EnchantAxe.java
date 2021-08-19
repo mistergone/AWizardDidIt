@@ -19,8 +19,8 @@ import java.util.List;
 
 import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
-public class WizardAxe extends ToolPattern {
-    public WizardAxe() {
+public class EnchantAxe extends ToolPattern {
+    public EnchantAxe() {
         patternName = "Wizard Axe";
         keys = new Material[]{ Material.WOODEN_AXE, Material.IRON_AXE, Material.GOLDEN_AXE,
             Material.DIAMOND_AXE, Material.NETHERITE_AXE };

@@ -13,13 +13,13 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class WizardLeggings extends ArmorPattern {
+public class EnchantChestplate extends ArmorPattern {
 
-    public WizardLeggings() {
-        keys = new Material[]{ Material.LEATHER_LEGGINGS, Material.CHAINMAIL_LEGGINGS, Material.IRON_LEGGINGS,
-                Material.GOLDEN_LEGGINGS, Material.DIAMOND_LEGGINGS, Material.NETHERITE_LEGGINGS };
+    public EnchantChestplate() {
+        keys = new Material[]{ Material.LEATHER_CHESTPLATE, Material.CHAINMAIL_CHESTPLATE, Material.IRON_CHESTPLATE,
+                Material.GOLDEN_CHESTPLATE, Material.DIAMOND_CHESTPLATE, Material.NETHERITE_CHESTPLATE };
         patterns =  new HashMap<String, String[]>();
-        patterns.put( "Wizard Helmet", new String[]
+        patterns.put( "Wizard Chestplate", new String[]
                 { "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "ANY", "GLOWSTONE_DUST",
                         "GLOWSTONE_DUST", "GLOWSTONE_DUST", "GLOWSTONE_DUST" }  );
@@ -37,21 +37,21 @@ public class WizardLeggings extends ArmorPattern {
                     return;
                 }
 
-                ItemStack leggings = magicChest.getChest().getInventory().getItem( 10 );
-                ItemMeta meta = leggings.getItemMeta();
+                ItemStack chestplate = magicChest.getChest().getInventory().getItem( 10 );
+                ItemMeta meta = chestplate.getItemMeta();
                 List<String> loreCheck = meta.getLore();
                 if ( meta.getLore() == null ) {
                     ArrayList<String> lore = new ArrayList<String>();
-                    lore.add( "Wizard Leggings" );
+                    lore.add( "Wizard Chestplate" );
                     meta.setLore( lore );
-                    leggings.setItemMeta( meta );
-                    player.sendMessage( ChatColor.GOLD + "These leggings has been empowered!" );
+                    chestplate.setItemMeta( meta );
+                    player.sendMessage( ChatColor.GOLD + "This chestplate has been empowered!" );
                     SpecialEffects.enchantEffect( magicChest.getChest().getLocation() );
 
                     int[] skipCenter = { 10 };
                     magicChest.clearPattern( skipCenter );
                 } else {
-                    player.sendMessage( ChatColor.RED + "These leggings cannot be further empowered!" );
+                    player.sendMessage( ChatColor.RED + "This chestplate cannot be further empowered!" );
                 }
             }
         };
