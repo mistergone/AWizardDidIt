@@ -3,19 +3,13 @@ package me.mistergone.AWizardDidIt.listeners;
 import me.mistergone.AWizardDidIt.*;
 import me.mistergone.AWizardDidIt.baseClasses.*;
 import me.mistergone.AWizardDidIt.helpers.*;
-import me.mistergone.AWizardDidIt.patterns.EnchantWand;
-import me.mistergone.AWizardDidIt.patterns.WizardDust;
 import org.bukkit.*;
 import org.bukkit.block.*;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
-import org.bukkit.entity.Projectile;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
-import org.bukkit.event.entity.EntityDamageByEntityEvent;
-import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
@@ -54,37 +48,30 @@ public class WandListener implements Listener {
         if ( main == null ) return;
 
         // Let's say you hit a block...
-
         if ( clickedBlock != null ) {
-            // First, handle the very specific case where clickedBlock is chest and main is normal stick
-            if ( clickedMaterial == Material.CHEST && main.getType() == Material.STICK && main.getAmount() == 1
-                    && WandHelper.isJustAStick( main ) ) {
-                e.setCancelled(true);
-
-
-                Chest chest = (Chest) clickedBlock.getState();
-
-                MagicChest magicChest = new MagicChest(chest);
-                Material key = magicChest.getKey();
-                if ( key == null ) return;
-
-                MagicPattern magicPattern = wizardry.getMagicPattern( key );
-                if ( magicPattern instanceof EnchantWand || magicPattern instanceof WizardDust ) {
-                    if ( magicPattern != null && magicPattern.getMagicFunction() != null ) {
-                        try {
-                            PatternFunction function = magicPattern.getMagicFunction();
-                            function.setPlayer(p);
-                            function.setWizardPlayer( wizardPlayer );
-                            function.setMagicWand(main);
-                            function.setMagicChest(magicChest);
-                            function.call();
-                        } catch (Exception ex) {
-                            ex.printStackTrace();
-                        }
-                        return;
-                    }
+            // First, let's handle Lectern hits
+            if ( clickedMaterial == Material.LECTERN ) {
+                Lectern lec = (Lectern)clickedBlock.getState();
+                Inventory inv = lec.getInventory();
+                ItemStack itemStack = inv.getItem( 0 );
+                if ( itemStack == null ) return;
+                if ( itemStack.getType() != Material.WRITTEN_BOOK ) return;
+                BookMeta bookMeta = (BookMeta)itemStack.getItemMeta();
+                String title = "";
+                if ( bookMeta.hasTitle() ) {
+                    title = bookMeta.getTitle();
                 }
-
+                title = title.toLowerCase();
+                Boolean enchantWand = title.contains( "enchant") && title.contains( "wand" );
+                if ( WandHelper.isJustAStick( main ) && enchantWand ) {
+                    e.setCancelled( true );
+                    WandHelper.enchantWand( p, clickedBlock );
+                    ItemStack air = new ItemStack( Material.AIR );
+                    inv.setItem( 0, new ItemStack(Material.AIR));
+                } else if ( WandHelper.isActuallyAWand( main ) && enchantWand ) {
+                    e.setCancelled( true );
+                    p.sendMessage( ChatColor.RED + "Your wand is already enchanted!");
+                }
             }
 
             // Now bail if it's not a magic wand
@@ -159,6 +146,16 @@ public class WandListener implements Listener {
                     }
                     return;
                 }
+            }
+
+            if ( clickedMaterial == Material.SMOKER ) {
+//                Bukkit.broadcastMessage( "It's a SMOKER!" );
+            }
+
+            if ( clickedMaterial == Material.BLAST_FURNACE ) {
+//                Bukkit.broadcastMessage( "It's a Blast Furnace!" );
+//                BlastFurnace furnace = ((BlastFurnace)clickedBlock.getState());
+//                Bukkit.broadcastMessage( furnace.getInventory().getSmelting().getType().toString() );
             }
         } else if ( !WandHelper.isActuallyAWand( main ) ) {
             // Not a wand? Bail!

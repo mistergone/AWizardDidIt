@@ -122,7 +122,6 @@ public class Wizardry {
 
     private void addPatterns( ) {
         ArrayList<MagicPattern> patternRegistry = new ArrayList<>();
-        patternRegistry.add( new EnchantWand() );
         patternRegistry.add( new WizardAnvil() );
         patternRegistry.add( new EnchantAxe() );
         patternRegistry.add( new EnchantBow() );
