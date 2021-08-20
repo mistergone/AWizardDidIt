@@ -126,7 +126,7 @@ public class Wizardry {
         patternRegistry.add( new EnchantAxe() );
         patternRegistry.add( new EnchantBow() );
         patternRegistry.add( new EnchantCrossbow() );
-        patternRegistry.add( new WizardDust() );
+        patternRegistry.add( new WizardTransmute() );
         patternRegistry.add( new EnchantHoe() );
         patternRegistry.add( new EnchantPick() );
         patternRegistry.add( new EnchantRod() );

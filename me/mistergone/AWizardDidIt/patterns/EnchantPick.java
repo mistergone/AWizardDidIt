@@ -78,6 +78,7 @@ public class EnchantPick extends ToolPattern {
                     stoneTypes.add(Material.DIORITE);
                     stoneTypes.add(Material.ANDESITE);
                     stoneTypes.add(Material.COBBLESTONE);
+                    stoneTypes.add(Material.DEEPSLATE);
 
                     Block firstBlock = blockBreakEvent.getBlock();
                     ArrayList<Block> blockBox = new ArrayList<>();

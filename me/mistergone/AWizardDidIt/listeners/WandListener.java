@@ -157,72 +157,72 @@ public class WandListener implements Listener {
 //                BlastFurnace furnace = ((BlastFurnace)clickedBlock.getState());
 //                Bukkit.broadcastMessage( furnace.getInventory().getSmelting().getType().toString() );
             }
-        } else if ( !WandHelper.isActuallyAWand( main ) ) {
-            // Not a wand? Bail!
+        }
+
+        // Not a wand? Bail!
+        if ( !WandHelper.isActuallyAWand( main ) ) return;
+
+        // So you waved a wand but didn't hit a block...
+        ItemStack offItem = p.getInventory().getItemInOffHand();
+        MagicSpell magicSpell = null;
+
+        // If you swing a wand in the air with no reagent, do some stuff
+        if ( offItem == null || offItem.getType() == Material.AIR ) {
+            // Show the wizard bar
+            wizardPlayer.showWizardBar();
+            // Show the direction to your spawn
+            Location spawn = p.getBedSpawnLocation();
+            if ( spawn == null ) spawn = p.getWorld().getSpawnLocation();
+            Location ploc = p.getEyeLocation();
+            ploc.setY( ploc.getY() - .25 );
+            ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
+            Vector spawnVector = spawn.toVector().subtract( ploc.toVector() );
+            SpecialEffects.magicLine( ploc, spawnVector, Particle.HEART );
+
+            Location dLoc = wizardPlayer.getLastDeathLocation();
+            if ( dLoc != null ) {
+                ploc = p.getEyeLocation();
+                ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
+                ploc.setY( ploc.getY() - 0 );
+                Vector deathVector = dLoc.toVector().subtract( ploc.toVector() );
+                SpecialEffects.magicLine( ploc, deathVector, Particle.SPELL_WITCH );
+            }
+
+            // Message player with info.
+            int wp = wizardPlayer.getWizardPower();
+            p.sendMessage( ChatColor.LIGHT_PURPLE + "You have " + String.valueOf( wp ) +
+                    " points of Wizard Power." );
+            p.sendMessage( ChatColor.YELLOW + "Your spawn location is at " + String.valueOf( spawn.getBlockX() ) +
+                    ", " + String.valueOf( spawn.getBlockY() ) + ", " + String.valueOf( spawn.getBlockZ() ) +
+                    ChatColor.ITALIC + " (Follow the line of hearts.)");
+            if ( dLoc != null ) {
+                p.sendMessage( ChatColor.RED + "Your last death was at " + String.valueOf( dLoc.getBlockX() ) +
+                        ", " + String.valueOf( dLoc.getBlockY() ) + ", " + String.valueOf( dLoc.getBlockZ() ) +
+                        ChatColor.ITALIC + " (Follow the line of purple sparks.)");
+            }
+
             return;
         } else {
-            // So you waved a wand but didn't hit a block...
-            ItemStack offItem = p.getInventory().getItemInOffHand();
-            MagicSpell magicSpell = null;
-
-            // If you swing a wand in the air with no reagent, do some stuff
-            if ( offItem == null || offItem.getType() == Material.AIR ) {
-                // Show the wizard bar
-                wizardPlayer.showWizardBar();
-                // Show the direction to your spawn
-                Location spawn = p.getBedSpawnLocation();
-                if ( spawn == null ) spawn = p.getWorld().getSpawnLocation();
-                Location ploc = p.getEyeLocation();
-                ploc.setY( ploc.getY() - .25 );
-                ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
-                Vector spawnVector = spawn.toVector().subtract( ploc.toVector() );
-                SpecialEffects.magicLine( ploc, spawnVector, Particle.HEART );
-
-                Location dLoc = wizardPlayer.getLastDeathLocation();
-                if ( dLoc != null ) {
-                    ploc = p.getEyeLocation();
-                    ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
-                    ploc.setY( ploc.getY() - 0 );
-                    Vector deathVector = dLoc.toVector().subtract( ploc.toVector() );
-                    SpecialEffects.magicLine( ploc, deathVector, Particle.SPELL_WITCH );
-                }
-
-                // Message player with info.
-                int wp = wizardPlayer.getWizardPower();
-                p.sendMessage( ChatColor.LIGHT_PURPLE + "You have " + String.valueOf( wp ) +
-                        " points of Wizard Power." );
-                p.sendMessage( ChatColor.YELLOW + "Your spawn location is at " + String.valueOf( spawn.getBlockX() ) +
-                        ", " + String.valueOf( spawn.getBlockY() ) + ", " + String.valueOf( spawn.getBlockZ() ) +
-                        ChatColor.ITALIC + " (Follow the line of hearts.)");
-                if ( dLoc != null ) {
-                    p.sendMessage( ChatColor.RED + "Your last death was at " + String.valueOf( dLoc.getBlockX() ) +
-                            ", " + String.valueOf( dLoc.getBlockY() ) + ", " + String.valueOf( dLoc.getBlockZ() ) +
-                            ChatColor.ITALIC + " (Follow the line of purple sparks.)");
-                }
-
+            // Now we check for a magic spell with the reagent
+            magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
+            if (magicSpell == null) {
+                p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
                 return;
-            } else {
-                // Now we check for a magic spell with the reagent
-                magicSpell = wizardry.getMagicSpell(offItem.getType().toString());
-                if (magicSpell == null) {
-                    p.sendMessage(ChatColor.RED + "No spell found for this reagent!");
-                    return;
-                } else if ( magicSpell != null && magicSpell.getSpellFunction() != null ) {
-                    e.setCancelled( true );
-                    try {
-                        SpellFunction function = magicSpell.getSpellFunction();
-                        function.setPlayer(p);
-                        function.setWizardPlayer( wizardPlayer );
-                        function.setClickedBlock( clickedBlock );
-                        function.setEvent( e );
-                        function.setMagicWand( main );
-                        function.setReagent( offItem );
-                        function.call();
-                    } catch ( Exception ex ) {
-                        ex.printStackTrace();
-                    }
-                    return;
+            } else if ( magicSpell != null && magicSpell.getSpellFunction() != null ) {
+                e.setCancelled( true );
+                try {
+                    SpellFunction function = magicSpell.getSpellFunction();
+                    function.setPlayer(p);
+                    function.setWizardPlayer( wizardPlayer );
+                    function.setClickedBlock( clickedBlock );
+                    function.setEvent( e );
+                    function.setMagicWand( main );
+                    function.setReagent( offItem );
+                    function.call();
+                } catch ( Exception ex ) {
+                    ex.printStackTrace();
                 }
+                return;
             }
         }
     }
