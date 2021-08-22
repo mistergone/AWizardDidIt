@@ -223,7 +223,7 @@ public class CloudRider extends MagicSpell {
                     cancel();
                 }
             }
-        }.runTaskTimer( plugin, 0, 10 );
+        }.runTaskTimer( plugin, 0, 3 );
     }
 
     private void glidingBurst( Player player ) {
