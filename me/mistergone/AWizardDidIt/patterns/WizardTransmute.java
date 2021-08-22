@@ -59,31 +59,24 @@ public class WizardTransmute extends MagicPattern {
 
                 switch ( reagent.getType() ) {
                     case BONE_MEAL:
-                        if ( !wizardPlayer.spendWizardPower( 150 , patternName ) ) return;
-                        reagent.setAmount( reagent.getAmount() - 1 );
+                        if ( reagent.getAmount() < 3 ) {
+                            error = "It takes at least 3 bone meal to transmute!";
+                            break;
+                        }
+                        if ( !wizardPlayer.spendWizardPower( 50 , patternName ) ) return;
+                        reagent.setAmount( reagent.getAmount() - 3 );
                         ItemStack dust = new ItemStack( Material.GLOWSTONE_DUST );
                         dust.setAmount( 1 );
                         player.getWorld().dropItem( player.getLocation(), dust );
-                        message += "bone meal into glowstone dust!";
+                        message += "3 bone meal into 1 glowstone dust!";
+                        break;
+                    case COBBLESTONE:
+                        if ( !wizardPlayer.spendWizardPower( 10 , patternName ) ) return;
+                        message += transmuteCobble( magicChest, player );
                         break;
                     case ROTTEN_FLESH:
                         if ( !wizardPlayer.spendWizardPower( 75 , patternName ) ) return;
-                        reagent.setAmount( reagent.getAmount() - 1 );
-                        ItemStack meat = new ItemStack( Material.PORKCHOP );
-                        meat.setAmount( 1 );
-                        message += "rotten flesh into ";
-                        String meatType = "raw pork";
-                        Random seed = new Random();
-                        int r = seed.nextInt( 100 ) + 1;
-                        if ( r > 50 && r <= 85 ) {
-                             meat.setType( Material.BEEF );
-                             meatType = "raw beef";
-                        } else if ( r > 85 ) {
-                            meat.setType( Material.CHICKEN );
-                            meatType = "raw chicken";
-                        }
-                        message += meatType + "!";
-                        player.getWorld().dropItem( player.getLocation(), meat );
+                        message += transmuteRottenFlesh( magicChest, player );
                         break;
                     case BOW:
                     case CROSSBOW:
@@ -146,10 +139,6 @@ public class WizardTransmute extends MagicPattern {
                     case NETHERITE_LEGGINGS:
                         message += transmuteArmor( magicChest, player );
                         break;
-                    case COBBLESTONE:
-                        if ( !wizardPlayer.spendWizardPower( 10 , patternName ) ) return;
-                        message += transmuteCobble( magicChest, player );
-                        break;
                     default:
                         error = "The item above the gold ingot in this chest is not transmutable!";
                 }
@@ -164,28 +153,6 @@ public class WizardTransmute extends MagicPattern {
 
             }
         };
-    }
-
-    private String transmuteCobble (MagicChest magicChest, Player player) {
-        ItemStack target = magicChest.getChest().getInventory().getItem( 1 );
-        Random seed = new Random();
-        int r = seed.nextInt( 100 ) + 1;
-        ItemStack mat = new ItemStack( Material.BLACKSTONE );
-        mat.setAmount( 1 );
-        if ( r > 10 && r <= 32 ) {
-            mat.setType( Material.ANDESITE );
-        } else if ( r <= 54 ) {
-            mat.setType( Material.DIORITE );
-        } else if ( r <= 76 ) {
-            mat.setType( Material.GRANITE );
-        } else if ( r <= 98 ) {
-            mat.setType( Material.COBBLED_DEEPSLATE );
-        } else if ( r > 99  ) {
-            mat.setType( Material.QUARTZ );
-        }
-        player.getWorld().dropItem( player.getLocation(), mat );
-        target.setAmount( target.getAmount() - 1 );
-        return "cobblestone into " + mat.getType().toString().toLowerCase().replace( "_", " ") + "!";
     }
 
     private String transmuteArmor (MagicChest magicChest, Player player) {
@@ -249,6 +216,54 @@ public class WizardTransmute extends MagicPattern {
         Bukkit.broadcastMessage( message );
         magicChest.getChest().getInventory().setItem( 1, new ItemStack( Material.AIR ) );
         return message + "!";
+    }
+
+    private String transmuteCobble (MagicChest magicChest, Player player) {
+        ItemStack target = magicChest.getChest().getInventory().getItem( 1 );
+        Random seed = new Random();
+        int r = seed.nextInt( 100 ) + 1;
+        ItemStack mat = new ItemStack( Material.BLACKSTONE );
+        mat.setAmount( 1 );
+        if ( r > 10 && r <= 32 ) {
+            mat.setType( Material.ANDESITE );
+        } else if ( r <= 54 ) {
+            mat.setType( Material.DIORITE );
+        } else if ( r <= 76 ) {
+            mat.setType( Material.GRANITE );
+        } else if ( r <= 98 ) {
+            mat.setType( Material.COBBLED_DEEPSLATE );
+        } else if ( r > 99  ) {
+            mat.setType( Material.QUARTZ );
+        }
+        player.getWorld().dropItem( player.getLocation(), mat );
+        target.setAmount( target.getAmount() - 1 );
+        return "cobblestone into " + mat.getType().toString().toLowerCase().replace( "_", " ") + "!";
+    }
+
+
+
+    private String transmuteRottenFlesh(MagicChest magicChest, Player player ) {
+        String message = "";
+        WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
+        ItemStack target = magicChest.getChest().getInventory().getItem( 1 );
+        target.setAmount( target.getAmount() - 1 );
+        ItemStack meat = new ItemStack( Material.PORKCHOP );
+        meat.setAmount( 1 );
+        message += "rotten flesh into ";
+        String meatType = "raw pork";
+        Random seed = new Random();
+        int r = seed.nextInt( 100 ) + 1;
+        if ( r > 50 && r <= 85 ) {
+            meat.setType( Material.BEEF );
+            meatType = "raw beef";
+        } else if ( r > 85 ) {
+            meat.setType( Material.CHICKEN );
+            meatType = "raw chicken";
+        }
+        message += meatType + "!";
+        player.getWorld().dropItem( player.getLocation(), meat );
+
+        return message;
     }
 
     private String transmuteTool(MagicChest magicChest, Player player ) {

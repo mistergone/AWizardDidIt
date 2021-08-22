@@ -4,11 +4,13 @@ package me.mistergone.AWizardDidIt.spells;
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Particle;
 import org.bukkit.block.BlockFace;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.IronGolem;
 import org.bukkit.entity.Villager;
 import org.bukkit.inventory.MerchantRecipe;
 
@@ -22,6 +24,7 @@ public class CharmVillager extends MagicSpell {
     public CharmVillager() {
         spellName = "Charm Villager";
         cost = 50;
+        int bribeCost = 1;
         reagents = new ArrayList<String>();
         reagents.add( "EMERALD" );
 
@@ -29,58 +32,38 @@ public class CharmVillager extends MagicSpell {
           @Override
           public void run() {
               WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-              if ( reagent.getAmount() >= 1 ) {
-                  if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
-                  Location loc = clickedBlock.getRelative(BlockFace.UP, 1).getLocation();
-                  loc.add(.5, 0, .5);
-                  double theta = 0;
-                  double radius = .2;
+              if ( event == null || !(clickedEntity instanceof  Villager) ) return;
+              Villager villager = ((Villager)clickedEntity);
+              event.setCancelled( true );
 
-                  for (int i = 0; i < 50; i++) {
-                      theta = theta + Math.PI / 8;
-                      radius += .05;
-                      double x = radius * Math.cos(theta);
-                      double y = .25;
-                      double z = radius * Math.sin(theta);
-                      loc.add(x, y, z);
-                      player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, loc, 10);
-                      loc.subtract(x, y, z);
-                  }
+              if ( reagent.getAmount() >= bribeCost ) {
 
-                  ArrayList<Entity> entities = new ArrayList(loc.getWorld().getNearbyEntities(loc, 2, 2, 2));
-                  for (Entity e : entities) {
-                      if (e instanceof Villager) {
-                          Boolean refreshed = false;
-                          for (MerchantRecipe recipe : ((Villager) e).getRecipes()) {
-                              int max = recipe.getMaxUses();
-                              int uses = recipe.getUses();
-                              if (uses == max) {
-                                  recipe.setMaxUses(recipe.getMaxUses() + 5);
-                                  refreshed = true;
-                              }
-                          }
-                          if (refreshed) {
+                  if ( villager.getRecipes() == null ) return;
 
-                              if (reagent.getAmount() >= 1) {
-                                  if (reagent.getAmount() > 1) {
-                                      reagent.setAmount(reagent.getAmount() - 1);
-                                  } else if (reagent.getAmount() == 1) {
-                                      player.getInventory().setItemInOffHand(null);
-                                  }
-                                  player.sendMessage(ChatColor.AQUA + "You have charmed a villager!");
+                  for (MerchantRecipe recipe : ((Villager) clickedEntity).getRecipes()) {
+                      int max = recipe.getMaxUses();
+                      int uses = recipe.getUses();
+                      if (uses == max) {
+                          recipe.setMaxUses(recipe.getMaxUses() + 5);
+                          reagent.setAmount( reagent.getAmount() - bribeCost);
+                          player.sendMessage(ChatColor.AQUA + "You have charmed a villager!");
+                          Location loc = villager.getLocation();loc.add(.5, 0, .5);
+                          double theta = 0;
+                          double radius = .2;
 
-                              } else {
-                                  String name = ((Villager) e).getProfession().toString().toLowerCase();
-                                  if (((Villager) e).getCustomName() != null) {
-                                      name = ((Villager) e).getCustomName();
-                                  }
-                                  player.sendMessage(ChatColor.RED + "You do not have the emerald needed in your off hand to charm "
-                                          + name + ".");
-                              }
+                          for (int i = 0; i < 50; i++) {
+                              theta = theta + Math.PI / 8;
+                              radius += .05;
+                              double x = radius * Math.cos(theta);
+                              double y = .25;
+                              double z = radius * Math.sin(theta);
+                              loc.add(x, y, z);
+                              player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, loc, 10);
+                              loc.subtract(x, y, z);
                           }
                       }
                   }
-              } else if ( reagent.getAmount() < 1 ) {
+              } else if ( reagent.getAmount() < bribeCost ) {
                   player.sendMessage( ChatColor.RED + "You don't have the emerald in your offhand needed to charm villagers." );
                   return;
               }

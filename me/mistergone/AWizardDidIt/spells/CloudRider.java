@@ -8,10 +8,7 @@ import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
-import org.bukkit.entity.Boat;
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.Player;
-import org.bukkit.entity.Vehicle;
+import org.bukkit.entity.*;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -29,6 +26,7 @@ import static me.mistergone.AWizardDidIt.Wizardry.getWizardry;
 
 public class CloudRider extends MagicSpell {
     String boatSpellName = "Wave Rider";
+    String railSpellName = "Rail Rider";
 
     public CloudRider() {
         spellName = "Cloud Rider";
@@ -121,6 +119,36 @@ public class CloudRider extends MagicSpell {
                             doBoating( (Boat)vehicle, wizardPlayer );
                         }
 
+                    } else if ( vehicle instanceof Minecart ) {
+                        Location loc = player.getLocation();
+                        Vector v = player.getVelocity();
+                        int xFactor = 1;
+                        int zFactor = 1;
+                        double angle = Math.round(player.getLocation().getYaw());
+
+                        double speed = 10;
+                        double pitch = 0;
+                        if (angle >= 270) {
+                            angle = Math.toRadians(Math.abs(angle - 360));
+                        } else if (angle >= 180) {
+                            zFactor = -1;
+                            angle = Math.toRadians(angle - 180);
+                        } else if (angle > 90) {
+                            xFactor = -1;
+                            zFactor = -1;
+                            angle = Math.toRadians(Math.abs(angle - 180));
+                        } else {
+                            xFactor = -1;
+                            angle = Math.toRadians(angle);
+                        }
+
+                        v.setX(Math.sin(angle) * speed * xFactor);
+                        v.setY(0);
+                        v.setZ(Math.cos(angle) * speed * zFactor);
+
+                        player.setVelocity(v);
+
+                        player.sendMessage(ChatColor.AQUA + "You have invoked " + railSpellName +"!");
                     }
                 }
             }

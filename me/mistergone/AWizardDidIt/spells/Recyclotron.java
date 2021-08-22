@@ -22,23 +22,20 @@ public class Recyclotron extends MagicSpell {
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
-                Boolean isGolem = (clickedEntity instanceof IronGolem &&
-                        event != null);
-                if (isGolem) {
-                    Location loc = clickedEntity.getLocation();
-                    ItemStack i = new ItemStack(Material.IRON_INGOT);
-                    Random rand = new Random();
-                    int amount = rand.nextInt(2) + 2;
-                    i.setAmount(amount);
-                    clickedEntity.getWorld().dropItem(loc, i);
-                    clickedEntity.remove();
-                    for (int x = 0; x < 6; x++) {
-                        loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 5);
-                    }
-                    loc.getWorld().playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, .3F, 2F);
-                    player.sendMessage( ChatColor.AQUA + "You have invoked " + spellName );
-                    clickedEntity = null;
+                if ( event == null || !(clickedEntity instanceof IronGolem) ) return;
+                Location loc = clickedEntity.getLocation();
+                ItemStack i = new ItemStack(Material.IRON_INGOT);
+                Random rand = new Random();
+                int amount = rand.nextInt(2) + 2;
+                i.setAmount(amount);
+                clickedEntity.getWorld().dropItem(loc, i);
+                clickedEntity.remove();
+                for (int x = 0; x < 6; x++) {
+                    loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 5);
                 }
+                loc.getWorld().playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, .3F, 2F);
+                player.sendMessage( ChatColor.AQUA + "You have invoked " + spellName );
+                clickedEntity = null;
 
             }
         };
