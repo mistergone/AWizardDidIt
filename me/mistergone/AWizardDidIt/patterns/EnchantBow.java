@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.data.Directional;
 import org.bukkit.entity.*;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.metadata.MetadataValue;
@@ -117,6 +118,14 @@ public class EnchantBow extends WeaponPattern {
                     BlockFace faceHit = projectileHitEvent.getHitBlockFace();
                     Block torch = projectileHitEvent.getHitBlock().getRelative( faceHit );
 
+                    // Find a torch
+                    Inventory inv = player.getInventory();
+                    ItemStack off = player.getInventory().getItemInOffHand();
+                    if ( !inv.contains( Material.TORCH ) && off.getType() != Material.TORCH ) {
+                        player.sendMessage( ChatColor.RED + "No torches were found in your inventory!" );
+                        return;
+                    }
+
                     if ( faceHit == BlockFace.UP || faceHit == BlockFace.DOWN ) {
                         if ( BlockHelper.airTypes.contains( projectileHitEvent.getHitBlock().getRelative( BlockFace.UP ).getType() ) ) {
                             if ( !wizardPlayer.spendWizardPower( getModeCost( spellName ), spellName ) ) return;
@@ -127,15 +136,31 @@ public class EnchantBow extends WeaponPattern {
                             torch.setType( Material.TORCH );
                         }
                     } else {
-                        if ( !wizardPlayer.spendWizardPower( getModeCost( spellName ), spellName ) ) return;
-                        wizardPlayer.sendMsgWithCooldown( spellName,
-                                ChatColor.AQUA + "You have invoked " + spellName + "! A torch has been placed where your arrow landed!",
-                                5 );
-                        torch.setType( Material.WALL_TORCH );
-                        Directional direction = (Directional)torch.getBlockData();
-                        direction.setFacing( faceHit );
-                        torch.setBlockData( direction );
+                        if ( !BlockHelper.airTypes.contains( torch.getType() ) ) {
+                            player.sendMessage( ChatColor.RED + "A torch could not be placed where the arrow hit!");
+                            return;
+                        } else {
+                            if ( !wizardPlayer.spendWizardPower( getModeCost( spellName ), spellName ) ) return;
+                            wizardPlayer.sendMsgWithCooldown( spellName,
+                                    ChatColor.AQUA + "You have invoked " + spellName + "! A torch has been placed where your arrow landed!",
+                                    5 );
+                            torch.setType( Material.WALL_TORCH );
+                            Directional direction = (Directional)torch.getBlockData();
+                            direction.setFacing( faceHit );
+                            torch.setBlockData( direction );
+                        }
                     }
+
+                    if ( off.getType() == Material.TORCH ) {
+                        off.setAmount( off.getAmount() - 1 );
+                        player.getInventory().setItemInOffHand( off );
+                    } else {
+                        int index = inv.first( Material.TORCH );
+                        ItemStack torches = inv.getItem( index );
+                        torches.setAmount( torches.getAmount() - 1 );
+                        inv.setItem( index, torches );
+                    }
+
                     projectileHitEvent.getEntity().remove();
                 }
 
