@@ -1,6 +1,6 @@
 package me.mistergone.AWizardDidIt.spells;
 
-import com.sun.org.apache.xpath.internal.operations.Bool;
+// import com.sun.org.apache.xpath.internal.operations.Bool;
 import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
@@ -31,7 +31,7 @@ public class Recyclotron extends MagicSpell {
                 clickedEntity.getWorld().dropItem(loc, i);
                 clickedEntity.remove();
                 for (int x = 0; x < 6; x++) {
-                    loc.getWorld().spawnParticle(Particle.SMOKE_LARGE, loc, 5);
+                    loc.getWorld().spawnParticle(Particle.CAMPFIRE_SIGNAL_SMOKE, loc, 5);
                 }
                 loc.getWorld().playSound(loc, Sound.ENTITY_DRAGON_FIREBALL_EXPLODE, .3F, 2F);
                 player.sendMessage( ChatColor.AQUA + "You have invoked " + spellName );

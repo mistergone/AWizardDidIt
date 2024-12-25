@@ -110,7 +110,7 @@ public class DamageListener implements Listener {
                         double damage =  Math.floor( ( Math.random() * 6 ) + 5 );
                         event.setDamage( damage );
                     } else if ( customName.equals( "Slow Bolt" ) ) {
-                        PotionEffect slow = new PotionEffect( PotionEffectType.SLOW, 60, 2 );
+                        PotionEffect slow = new PotionEffect( PotionEffectType.SLOWNESS, 60, 2 );
                         ((Monster) target).addPotionEffect( slow );
                         wizardPlayer.sendMsgWithCooldown( "Slow Bolt",
                                 ChatColor.AQUA + "You have invoked Slow Bolt with your Wizard Crossbow!",

@@ -38,6 +38,8 @@ public class WandListener implements Listener {
         if ( h != EquipmentSlot.HAND ) return;
         if ( !isLeftClick ) return;
 
+        Bukkit.getServer().broadcastMessage("This part works. 0");
+
         // Let's check out the item and the clickedBlock
         ItemStack main =  e.getItem();
         Block clickedBlock = e.getClickedBlock();
@@ -51,6 +53,7 @@ public class WandListener implements Listener {
         if ( clickedBlock != null ) {
             // First, let's handle Lectern hits
             if ( clickedMaterial == Material.LECTERN ) {
+                Bukkit.getServer().broadcastMessage("This part works. ");
                 Lectern lec = (Lectern)clickedBlock.getState();
                 Inventory inv = lec.getInventory();
                 ItemStack itemStack = inv.getItem( 0 );
@@ -185,7 +188,7 @@ public class WandListener implements Listener {
                 ploc = ploc.add( ploc.getDirection().multiply( 3 ) );
                 ploc.setY( ploc.getY() - 0 );
                 Vector deathVector = dLoc.toVector().subtract( ploc.toVector() );
-                SpecialEffects.magicLine( ploc, deathVector, Particle.SPELL_WITCH );
+                SpecialEffects.magicLine( ploc, deathVector, Particle.WITCH );
             }
 
             // Message player with info.

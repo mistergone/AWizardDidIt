@@ -121,7 +121,8 @@ public class WizardElevator extends MagicSign {
                         floorType.isSolid() && floorType != Material.MAGMA_BLOCK ) {
                     break;
                 }
-            } else if ( destination.getY() == start.getWorld().getMaxHeight() || destination.getY() == 0 ) {
+            } else if ( destination.getY() == start.getWorld().getMaxHeight() ||
+                    destination.getY() == start.getWorld().getMinHeight() ) {
                 p.sendMessage( ChatColor.RED + "No valid destination found!" );
                 return null;
             }

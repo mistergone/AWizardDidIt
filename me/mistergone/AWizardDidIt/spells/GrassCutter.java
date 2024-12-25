@@ -49,7 +49,7 @@ public class GrassCutter extends MagicSpell {
                     for( int y = loc.getBlockY() - radius; y <= loc.getBlockY() + radius; y++ ) {
                         for ( int z = loc.getBlockZ() - radius; z <= loc.getBlockZ() + radius; z++ ) {
                             Block block = loc.getWorld().getBlockAt( x, y, z );
-                            if ( block.getType() == Material.GRASS || block.getType() == Material.TALL_GRASS || block.getType() == Material.FERN || block.getType() == Material.LARGE_FERN ) {
+                            if ( block.getType() == Material.SHORT_GRASS || block.getType() == Material.TALL_GRASS || block.getType() == Material.FERN || block.getType() == Material.LARGE_FERN ) {
                                 block.breakNaturally();
                             }
                         }

@@ -25,7 +25,7 @@ public class WizardTransmute extends MagicPattern {
         keys = new Material[]{ Material.GOLD_INGOT };
         patterns =  new HashMap<String, String[]>();
         patterns.put( "Wizard Dust", new String[]
-                {"NONE", "ANY", "NONE",
+                {"ANY", "ANY", "ANY",
                         "NONE", "GOLD_INGOT", "NONE",
                         "NONE", "NONE", "NONE"});
 
@@ -47,9 +47,14 @@ public class WizardTransmute extends MagicPattern {
                     return;
                 }
 
-                ItemStack reagent = magicChest.getChest().getInventory().getItem( 1 );
+                int itemSlot = 0;
+                ItemStack reagent = magicChest.getChest().getInventory().getItem( itemSlot );
+                while ( reagent == null && itemSlot <= 2 ) {
+                    itemSlot++;
+                    reagent = magicChest.getChest().getInventory().getItem( itemSlot );
+                }
                 if ( reagent == null ) {
-                    player.sendMessage( ChatColor.RED + "Wizard Transmute requires an item to be transmuted, which should be placed above the gold ingot in the chest!");
+                    player.sendMessage( ChatColor.RED + "Wizard Transmute requires an item to be transmuted, which should be placed in the top row of the chest!");
                     return;
                 }
 
@@ -72,11 +77,11 @@ public class WizardTransmute extends MagicPattern {
                         break;
                     case COBBLESTONE:
                         if ( !wizardPlayer.spendWizardPower( 10 , patternName ) ) return;
-                        message += transmuteCobble( magicChest, player );
+                        message += transmuteCobble( magicChest, itemSlot, player );
                         break;
                     case ROTTEN_FLESH:
                         if ( !wizardPlayer.spendWizardPower( 75 , patternName ) ) return;
-                        message += transmuteRottenFlesh( magicChest, player );
+                        message += transmuteRottenFlesh( magicChest, itemSlot, player );
                         break;
                     case BOW:
                     case CROSSBOW:
@@ -111,7 +116,7 @@ public class WizardTransmute extends MagicPattern {
                     case GOLDEN_SWORD:
                     case DIAMOND_SWORD:
                     case NETHERITE_SWORD:
-                        message += transmuteTool( magicChest, player );
+                        message += transmuteTool( magicChest, itemSlot, player );
                         break;
                     case LEATHER_BOOTS:
                     case LEATHER_CHESTPLATE:
@@ -137,7 +142,7 @@ public class WizardTransmute extends MagicPattern {
                     case NETHERITE_CHESTPLATE:
                     case NETHERITE_HELMET:
                     case NETHERITE_LEGGINGS:
-                        message += transmuteArmor( magicChest, player );
+                        message += transmuteArmor( magicChest, itemSlot, player );
                         break;
                     default:
                         error = "The item above the gold ingot in this chest is not transmutable!";
@@ -155,8 +160,8 @@ public class WizardTransmute extends MagicPattern {
         };
     }
 
-    private String transmuteArmor (MagicChest magicChest, Player player) {
-        ItemStack target = magicChest.getChest().getInventory().getItem( 1 );
+    private String transmuteArmor (MagicChest magicChest, int itemSlot, Player player) {
+        ItemStack target = magicChest.getChest().getInventory().getItem( itemSlot );
         String type = target.getType().toString();
         ArrayList<String> msgs = new ArrayList<>();
 
@@ -213,13 +218,12 @@ public class WizardTransmute extends MagicPattern {
             message += iter.next();
         }
         message = message.replace( "  ", " " );
-        Bukkit.broadcastMessage( message );
         magicChest.getChest().getInventory().setItem( 1, new ItemStack( Material.AIR ) );
         return message + "!";
     }
 
-    private String transmuteCobble (MagicChest magicChest, Player player) {
-        ItemStack target = magicChest.getChest().getInventory().getItem( 1 );
+    private String transmuteCobble (MagicChest magicChest, int itemSlot, Player player) {
+        ItemStack target = magicChest.getChest().getInventory().getItem( itemSlot );
         Random seed = new Random();
         int r = seed.nextInt( 100 ) + 1;
         ItemStack mat = new ItemStack( Material.BLACKSTONE );
@@ -242,10 +246,10 @@ public class WizardTransmute extends MagicPattern {
 
 
 
-    private String transmuteRottenFlesh(MagicChest magicChest, Player player ) {
+    private String transmuteRottenFlesh(MagicChest magicChest, int itemSlot, Player player ) {
         String message = "";
         WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-        ItemStack target = magicChest.getChest().getInventory().getItem( 1 );
+        ItemStack target = magicChest.getChest().getInventory().getItem( itemSlot );
         target.setAmount( target.getAmount() - 1 );
         ItemStack meat = new ItemStack( Material.PORKCHOP );
         meat.setAmount( 1 );
@@ -266,8 +270,8 @@ public class WizardTransmute extends MagicPattern {
         return message;
     }
 
-    private String transmuteTool(MagicChest magicChest, Player player ) {
-        ItemStack target = magicChest.getChest().getInventory().getItem( 1 );
+    private String transmuteTool(MagicChest magicChest, int itemSlot, Player player ) {
+        ItemStack target = magicChest.getChest().getInventory().getItem( itemSlot );
         String type = target.getType().toString();
         String ingredientString = "";
         ArrayList<String> msgs = new ArrayList<>();

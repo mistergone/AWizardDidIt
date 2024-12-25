@@ -234,8 +234,12 @@ public class EnchantBow extends WeaponPattern {
     private void teletransfer( WizardPlayer wizardPlayer, Location start, Location destination, Vector vector ) {
         AWizardDidIt plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
         Player p = wizardPlayer.getPlayer();
-        final AtomicInteger stuckCount = new AtomicInteger();
-        Location startLoc = p.getLocation();
+
+        if ( p.isSneaking() ) {
+            p.sendMessage( ChatColor.RED + "Teletransfer was cancelled because you are sneaking.");
+            return;
+        }
+        
         p.setAllowFlight( true );
         wizardPlayer.addSpell( "Teletransference" );
 

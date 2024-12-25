@@ -1,6 +1,6 @@
 package me.mistergone.AWizardDidIt.helpers;
 
-import org.bukkit.craftbukkit.libs.org.apache.commons.lang3.text.WordUtils;
+import org.apache.commons.text.WordUtils;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;

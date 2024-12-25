@@ -58,7 +58,7 @@ public class CharmVillager extends MagicSpell {
                               double y = .25;
                               double z = radius * Math.sin(theta);
                               loc.add(x, y, z);
-                              player.getWorld().spawnParticle(Particle.VILLAGER_HAPPY, loc, 10);
+                              player.getWorld().spawnParticle(Particle.HAPPY_VILLAGER, loc, 10);
                               loc.subtract(x, y, z);
                           }
                       }

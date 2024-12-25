@@ -15,8 +15,8 @@ public class SpecialEffects {
     public static void magicPoof( Location loc ) {
         loc.add( .5, .5, .5 );
         for ( int i = 0; i < 4; i++ ) {
-            loc.getWorld().spawnParticle( Particle.SPELL_MOB, loc, 10 );
-            loc.getWorld().spawnParticle( Particle.SPELL_MOB_AMBIENT, loc, 10 );
+            loc.getWorld().spawnParticle( Particle.ELECTRIC_SPARK, loc, 10 );
+            loc.getWorld().spawnParticle( Particle.CAMPFIRE_COSY_SMOKE, loc, 10 );
         }
     }
 
@@ -47,14 +47,14 @@ public class SpecialEffects {
     public static void enchantEffect( Location loc ) {
         loc.add( .5, 1, .5 );
         for ( int i = 0; i < 6; i++ ) {
-            loc.getWorld().spawnParticle( Particle.ENCHANTMENT_TABLE, loc, 20 );
+            loc.getWorld().spawnParticle( Particle.ENCHANT, loc, 20 );
         }
     }
 
     public static void magicChest( Location loc ) {
         loc.add( .5, 0, .5 );
         for ( int i = 0; i < 6; i++ ) {
-            loc.getWorld().spawnParticle( Particle.SPELL_MOB, loc, 20 );
+            loc.getWorld().spawnParticle( Particle.EFFECT, loc, 20 );
         }
     }
 
@@ -71,7 +71,7 @@ public class SpecialEffects {
             double y = .1 + ( (double)i / 20 );
             double z = radius * Math.sin( theta );
             loc.add(x, y, z);
-            loc.getWorld().spawnParticle( Particle.SPELL_WITCH, loc, 2);
+            loc.getWorld().spawnParticle( Particle.WITCH, loc, 2);
             loc.subtract(x, y, z);
         }
     }
