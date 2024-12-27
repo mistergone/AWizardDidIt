@@ -4,6 +4,7 @@ import me.mistergone.AWizardDidIt.helpers.ChestHelper;
 import me.mistergone.AWizardDidIt.helpers.WandHelper;
 import me.mistergone.AWizardDidIt.Wizardry;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;

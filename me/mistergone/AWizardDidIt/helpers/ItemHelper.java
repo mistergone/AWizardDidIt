@@ -1,6 +1,4 @@
 package me.mistergone.AWizardDidIt.helpers;
-
-import org.apache.commons.text.WordUtils;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -18,9 +16,15 @@ public class ItemHelper {
     }
 
     public static String prettyItemName( String s ) {
-        s = s.replace( "_", " ");
-        s = WordUtils.capitalize( s.toLowerCase() );
-        return s;
+        s = s.replace( "_", " ").toLowerCase();
+        String[] words = s.split("\\s");
+        StringBuilder prettyName = new StringBuilder();
+        for (String word : words) {
+            prettyName.append(Character.toTitleCase(word.charAt(0)))
+                    .append(word.substring(1))
+                    .append(" ");
+        }
+        return prettyName.toString();
     }
 
 }

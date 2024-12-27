@@ -5,7 +5,6 @@ import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -23,7 +22,7 @@ public class WizardTransmute extends MagicPattern {
     public WizardTransmute() {
         patternName = "Wizard Transmute";
         keys = new Material[]{ Material.GOLD_INGOT };
-        patterns =  new HashMap<String, String[]>();
+        patterns =  new HashMap<>();
         patterns.put( "Wizard Dust", new String[]
                 {"ANY", "ANY", "ANY",
                         "NONE", "GOLD_INGOT", "NONE",
@@ -192,7 +191,7 @@ public class WizardTransmute extends MagicPattern {
         if ( split[1] != null ) ingredientString += split[1].toLowerCase() + " ";
         mat.setAmount( r );
         player.getWorld().dropItem( player.getLocation(), mat );
-        msgs.add( String.valueOf( r ) + matString );
+        msgs.add( r  + matString );
 
         if ( target.getEnchantments().size() > 0 ) {
             Random s = new Random();
@@ -218,7 +217,7 @@ public class WizardTransmute extends MagicPattern {
             message += iter.next();
         }
         message = message.replace( "  ", " " );
-        magicChest.getChest().getInventory().setItem( 1, new ItemStack( Material.AIR ) );
+        magicChest.getChest().getInventory().setItem( itemSlot, new ItemStack( Material.AIR ) );
         return message + "!";
     }
 
@@ -357,7 +356,7 @@ public class WizardTransmute extends MagicPattern {
             }
             message += iter.next();
         }
-        magicChest.getChest().getInventory().setItem( 1, new ItemStack( Material.AIR ) );
+        magicChest.getChest().getInventory().setItem( itemSlot, new ItemStack( Material.AIR ) );
         return message + "!";
     }
 

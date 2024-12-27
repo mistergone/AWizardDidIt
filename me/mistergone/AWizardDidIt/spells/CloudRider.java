@@ -92,13 +92,12 @@ public class CloudRider extends MagicSpell {
                     player.sendMessage(ChatColor.DARK_AQUA + "Swing your wand again to begin gliding!");
 
                 } else if (!player.isGliding() && !player.isSwimming() && !isInVehicle && wizardPlayer.getSpells().contains(spellName)) {
-                    player.setGliding(true);
-                    player.playSound(player.getLocation(), Sound.ENTITY_FIREWORK_ROCKET_LAUNCH, 1.2F, .8F);
-
-                    doStartingBurst( player );
-
                     wizardPlayer.removeSpell("Cloud Rider");
                     wizardPlayer.addSpell("Cloud Rider (Gliding)");
+                    player.setGliding( true );
+                    player.playSound(player.getLocation(), Sound.ENTITY_BREEZE_WIND_BURST, 1.2F, .8F);
+
+                    doStartingBurst( player );
 
                     player.sendMessage(ChatColor.AQUA + "You are now gliding!");
 

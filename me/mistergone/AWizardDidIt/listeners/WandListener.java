@@ -38,8 +38,6 @@ public class WandListener implements Listener {
         if ( h != EquipmentSlot.HAND ) return;
         if ( !isLeftClick ) return;
 
-        Bukkit.getServer().broadcastMessage("This part works. 0");
-
         // Let's check out the item and the clickedBlock
         ItemStack main =  e.getItem();
         Block clickedBlock = e.getClickedBlock();
@@ -53,7 +51,6 @@ public class WandListener implements Listener {
         if ( clickedBlock != null ) {
             // First, let's handle Lectern hits
             if ( clickedMaterial == Material.LECTERN ) {
-                Bukkit.getServer().broadcastMessage("This part works. ");
                 Lectern lec = (Lectern)clickedBlock.getState();
                 Inventory inv = lec.getInventory();
                 ItemStack itemStack = inv.getItem( 0 );
@@ -69,8 +66,10 @@ public class WandListener implements Listener {
                 if ( WandHelper.isJustAStick( main ) && enchantWand ) {
                     e.setCancelled( true );
                     WandHelper.enchantWand( p, clickedBlock );
-                    ItemStack air = new ItemStack( Material.AIR );
                     inv.setItem( 0, new ItemStack(Material.AIR));
+                    ItemStack book = new ItemStack( Material.BOOK );
+                    book.setAmount( 1 );
+                    wizardPlayer.getPlayer().getWorld().dropItem( wizardPlayer.getPlayer().getLocation(), book );
                 } else if ( WandHelper.isActuallyAWand( main ) && enchantWand ) {
                     e.setCancelled( true );
                     p.sendMessage( ChatColor.RED + "Your wand is already enchanted!");
