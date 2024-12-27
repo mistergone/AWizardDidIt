@@ -35,6 +35,7 @@ public class BlockHelper {
             Material.DIAMOND_ORE,
             Material.EMERALD_ORE,
             Material.ENDER_CHEST,
+            // Glass types
             Material.GLASS,
             Material.GLASS_PANE,
             Material.GLOWSTONE,
@@ -80,6 +81,8 @@ public class BlockHelper {
             return true;
         } else if ( Tag.LEAVES.isTagged( material ) ) {
             // Leaves are silk pickable
+            return true;
+        } else if ( material.toString().contains("STAINED_GLASS") ) {
             return true;
         }
 
