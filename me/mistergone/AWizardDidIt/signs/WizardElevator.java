@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.BlockState;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -63,14 +64,16 @@ public class WizardElevator extends MagicSign {
                 p.setFallDistance(0f);
 
                 // Stuck check - sometimes, the player gets stuck under a black, so we check
-                // to see if the player is possibly stuck, and teleport them if stuck
-                if ( p.getLocation().getY() == wizardPlayer.getLastKnownLocation().getY() ) {
+                // to see if the player is possibly stuck, and teleport them if stuck\
+                if ( Math.round( p.getLocation().getY() ) == Math.round( wizardPlayer.getLastKnownLocation().getY() ) ) {
+                    Bukkit.getServer().broadcastMessage("Stuck: " + String.valueOf( Math.round( p.getLocation().getY() ) ) );
                     stuckCount.incrementAndGet();
                 } else {
                     stuckCount.set( 0 );
                 }
-                if ( stuckCount.intValue() > 10 ) {
-                    p.teleport( p.getLocation().add( 0, .66, 0 ) );
+                if ( stuckCount.intValue() > 3 ) {
+                    double stuckVar = stuckCount.doubleValue() / 3 * .66;
+                    p.teleport( p.getLocation().add( 0, stuckVar, 0 ) );
                 }
                 wizardPlayer.setLastKnownLocation( p.getLocation() );
 
@@ -150,7 +153,7 @@ public class WizardElevator extends MagicSign {
         if ( Tag.WALL_SIGNS.isTagged( b.getType() ) ) {
             BlockState state = b.getState();
             Sign sign = (Sign)state;
-            String[] lines = sign.getLines();
+            String[] lines = sign.getSide(Side.FRONT).getLines();
             if ( lines[0] == null ) {
                 return false;
             } else {

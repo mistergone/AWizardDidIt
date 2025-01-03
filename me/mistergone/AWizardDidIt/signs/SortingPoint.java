@@ -8,6 +8,7 @@ import org.bukkit.Material;
 import org.bukkit.Tag;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
@@ -62,7 +63,7 @@ public class SortingPoint extends MagicSign {
     public static Boolean isSortingPointSign( Block b ) {
         if ( !Tag.WALL_SIGNS.isTagged(  b.getType() ) ) return false;
         Sign sign = (Sign) b.getState();
-        String[] lines = sign.getLines();
+        String[] lines = sign.getSide(Side.FRONT).getLines();
         if ( !( ChatColor.stripColor( lines[0] ). equals( "[SortingPoint]" ) ) ) return false;
 
         return true;

@@ -8,6 +8,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.type.WallSign;
+import org.bukkit.block.sign.Side;
 
 import java.util.ArrayList;
 
@@ -18,7 +19,7 @@ public class SignHelper {
     public static Boolean isWizardSign( Block b ) {
         if ( !( b.getType().toString().contains( "SIGN" ) ) ) return false;
         Sign sign = (Sign) b.getState();
-        String[] lines = sign.getLines();
+        String[] lines = sign.getSide(Side.FRONT).getLines();
         String signature = ChatColor.stripColor(lines[0].trim());
         MagicSign magicSign = getWizardry().getMagicSign(signature);
         if ( magicSign != null ) return true;
@@ -61,7 +62,7 @@ public class SignHelper {
     }
 
     public static String getSignOwner(Sign s ) {
-        String[] lines = s.getLines();
+        String[] lines = s.getSide(Side.FRONT).getLines();
         return  ChatColor.stripColor( lines[3] );
     }
 

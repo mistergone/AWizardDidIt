@@ -9,6 +9,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
 import org.bukkit.block.data.Directional;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -40,7 +41,7 @@ public class WizardPassage extends MagicSign {
             Block bottom = top.getRelative( BlockFace.DOWN );
 
             // Check for second signBlock on the opposite side
-            if ( !isWizardPassageSign( secondSignBlock ) || lines[1].equals( ( (Sign)secondSignBlock.getState() ).getLine( 1 ) ) ) {
+            if ( !isWizardPassageSign( secondSignBlock ) || lines[1].equals( ( (Sign)secondSignBlock.getState() ).getSide(Side.FRONT).getLine( 1 ) ) ) {
                 secondSignBlock = null;
             }
 
@@ -57,19 +58,19 @@ public class WizardPassage extends MagicSign {
     private void makePassage( Block signBlock, Block top, Block bottom, int timer, Block secondSignBlock ) {
         AWizardDidIt plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
 
-        Sign state = (Sign)signBlock.getState();
+        Sign sign = (Sign)signBlock.getState();
         Sign secondState = secondSignBlock == null ? null : (Sign) secondSignBlock.getState();
-        String[] lines = state.getLines();
-        String delay = state.getLine(2 );
-        String secondDelay = secondState == null ? null : secondState.getLine( 2 );
+        String[] lines = sign.getSide(Side.FRONT).getLines();
+        String delay = lines[2];
+        String secondDelay = secondState == null ? null : secondState.getSide(Side.FRONT).getLine( 2 );
         Material topType = top.getType();
         Material bottomType = bottom.getType();
 
-        state.setLine( 2, "ACTIVE" );
-        state.update();
+        sign.getSide(Side.FRONT).setLine( 2, "ACTIVE" );
+        sign.update();
 
         if ( secondState != null ) {
-            secondState.setLine( 2, "ACTIVE" );
+            secondState.getSide(Side.FRONT).setLine( 2, "ACTIVE" );
             secondState.update();
         }
 
@@ -84,10 +85,13 @@ public class WizardPassage extends MagicSign {
                     public void run() {
                         top.setType( topType );
                         bottom.setType( bottomType );
-                        state.setLine( 2, delay );
-                        state.update();
+                        Sign sign = (Sign) signBlock.getState();
+                        sign.getSide(Side.FRONT).setLine( 2, delay );
+                        sign.update();
                         if ( secondSignBlock != null ) {
-                            secondState.setLine( 2, secondDelay );
+                            Sign secondState = (Sign)secondSignBlock.getState();
+                            secondState.getSide(Side.FRONT).setLine(2, secondDelay );
+                            secondState.setWaxed(false);
                             secondState.update();
                         }
                     }
@@ -136,7 +140,7 @@ public class WizardPassage extends MagicSign {
     public static Boolean isWizardPassageSign( Block b ) {
         if ( !Tag.WALL_SIGNS.isTagged(  b.getType() ) ) return false;
         Sign sign = (Sign) b.getState();
-        String[] lines = sign.getLines();
+        String[] lines = sign.getSide(Side.FRONT).getLines();
         if ( !( ChatColor.stripColor( lines[0] ). equals( "[WizardPassage]" ) ) ) return false;
 
         return true;

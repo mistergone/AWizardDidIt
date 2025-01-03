@@ -5,6 +5,7 @@ import me.mistergone.AWizardDidIt.baseClasses.*;
 import me.mistergone.AWizardDidIt.helpers.*;
 import org.bukkit.*;
 import org.bukkit.block.*;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -127,7 +128,7 @@ public class WandListener implements Listener {
                     state = signBlock.getState();
                 }
                 Sign sign = (Sign) state;
-                String[] lines = sign.getLines();
+                String[] lines = sign.getSide(Side.FRONT).getLines();
                 if (lines[0] == null) return;
                 String signature = ChatColor.stripColor(lines[0].trim());
 

@@ -11,6 +11,7 @@ import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Chest;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Entity;
 import org.bukkit.entity.ItemFrame;
 import org.bukkit.entity.Player;
@@ -81,7 +82,7 @@ public class SortingChest extends MagicSign {
                     if ( chestCheck.getType() != Material.CHEST ) continue;
 
                     Sign sign = (Sign)b.getState();
-                    String[] lines = sign.getLines();
+                    String[] lines = sign.getSide(Side.FRONT).getLines();
                     Chest chest = (Chest) chestCheck.getState();
                     if ( ChatColor.stripColor( lines[1] ).equals("Automatic") ) {
                         Inventory sorter = chest.getInventory();

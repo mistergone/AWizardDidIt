@@ -8,6 +8,7 @@ import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
 import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.block.SignChangeEvent;
 
@@ -37,7 +38,7 @@ public class UnseenArchitect extends MagicSign {
             @Override
             public void run() {
                 Sign sign = (Sign) signBlock.getState();
-                String[] lines = sign.getLines();
+                String[] lines = sign.getSide(Side.FRONT).getLines();
 
                 String projectName = ChatColor.stripColor( lines[1] ).toLowerCase().trim();
                 String command = ChatColor.stripColor(lines[2]).trim();

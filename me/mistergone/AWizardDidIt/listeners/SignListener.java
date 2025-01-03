@@ -7,6 +7,7 @@ import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
 import org.bukkit.block.Sign;
+import org.bukkit.block.sign.Side;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -57,7 +58,7 @@ public class SignListener implements Listener {
 
         if ( Tag.SIGNS.isTagged( b.getType() ) ) {
             Sign sign = (Sign) b.getState();
-            String[] lines = sign.getLines();
+            String[] lines = sign.getSide(Side.FRONT).getLines();
 
             // Handle Unseen Assistant signs
             if ( getUnseenPM().isUASign( lines[0] ) ) {
@@ -104,7 +105,7 @@ public class SignListener implements Listener {
         if ( loc.getBlock() != null && Tag.SIGNS.isTagged( loc.getBlock().getType() ) ) {
             Sign sign = (Sign)loc.getBlock().getState();
             for (int i = 0; i < 4; i++ ) {
-                sign.setLine( i, "???");
+                sign.getSide(Side.FRONT).setLine( i, "???");
             }
             sign.update( true );
         } else {
