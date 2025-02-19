@@ -65,16 +65,20 @@ public class RainbowInTheDark extends MagicSpell {
             public void run() {
                 long time = p.getWorld().getTime();
                 if ( time > 0 && time < 13000 ) {
+                    if ( time < 100 ) {
+                        time = 0;
+                        p.getWorld().setTime( time );
+                    }
                     Bukkit.broadcastMessage( ChatColor.GREEN +  p.getDisplayName() + ChatColor.YELLOW
                             + " has invoked " + ChatColor.LIGHT_PURPLE + spellName + "!");
                     cancel();
                     return;
-                } else if ( time >= 13000 && time < 23000 ) {
+                } else if ( time >= 13000 ) {
                     time += 100;
                     p.getWorld().setTime( time );
                 } else {
-                    time += 10;
-                    p.getWorld().setTime( time );
+                    cancel();
+                    return;
                 }
             }
         }.runTaskTimer( plugin, 0, 1 );

@@ -31,7 +31,7 @@ public class SortingChest extends MagicSign {
     public SortingChest() {
         signName = "Sorting Chest";
         signature = "[SortingChest]";
-        cost = 5;
+        cost = 25;
 
         signFunction = new SignFunction() {
             @Override
@@ -47,6 +47,7 @@ public class SortingChest extends MagicSign {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
 
                 HashMap<Material, ArrayList<Chest>> chestIndex = new HashMap<>();
+                HashMap<String, Chest> stringIndex = new HashMap<>();
 
                 // add Item Frames to chestIndex
                 List<Entity> entities = player.getNearbyEntities( 20, 10, 20 );
@@ -67,7 +68,7 @@ public class SortingChest extends MagicSign {
                     }
                 }
 
-                // add Signs to chestIndex
+                // add Signs to chestIndex & stringIndex
                 Location signLoc = signBlock.getLocation();
                 Block start = player.getWorld().getBlockAt(
                         signLoc.getBlockX() - 20,
@@ -100,14 +101,19 @@ public class SortingChest extends MagicSign {
                     } else {
                         for ( int x = 1; x <=3; x++ ) {
                             String line = ChatColor.stripColor( lines[x] ).toUpperCase();
-                            Material m = Material.matchMaterial( line );
-                            if ( m == null ) continue;
-                            ArrayList<Chest> chests = chestIndex.get( m );
-                            if ( chests == null ) {
-                                chests = new ArrayList<Chest>();
+                            // Add wildcard signs to stringIndex
+                            if ( line.contains("*") ) {
+                                stringIndex.put( line.replace("*", "" ).toLowerCase().trim(), chest );
+                            } else {
+                                Material m = Material.matchMaterial( line );
+                                if ( m == null ) continue;
+                                ArrayList<Chest> chests = chestIndex.get( m );
+                                if ( chests == null ) {
+                                    chests = new ArrayList<Chest>();
+                                }
+                                chests.add( chest );
+                                chestIndex.put( m, chests );
                             }
-                            chests.add( chest );
-                            chestIndex.put( m, chests );
                         }
                     }
                 }
@@ -120,35 +126,51 @@ public class SortingChest extends MagicSign {
                 Inventory distInv = distChest.getInventory();
                 for ( int i = 0; i < distInv.getSize(); i ++ ) {
                     ItemStack item = distInv.getContents()[i];
-                    if (item != null && chestIndex.keySet().contains(item.getType())) {
-                        if (!wizardPlayer.spendWizardPower(cost, signName)) return;
-                        // Special effects!
-                        SpecialEffects.portalCollapse(signBlock.getLocation());
-                        player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 3F, 2F);
-                        ArrayList<Chest> chests = chestIndex.get(item.getType());
-                        int startingAmt = item.getAmount();
+                    if ( item == null ) continue;
+                    ArrayList<Chest> chests = new ArrayList<>();
+                    if ( chestIndex.containsKey( item.getType() ) ) {
+                        chests = chestIndex.get(item.getType());
+                    }
 
-                        while (item.getAmount() > 0 && chests.size() > 0) {
-                            // try to add the item to chests[0]
-                            Chest chest = chests.get(0);
-                            Inventory inv = chest.getInventory();
-                            HashMap<Integer, ItemStack> leftovers = inv.addItem(item);
-
-                            // There were leftovers
-                            if (leftovers.size() > 0) {
-                                // Chest is full, remove the chest
-                                chests.remove(0);
-
-                                // Set itemstack to leftover amount
-                                ItemStack left = leftovers.get(0);
-                                item.setAmount(left.getAmount());
-                            } else {
-                                // No leftovers! Finish up.
-                                distChest.getInventory().setItem(i, null);
-                                movedItems++;
-                                item.setAmount(0);
-                            }
+                    // Add chests with wildcard signs
+                    String mat = item.getType().toString().toLowerCase().trim();
+                    for ( HashMap.Entry<String,Chest> matchItem: stringIndex.entrySet() ) {
+                        String wildcard = matchItem.getKey().toLowerCase().trim();
+                        if ( mat.contains( wildcard ) ) {
+                            chests.add( matchItem.getValue() );
                         }
+                    }
+
+                    if ( item != null && chests.size() == 0 ) {
+                        notFound++;
+                        continue;
+                    }
+
+                    // We have a chest(s), now go!
+                    if (!wizardPlayer.spendWizardPower(cost, signName)) return;
+
+                    int startingAmt = item.getAmount();
+                    while (item.getAmount() > 0 && chests.size() > 0) {
+                        // try to add the item to chests[0]
+                        Chest chest = chests.get(0);
+                        Inventory inv = chest.getInventory();
+                        HashMap<Integer, ItemStack> leftovers = inv.addItem(item);
+
+                        // There were leftovers
+                        if (leftovers.size() > 0) {
+                            // Chest is full, remove the chest
+                            chests.remove(0);
+
+                            // Set itemStack to leftover amount
+                            ItemStack left = leftovers.get(0);
+                            item.setAmount(left.getAmount());
+                        } else {
+                            // No leftovers! Finish up.
+                            distChest.getInventory().setItem(i, null);
+                            movedItems++;
+                            item.setAmount(0);
+                        }
+
                         // If items are left, then all chests were full!
                         if ( item.getAmount() > 0 ) {
                             if ( item.getAmount() != startingAmt ) {
@@ -159,14 +181,15 @@ public class SortingChest extends MagicSign {
                             }
                             distChest.getInventory().setItem( i, item );
                         }
-
-                    } else if ( item != null ) {
-                        notFound++;
                     }
                 }
 
                 if ( movedItems > 0 || failedMoves > 0 || notFound > 0 ) {
-                    player.sendMessage( ChatColor.GREEN + "You have invoked " + signName + "!" );
+                    // Special effects!
+                    SpecialEffects.portalCollapse(signBlock.getLocation());
+                    player.playSound(player.getLocation(), Sound.ENTITY_EVOKER_PREPARE_WOLOLO, 3F, 2F);
+
+                    player.sendTitle( ChatColor.GREEN + signName + "!", "" );
                     String message = ChatColor.GREEN + "";
                     if ( movedItems > 0 ) message += String.valueOf( movedItems) + " item stack(s) were moved. ";
                     if ( leftoverItems > 0 ) message += String.valueOf( leftoverItems ) + " item stack(s) had leftover items. " ;
@@ -193,7 +216,7 @@ public class SortingChest extends MagicSign {
             return;
         }
 
-        lines[0] = "[" + ChatColor.DARK_PURPLE + "SortingChest" + ChatColor.BLACK + "]";
+        lines[0] = "[" + ChatColor.DARK_AQUA + "SortingChest" + ChatColor.BLACK + "]";
         lines[3] = "";
 
     }

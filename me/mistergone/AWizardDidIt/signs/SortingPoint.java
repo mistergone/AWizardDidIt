@@ -44,17 +44,18 @@ public class SortingPoint extends MagicSign {
         lines[0] = "[" + ChatColor.DARK_AQUA + "SortingPoint" + ChatColor.BLACK + "]";
         String secondLine = lines[1];
         if ( secondLine.equals( "" ) || secondLine.toLowerCase().equals( "automatic" ) ) {
-            lines[1] = ChatColor.LIGHT_PURPLE + "Automatic";
+            lines[1] = ChatColor.DARK_BLUE + "Automatic";
         } else {
             for ( int x = 1; x <= 3; x++ ) {
                 String line = lines[x];
                 line = line.trim().replace( " ", "_" );
                 if ( line.equals( "" ) ) continue;
+                if ( line.contains("*") ) continue;
                 if ( Material.matchMaterial( line.toUpperCase() ) == null ) {
                     p.sendMessage( "Could not find Material: " + line );
                     lines[x] = "";
                 } else {
-                    lines[x] = ChatColor.LIGHT_PURPLE + line.toLowerCase();
+                    lines[x] = ChatColor.DARK_BLUE + line.toLowerCase();
                 }
             }
         }
