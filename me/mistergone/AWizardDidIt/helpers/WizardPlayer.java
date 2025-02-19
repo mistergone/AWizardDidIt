@@ -141,6 +141,7 @@ public class WizardPlayer {
             this.spellTimers.get( spellName ).cancel();
         }
 
+        if ( timer < 5 ) timer = 5;
         BukkitTask task = Bukkit.getServer().getScheduler().runTaskLaterAsynchronously(
                 plugin,
                 new Runnable() {

@@ -58,7 +58,7 @@ public class WizardTransmute extends MagicPattern {
                 }
 
                 if ( matOne != null && matTwo != null && matThree != null ) {
-                    Bukkit.broadcastMessage("THIS PART WORK");
+                    // Complex transmute recipes
                 }
 
                 // Transmute each item

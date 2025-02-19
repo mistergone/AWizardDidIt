@@ -40,8 +40,13 @@ public class RainbowInTheDark extends MagicSpell {
                 int s = 1;
                 int c = 5;
 
+                if ( wizardPlayer.checkSpellCooldown("Rainbow") ) {
+                    wizardPlayer.sendTitle( "", "Rainbow in the Dark is on cooldown!");
+                    return;
+                }
                 if ( ( (double) sleeping + 1 ) / (double) playerCount >= .25 ){
                     if ( wizardPlayer.spendWizardPower( cost, spellName ) ) {
+                        wizardPlayer.addSpellCooldown( "Rainbow", 60 );
                         cryOutForMagic( player );
                         Bukkit.broadcastMessage( ChatColor.YELLOW + "There's no sign of the morning coming! There's no sign of the day!" );
                     }
