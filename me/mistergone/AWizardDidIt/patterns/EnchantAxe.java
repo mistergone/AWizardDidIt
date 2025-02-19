@@ -82,6 +82,7 @@ public class EnchantAxe extends ToolPattern {
                     if ( !Tag.LOGS.isTagged( choppedType ) &&
                          !Tag.CRIMSON_STEMS.isTagged( choppedType ) &&
                          !Tag.WARPED_STEMS.isTagged( choppedType ) &&
+                         !choppedType.toString().contains("MANGROVE_ROOTS") &&
                          choppedType != Material.MUSHROOM_STEM ) return;
 
                     Material leafType = null;
@@ -92,10 +93,14 @@ public class EnchantAxe extends ToolPattern {
                     } else if ( Tag.WARPED_STEMS.isTagged( choppedType ) ) {
                         leafType = Material.WARPED_WART_BLOCK;
                         shroomin = true;
+                    } else if ( choppedType.toString().contains("MANGROVE_ROOTS")) {
+                        choppedType = Material.MANGROVE_LOG;
+                        leafType = Material.MANGROVE_LEAVES;
                     } else if ( Tag.LOGS.isTagged( choppedType ) ) {
                         String leafString = choppedType.toString().substring( 0, choppedType.toString().length() -4 ) + "_LEAVES";
                         leafType = Material.valueOf( leafString );
                     }
+
                     ArrayList<Block> blocks = new ArrayList<>();
                     ArrayList<Block> leaves = new ArrayList<>();
                     player.playSound( player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, .3F, 2F  );
@@ -136,9 +141,13 @@ public class EnchantAxe extends ToolPattern {
                                     } else if ( choppedType == Material.MUSHROOM_STEM &&
                                             ( checkType == Material.RED_MUSHROOM_BLOCK ||
                                               checkType == Material.BROWN_MUSHROOM_BLOCK ) ) {
-                                        leaves.add(blockCheck);
+                                        blocks.add(blockCheck);
                                     } else if ( shroomin &&  checkType == Material.SHROOMLIGHT ) {
-                                        leaves.add(blockCheck);
+                                        blocks.add(blockCheck);
+                                    } else if ( shroomin && checkType == leafType) {
+                                        blocks.add(blockCheck);
+                                    } else if ( choppedType == Material.MANGROVE_LOG && checkType.toString().contains("MANGROVE_ROOTS") ) {
+                                        blocks.add( blockCheck );
                                     } else if ( leafType != null && checkType == leafType  ) {
                                         leaves.add( blockCheck );
                                     }
