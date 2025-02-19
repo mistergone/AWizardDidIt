@@ -72,7 +72,7 @@ public class WizardPlayer {
         this.lastDeathLocation = null;
 
         //set up wizardVaults
-        for( int i = 0; i < 10; i++ ) {
+        for( int i = 0; i < 12; i++ ) {
             wizardVaults.add( Bukkit.createInventory( this.player, 54 ) );
         }
     }
@@ -615,6 +615,7 @@ public class WizardPlayer {
             try {
                 fileConfiguration.load( playerDataFile );
                 String power = fileConfiguration.getString( "Wizard Power");
+                if ( power == null ) power = "0";
                 String wizard_exp = fileConfiguration.getString( "Wizard Exp");
                 if ( wizard_exp == null ) wizard_exp = "0";
                 String recent_wizard_exp = fileConfiguration.getString( "Recent Wizard Exp");
@@ -622,18 +623,14 @@ public class WizardPlayer {
                 String wizard_exp_cooldown = fileConfiguration.getString( "Wizard Exp Cooldown");
                 if ( wizard_exp_cooldown == null ) wizard_exp_cooldown = "0";
                 ConfigurationSection tCooldownsSect = fileConfiguration.getConfigurationSection("Transmute Cooldowns");
-                if ( tCooldownsSect != null ) {
-                    Set<String> transmuteCooldowns = tCooldownsSect.getKeys(false);
-                    for ( String t: transmuteCooldowns) {
-                        if ( t == null ) continue;
-                        Long cooldown = fileConfiguration.getLong( "Transmute Cooldowns." + t );
-                        addTransmuteCooldown( t, cooldown );
-                    }
-                }
                 List<String> activeSpells = fileConfiguration.getStringList( "Active Spells" );
+                if ( activeSpells == null ) activeSpells = new ArrayList<>();
                 List<ItemStack> list = (List<ItemStack>) fileConfiguration.getList("Death Items");
+                if ( list == null ) list = new ArrayList<>();
                 List<ItemStack> vaults = (List<ItemStack>) fileConfiguration.getList( "Wizard Vaults");
+                if ( vaults == null ) vaults = new ArrayList<>();
                 Location deathLoc = (Location) fileConfiguration.getLocation( "Last Death Location" );
+
                 try {
                     this.wizardPower = Integer.parseInt( power );
                     this.wizardExp = Integer.parseInt( wizard_exp );
@@ -642,6 +639,14 @@ public class WizardPlayer {
                     this.wizardExpCooldown = Long.parseLong( wizard_exp_cooldown );
                     if ( this.wizardExpCooldown == 0 ) {
                         this.wizardExpCooldown = System.currentTimeMillis();
+                    }
+                    if ( tCooldownsSect != null ) {
+                        Set<String> transmuteCooldowns = tCooldownsSect.getKeys(false);
+                        for ( String t: transmuteCooldowns) {
+                            if ( t == null ) continue;
+                            Long cooldown = fileConfiguration.getLong( "Transmute Cooldowns." + t );
+                            addTransmuteCooldown( t, cooldown );
+                        }
                     }
                     this.setLastDeathLocation( deathLoc );
                     for ( String str: activeSpells ) {

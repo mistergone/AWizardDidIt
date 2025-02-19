@@ -74,8 +74,8 @@ public class WizardVault extends MagicSign {
 
         if ( ( lines[1].equals( "" ) )  || Integer.valueOf( lines[1] ) < 1 ) {
             lines[1] = "1";
-        } else if ( Integer.valueOf( lines[1] ) > 10 ) {
-            lines[1] = "10";
+        } else if ( Integer.valueOf( lines[1] ) > 12 ) {
+            lines[1] = "12";
         }
 
 //        String command =  lines[2].toLowerCase();
