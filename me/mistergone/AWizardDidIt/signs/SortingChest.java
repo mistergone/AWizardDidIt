@@ -84,6 +84,7 @@ public class SortingChest extends MagicSign {
                     Sign sign = (Sign)b.getState();
                     String[] lines = sign.getSide(Side.FRONT).getLines();
                     Chest chest = (Chest) chestCheck.getState();
+                    if ( chest.getInventory().firstEmpty() == -1 ) continue;
                     if ( ChatColor.stripColor( lines[1] ).equals("Automatic") ) {
                         Inventory sorter = chest.getInventory();
                         for (  ItemStack i: sorter.getContents() ) {

@@ -1,5 +1,6 @@
 package me.mistergone.AWizardDidIt.helpers;
 
+import me.mistergone.AWizardDidIt.Wizardry;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
@@ -45,7 +46,9 @@ public class WandHelper {
     public static Boolean isActuallyAWand( ItemStack wandItem ) {
         Boolean isStick = wandItem.getType() == Material.STICK;
         int amt = wandItem.getAmount();
-        if ( !isStick  || amt > 1 ) {
+        if ( !isStick ) {
+            return false;
+        } else if ( wandItem.getAmount() > 1 ) {
             return false;
         } else {
             ItemMeta meta = wandItem.getItemMeta();
@@ -54,7 +57,7 @@ public class WandHelper {
                 hasWandLore = true;
             }
             Boolean hasEnchant = false;
-            if ( meta.getEnchantmentGlintOverride() == true ) {
+            if ( meta.hasEnchantmentGlintOverride() == true ) {
                 hasEnchant = true;
             }
             Boolean hasRarity = false;
@@ -72,20 +75,27 @@ public class WandHelper {
     public static void enchantWand( Player player, Block block ) {
         ItemStack magicWand = player.getInventory().getItemInMainHand();
         if ( WandHelper.isJustAStick( magicWand ) ) {
-            player.sendMessage(ChatColor.BLUE + "I see you have a taste for magic!");
-            ItemMeta meta = magicWand.getItemMeta();
-            meta.setEnchantmentGlintOverride( true );
-            meta.setRarity( ItemRarity.UNCOMMON );
-            ArrayList<String> lore = new ArrayList<String>();
-            lore.add( "A magic wand!" );
-            meta.setLore( lore );
-            meta.setDisplayName( "Magic Wand" );
-            magicWand.setItemMeta( meta );
+            player.sendTitle("", ChatColor.BLUE + "I see you have a taste for magic!");
+            magicWand = turnIntoWand( magicWand );
             player.getInventory().setItemInMainHand( magicWand );
             player.sendMessage( ChatColor.GOLD + "Your stick has been turned into a magic wand!");
+            Wizardry.getWizardry().getWizardPlayer( player.getUniqueId() ).setWizardLevel( 1 );
             SpecialEffects.magicPoof( block.getLocation() );
             player.playSound( player.getLocation(), Sound.BLOCK_BEACON_ACTIVATE, 1F, 1.5F  );
         }
+    }
+
+    public static ItemStack turnIntoWand( ItemStack stick ) {
+        ItemMeta meta = stick.getItemMeta();
+        meta.setEnchantmentGlintOverride( true );
+        meta.setRarity( ItemRarity.UNCOMMON );
+        ArrayList<String> lore = new ArrayList<String>();
+        lore.add( "A magic wand!" );
+        meta.setLore( lore );
+        meta.setDisplayName( "Magic Wand" );
+        meta.setMaxStackSize( 1 );
+        stick.setItemMeta( meta );
+        return stick;
     }
 
 }

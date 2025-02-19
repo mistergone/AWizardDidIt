@@ -34,8 +34,7 @@ public class MightyLeap extends MagicSpell {
                     wizardPlayer.addSpell( spellName );
 
                     if ( wizardPlayer.checkMsgCooldown( "Magic Leap" ) == false ) {
-                        player.sendMessage(ChatColor.DARK_GREEN + "You have invoked Mighty Leap! Safety is not guaranteed!");
-                        wizardPlayer.addMsgCooldown( "Magic Leap", 20 );
+                        wizardPlayer.spellAlert( spellName, ChatColor.DARK_GREEN + "Safety is not guaranteed!" );
                     }
 
                     player.playSound(player.getLocation(), Sound.ENTITY_SLIME_JUMP, .6F, .2F);

@@ -27,6 +27,7 @@ public class Incinerate extends MagicSpell {
             public void run() {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
+                wizardPlayer.spellAlert( spellName, "");
 
                 Vector v = new Vector();
                 int xFactor = 1;

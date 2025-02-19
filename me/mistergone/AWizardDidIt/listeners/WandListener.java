@@ -16,6 +16,7 @@ import org.bukkit.inventory.EquipmentSlot;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.BookMeta;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.util.Vector;
 
 import java.util.ArrayList;
@@ -28,7 +29,7 @@ public class WandListener implements Listener {
     }
 
     @EventHandler(priority=EventPriority.HIGH)
-    public void PlayerInteractEvent(PlayerInteractEvent e) {
+    public void PlayerInteractEvent(PlayerInteractEvent e) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         Player p = e.getPlayer();
         EquipmentSlot h = e.getHand();
         Action action = e.getAction();
@@ -193,15 +194,16 @@ public class WandListener implements Listener {
 
             // Message player with info.
             int wp = wizardPlayer.getWizardPower();
-            p.sendMessage( ChatColor.LIGHT_PURPLE + "You have " + String.valueOf( wp ) +
-                    " points of Wizard Power." );
-            p.sendMessage( ChatColor.YELLOW + "Your spawn location is at " + String.valueOf( spawn.getBlockX() ) +
+            p.sendTitle( "Wizard Level " + String.valueOf( wizardPlayer.getWizardLevel() ),
+                    ChatColor.LIGHT_PURPLE + "You have " + String.valueOf( wp ) +
+                    " points of Wizard Power.", 10, 20, 20 );
+            wizardPlayer.sendMsgWithCooldown( "spawn", ChatColor.YELLOW + "Your spawn location is at " + String.valueOf( spawn.getBlockX() ) +
                     ", " + String.valueOf( spawn.getBlockY() ) + ", " + String.valueOf( spawn.getBlockZ() ) +
-                    ChatColor.ITALIC + " (Follow the line of hearts.)");
+                    ChatColor.ITALIC + " (Follow the line of hearts.)", 60 );
             if ( dLoc != null ) {
-                p.sendMessage( ChatColor.RED + "Your last death was at " + String.valueOf( dLoc.getBlockX() ) +
+                wizardPlayer.sendMsgWithCooldown( "deathloc", ChatColor.RED + "Your last death was at " + String.valueOf( dLoc.getBlockX() ) +
                         ", " + String.valueOf( dLoc.getBlockY() ) + ", " + String.valueOf( dLoc.getBlockZ() ) +
-                        ChatColor.ITALIC + " (Follow the line of purple sparks.)");
+                        ChatColor.ITALIC + " (Follow the line of purple sparks.)", 60 );
             }
 
             return;

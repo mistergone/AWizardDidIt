@@ -39,7 +39,6 @@ public class ExpHelper {
         return totalExp;
     }
 
-
     public static Boolean spendExp( Player player, int amount ) {
         int total = getExpTotal( player );
         if ( total >= amount ) {

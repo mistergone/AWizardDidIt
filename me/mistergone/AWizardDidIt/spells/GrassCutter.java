@@ -34,8 +34,7 @@ public class GrassCutter extends MagicSpell {
                 WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
                 SpecialEffects.magicPoof( clickedBlock.getLocation() );
                 if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                    player.sendMessage(ChatColor.DARK_GREEN + "You have invoked " + spellName + "!" );
-                    wizardPlayer.addMsgCooldown( spellName, 20 );
+                    wizardPlayer.spellAlert( spellName, "" );
                 }
 
 

@@ -5,12 +5,12 @@ import me.mistergone.AWizardDidIt.baseClasses.MagicPattern;
 import me.mistergone.AWizardDidIt.baseClasses.PatternFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import me.mistergone.AWizardDidIt.helpers.WizardPlayer;
-import org.bukkit.ChatColor;
-import org.bukkit.Location;
-import org.bukkit.Material;
+import org.bukkit.*;
 import org.bukkit.block.Block;
 import org.bukkit.block.BlockFace;
+import org.bukkit.block.Chest;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.*;
@@ -24,7 +24,7 @@ public class WizardTransmute extends MagicPattern {
         keys = new Material[]{ Material.GOLD_INGOT };
         patterns =  new HashMap<>();
         patterns.put( "Wizard Dust", new String[]
-                {"ANY", "ANY", "ANY",
+                { "ANY", "ANY", "ANY",
                         "NONE", "GOLD_INGOT", "NONE",
                         "NONE", "NONE", "NONE"});
 
@@ -46,117 +46,207 @@ public class WizardTransmute extends MagicPattern {
                     return;
                 }
 
-                int itemSlot = 0;
-                ItemStack reagent = magicChest.getChest().getInventory().getItem( itemSlot );
-                while ( reagent == null && itemSlot <= 2 ) {
-                    itemSlot++;
-                    reagent = magicChest.getChest().getInventory().getItem( itemSlot );
-                }
-                if ( reagent == null ) {
-                    player.sendMessage( ChatColor.RED + "Wizard Transmute requires an item to be transmuted, which should be placed in the top row of the chest!");
+                Chest chest = magicChest.getChest();
+                Inventory inv = chest.getInventory();
+                // Check for transmute pattern
+                Material matOne = inv.getItem(0) != null ? inv.getItem(0).getType() : null;
+                Material matTwo = inv.getItem(1) != null ? inv.getItem(1).getType() : null;
+                Material matThree = inv.getItem(2) != null ? inv.getItem(2).getType() : null;
+                if ( matOne == null && matTwo == null && matThree == null ) {
+                    player.sendMessage( ChatColor.RED + "Wizard Transmute requires an item to be transmuted, which should be placed in the top three slots of the chest!");
                     return;
                 }
 
-                WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-                String message = ChatColor.GOLD + "You have transmuted ";
-                String error = null;
-
-                switch ( reagent.getType() ) {
-                    case BONE_MEAL:
-                        if ( reagent.getAmount() < 3 ) {
-                            error = "It takes at least 3 bone meal to transmute!";
-                            break;
-                        }
-                        if ( !wizardPlayer.spendWizardPower( 50 , patternName ) ) return;
-                        reagent.setAmount( reagent.getAmount() - 3 );
-                        ItemStack dust = new ItemStack( Material.GLOWSTONE_DUST );
-                        dust.setAmount( 1 );
-                        player.getWorld().dropItem( player.getLocation(), dust );
-                        message += "3 bone meal into 1 glowstone dust!";
-                        break;
-                    case COBBLESTONE:
-                        if ( !wizardPlayer.spendWizardPower( 10 , patternName ) ) return;
-                        message += transmuteCobble( magicChest, itemSlot, player );
-                        break;
-                    case ROTTEN_FLESH:
-                        if ( !wizardPlayer.spendWizardPower( 75 , patternName ) ) return;
-                        message += transmuteRottenFlesh( magicChest, itemSlot, player );
-                        break;
-                    case BOW:
-                    case CROSSBOW:
-                    case TRIDENT:
-                    case WOODEN_AXE:
-                    case STONE_AXE:
-                    case IRON_AXE:
-                    case GOLDEN_AXE:
-                    case DIAMOND_AXE:
-                    case NETHERITE_AXE:
-                    case WOODEN_HOE:
-                    case STONE_HOE:
-                    case IRON_HOE:
-                    case GOLDEN_HOE:
-                    case DIAMOND_HOE:
-                    case NETHERITE_HOE:
-                    case WOODEN_PICKAXE:
-                    case STONE_PICKAXE:
-                    case IRON_PICKAXE:
-                    case GOLDEN_PICKAXE:
-                    case DIAMOND_PICKAXE:
-                    case NETHERITE_PICKAXE:
-                    case WOODEN_SHOVEL:
-                    case STONE_SHOVEL:
-                    case IRON_SHOVEL:
-                    case GOLDEN_SHOVEL:
-                    case DIAMOND_SHOVEL:
-                    case NETHERITE_SHOVEL:
-                    case WOODEN_SWORD:
-                    case STONE_SWORD:
-                    case IRON_SWORD:
-                    case GOLDEN_SWORD:
-                    case DIAMOND_SWORD:
-                    case NETHERITE_SWORD:
-                        message += transmuteTool( magicChest, itemSlot, player );
-                        break;
-                    case LEATHER_BOOTS:
-                    case LEATHER_CHESTPLATE:
-                    case LEATHER_HELMET:
-                    case LEATHER_LEGGINGS:
-                    case CHAINMAIL_BOOTS:
-                    case CHAINMAIL_CHESTPLATE:
-                    case CHAINMAIL_HELMET:
-                    case CHAINMAIL_LEGGINGS:
-                    case IRON_BOOTS:
-                    case IRON_CHESTPLATE:
-                    case IRON_HELMET:
-                    case IRON_LEGGINGS:
-                    case GOLDEN_BOOTS:
-                    case GOLDEN_CHESTPLATE:
-                    case GOLDEN_HELMET:
-                    case GOLDEN_LEGGINGS:
-                    case DIAMOND_BOOTS:
-                    case DIAMOND_CHESTPLATE:
-                    case DIAMOND_HELMET:
-                    case DIAMOND_LEGGINGS:
-                    case NETHERITE_BOOTS:
-                    case NETHERITE_CHESTPLATE:
-                    case NETHERITE_HELMET:
-                    case NETHERITE_LEGGINGS:
-                        message += transmuteArmor( magicChest, itemSlot, player );
-                        break;
-                    default:
-                        error = "The item above the gold ingot in this chest is not transmutable!";
+                if ( matOne != null && matTwo != null && matThree != null ) {
+                    Bukkit.broadcastMessage("THIS PART WORK");
                 }
 
-                if ( error != null ) {
-                    player.sendMessage( ChatColor.RED + error );
-                } else {
-                    player.sendMessage( message );
-                    Location loc = magicChest.getChest().getLocation().add(0, 1, 0);
-                    SpecialEffects.magicChest(loc);
+                // Transmute each item
+                for ( int i =0; i < 3; i++ ) {
+                    ItemStack reagent = inv.getItem( i );
+                    if ( reagent != null ) {
+                        transmuteSlot( magicChest, i, player );
+                    }
                 }
-
             }
         };
+    }
+
+    private void transmuteSlot( MagicChest magicChest, int itemSlot, Player player ) {
+        WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
+        String message = ChatColor.GOLD + "You have transmuted ";
+        String error = null;
+        ItemStack reagent = magicChest.getChest().getInventory().getItem( itemSlot );
+        HashMap<Material,Integer> totals = new HashMap<>();
+        int count = 0;
+        int index = 0;
+
+        switch ( reagent.getType() ) {
+            case BONE_MEAL:
+                if ( reagent.getAmount() < 3 ) {
+                    error = "It takes at least 3 bone meal to transmute!";
+                    break;
+                }
+
+                int mealCount = 0;
+                int dustCount = 0;
+                while (reagent.getAmount() > 2 ) {
+                    if ( !wizardPlayer.spendWizardPower( 25 , patternName ) ) break;
+                    reagent.setAmount( reagent.getAmount() - 3 );
+                    ItemStack dust = new ItemStack( Material.GLOWSTONE_DUST );
+                    dust.setAmount( 1 );
+                    player.getWorld().dropItem( player.getLocation(), dust );
+                    mealCount += 3;
+                    dustCount++;
+                }
+                message += String.valueOf(mealCount) + " bone meal into " + String.valueOf(dustCount)
+                    + " glowstone dust!";
+                break;
+            case FLINT:
+                int flintCount = 0;
+                while ( reagent.getAmount() > 0 ) {
+                    if ( !wizardPlayer.spendWizardPower( 10 , patternName ) ) break;
+                    reagent.setAmount(reagent.getAmount() - 1 );
+                    ItemStack gravel = new ItemStack( Material.GRAVEL );
+                    gravel.setAmount(1);
+                    flintCount++;
+                    player.getWorld().dropItem( player.getLocation(), gravel );
+                }
+                String amt = String.valueOf( flintCount );
+                message += amt + " flint into " + amt + " gravel";
+                break;
+            case COBBLESTONE:
+                totals = new HashMap<>();
+                count = 0;
+                while ( reagent.getAmount() > 0 ) {
+                    if ( !wizardPlayer.spendWizardPower( 5 , patternName ) ) break;
+                    Material mat = transmuteCobble();
+                    if ( totals.containsKey( mat ) ) {
+                        totals.put( mat, totals.get(mat) + 1 );
+                    } else {
+                        totals.put( mat, 1 );
+                    }
+                    reagent.setAmount( reagent.getAmount() - 1);
+                    count++;
+                }
+                message += String.valueOf( count ) + " cobblestone into ";
+                index = 0;
+                for ( Map.Entry<Material, Integer> m: totals.entrySet()) {
+                    Material mat = m.getKey();
+                    ItemStack i = new ItemStack( mat );
+                    i.setAmount( m.getValue() );
+                    player.getWorld().dropItem( player.getLocation(), i );
+                    if ( index > 0 ) message += ", ";
+                    if ( index == totals.size() - 1 ) message += " and ";
+                    message += String.valueOf( m.getValue() ) + " "
+                            + m.getKey().toString().toLowerCase().replace( "_", " ");
+                    if ( index == totals.size() - 1 ) message += ".";
+                    index++;
+                }
+                break;
+            case ROTTEN_FLESH:
+                totals = new HashMap<>();
+                count = 0;
+
+                while ( reagent.getAmount() > 0 ) {
+                    if ( !wizardPlayer.spendWizardPower( 25 , patternName ) ) break;
+                    Material mat = transmuteRottenFlesh();
+                    if ( totals.containsKey( mat ) ) {
+                        totals.put( mat, totals.get(mat) + 1 );
+                    } else {
+                        totals.put( mat, 1 );
+                    }
+                    reagent.setAmount( reagent.getAmount() - 1);
+                    count++;
+                }
+                message += String.valueOf( count ) + " rotten flesh into ";
+                index = 0;
+                for ( Map.Entry<Material, Integer> m: totals.entrySet()) {
+                    Material mat = m.getKey();
+                    ItemStack i = new ItemStack( mat );
+                    i.setAmount( m.getValue() );
+                    player.getWorld().dropItem( player.getLocation(), i );
+                    if ( index > 0 ) message += ", ";
+                    if ( index == totals.size() - 1 ) message += " and ";
+                    message += String.valueOf( m.getValue() ) + " "
+                            + m.getKey().toString().toLowerCase().replace( "_", " ");
+                    if ( index == totals.size() - 1 ) message += ".";
+                    index++;
+                }
+                break;
+            case BOW:
+            case CROSSBOW:
+            case TRIDENT:
+            case WOODEN_AXE:
+            case STONE_AXE:
+            case IRON_AXE:
+            case GOLDEN_AXE:
+            case DIAMOND_AXE:
+            case NETHERITE_AXE:
+            case WOODEN_HOE:
+            case STONE_HOE:
+            case IRON_HOE:
+            case GOLDEN_HOE:
+            case DIAMOND_HOE:
+            case NETHERITE_HOE:
+            case WOODEN_PICKAXE:
+            case STONE_PICKAXE:
+            case IRON_PICKAXE:
+            case GOLDEN_PICKAXE:
+            case DIAMOND_PICKAXE:
+            case NETHERITE_PICKAXE:
+            case WOODEN_SHOVEL:
+            case STONE_SHOVEL:
+            case IRON_SHOVEL:
+            case GOLDEN_SHOVEL:
+            case DIAMOND_SHOVEL:
+            case NETHERITE_SHOVEL:
+            case WOODEN_SWORD:
+            case STONE_SWORD:
+            case IRON_SWORD:
+            case GOLDEN_SWORD:
+            case DIAMOND_SWORD:
+            case NETHERITE_SWORD:
+            case FISHING_ROD:
+                message += transmuteTool( magicChest, itemSlot, player );
+                break;
+            case LEATHER_BOOTS:
+            case LEATHER_CHESTPLATE:
+            case LEATHER_HELMET:
+            case LEATHER_LEGGINGS:
+            case CHAINMAIL_BOOTS:
+            case CHAINMAIL_CHESTPLATE:
+            case CHAINMAIL_HELMET:
+            case CHAINMAIL_LEGGINGS:
+            case IRON_BOOTS:
+            case IRON_CHESTPLATE:
+            case IRON_HELMET:
+            case IRON_LEGGINGS:
+            case GOLDEN_BOOTS:
+            case GOLDEN_CHESTPLATE:
+            case GOLDEN_HELMET:
+            case GOLDEN_LEGGINGS:
+            case DIAMOND_BOOTS:
+            case DIAMOND_CHESTPLATE:
+            case DIAMOND_HELMET:
+            case DIAMOND_LEGGINGS:
+            case NETHERITE_BOOTS:
+            case NETHERITE_CHESTPLATE:
+            case NETHERITE_HELMET:
+            case NETHERITE_LEGGINGS:
+                message += transmuteArmor( magicChest, itemSlot, player );
+                break;
+            default:
+                error = reagent.getType().toString() + " is not transmutable!";
+        }
+
+        if ( error != null ) {
+            player.sendMessage( ChatColor.RED + error );
+        } else {
+            player.sendMessage( message );
+            Location loc = magicChest.getChest().getLocation().add(0, 1, 0);
+            SpecialEffects.magicChest(loc);
+        }
     }
 
     private String transmuteArmor (MagicChest magicChest, int itemSlot, Player player) {
@@ -221,52 +311,39 @@ public class WizardTransmute extends MagicPattern {
         return message + "!";
     }
 
-    private String transmuteCobble (MagicChest magicChest, int itemSlot, Player player) {
-        ItemStack target = magicChest.getChest().getInventory().getItem( itemSlot );
+    private Material transmuteCobble () {
         Random seed = new Random();
+        Material mat = Material.BLACKSTONE;
         int r = seed.nextInt( 100 ) + 1;
-        ItemStack mat = new ItemStack( Material.BLACKSTONE );
-        mat.setAmount( 1 );
         if ( r > 10 && r <= 32 ) {
-            mat.setType( Material.ANDESITE );
+            mat = Material.ANDESITE;
         } else if ( r <= 54 ) {
-            mat.setType( Material.DIORITE );
+            mat = Material.DIORITE;
         } else if ( r <= 76 ) {
-            mat.setType( Material.GRANITE );
+            mat = Material.GRANITE;
         } else if ( r <= 98 ) {
-            mat.setType( Material.COBBLED_DEEPSLATE );
+            mat = Material.COBBLED_DEEPSLATE;
         } else if ( r > 99  ) {
-            mat.setType( Material.QUARTZ );
+            mat = Material.QUARTZ;
         }
-        player.getWorld().dropItem( player.getLocation(), mat );
-        target.setAmount( target.getAmount() - 1 );
-        return "cobblestone into " + mat.getType().toString().toLowerCase().replace( "_", " ") + "!";
+        return mat;
     }
 
 
 
-    private String transmuteRottenFlesh(MagicChest magicChest, int itemSlot, Player player ) {
-        String message = "";
-        WizardPlayer wizardPlayer = getWizardry().getWizardPlayer( player.getUniqueId() );
-        ItemStack target = magicChest.getChest().getInventory().getItem( itemSlot );
-        target.setAmount( target.getAmount() - 1 );
-        ItemStack meat = new ItemStack( Material.PORKCHOP );
-        meat.setAmount( 1 );
-        message += "rotten flesh into ";
-        String meatType = "raw pork";
+    private Material transmuteRottenFlesh() {
+        Material mat = Material.PORKCHOP;
         Random seed = new Random();
         int r = seed.nextInt( 100 ) + 1;
-        if ( r > 50 && r <= 85 ) {
-            meat.setType( Material.BEEF );
-            meatType = "raw beef";
-        } else if ( r > 85 ) {
-            meat.setType( Material.CHICKEN );
-            meatType = "raw chicken";
+        if ( r > 50 && r <= 80 ) {
+            mat = Material.BEEF;
+        } else if ( r > 80 && r <= 90  ) {
+            mat = Material.CHICKEN;
+        } else if ( r > 90 ) {
+            mat = Material.MUTTON;
         }
-        message += meatType + "!";
-        player.getWorld().dropItem( player.getLocation(), meat );
 
-        return message;
+        return mat;
     }
 
     private String transmuteTool(MagicChest magicChest, int itemSlot, Player player ) {
@@ -283,17 +360,16 @@ public class WizardTransmute extends MagicPattern {
             msgs.add( String.valueOf( r ) + " prismarine shards" );
             ingredientString = type.toLowerCase() + " ";
         }
-        if ( type.contains( "BOW" ) ) {
+        if ( type.contains( "BOW" ) || type.contains("FISHING_ROD") ) {
             Random seed = new Random();
             int r = seed.nextInt( 2 ) + 1;
-
             ItemStack string = new ItemStack( Material.STRING );
             string.setAmount( r );
             player.getWorld().dropItem( player.getLocation(), string );
             msgs.add( String.valueOf( r ) + " piece(s) of string" );
             ingredientString = type.toLowerCase() + " ";
         }
-        if ( !type.contains( "BOW") && !type.equals( "TRIDENT" ) ) {
+        if ( !type.contains( "BOW") && !type.contains("FISHING_ROD") && !type.equals( "TRIDENT" ) ) {
             Random seed = new Random();
             int bound = getItemMatMax( type );
             int r = seed.nextInt( bound ) + 1;
@@ -321,7 +397,7 @@ public class WizardTransmute extends MagicPattern {
             msgs.add( String.valueOf( r ) + matString );
         }
         if ( type.contains( "AXE" ) || type.contains( "HOE" ) || type.contains( "PICKAXE") || type.contains( "SHOVEL" )
-                || type.contains( "SWORD") ) {
+                || type.contains( "SWORD") || type.contains("BOW") || type.contains("FISHING_ROD") ) {
             Random seed = new Random();
             int bound = 2;
             if ( type.contains( "SWORD" ) ) bound = 1;
@@ -331,11 +407,11 @@ public class WizardTransmute extends MagicPattern {
                 stick.setAmount( r );
                 player.getWorld().dropItem( player.getLocation(), stick );
                 msgs.add( String.valueOf( r ) + " stick(s)" );
-
             }
-            String split[] = type.split( "_" );
-            ingredientString += split[1].toLowerCase() + " ";
+            String ing = type.contains("_") ? type.split( "_" )[1] : "";
+            ingredientString += ing.toLowerCase() + " ";
         }
+
         if ( target.getEnchantments().size() > 0 ) {
             Random seed = new Random();
             int r = seed.nextInt( 2 ) + 1;
@@ -352,7 +428,7 @@ public class WizardTransmute extends MagicPattern {
                 message += ", ";
             }
             if ( iter.nextIndex() > 0 && iter.nextIndex() + 1 == msgs.size() ) {
-                message += "and ";
+                message += " and ";
             }
             message += iter.next();
         }

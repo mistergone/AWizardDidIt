@@ -43,13 +43,11 @@ public class FreezeOver extends MagicSpell {
                         }
                         SpecialEffects.magicPoof( targetBlock.getLocation() );
                         if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                            player.sendMessage(ChatColor.BLUE + "You have invoked " + spellName + "!");
-                            wizardPlayer.addMsgCooldown( spellName, 30 );
+                            wizardPlayer.spellAlertWithCooldown( spellName, "",10 );
                         }
                     } else {
                         if ( wizardPlayer.checkMsgCooldown( spellName + " (warn)" ) == false ) {
-                            player.sendMessage(ChatColor.DARK_BLUE + "Freeze Over does not work underwater!");
-                            wizardPlayer.addMsgCooldown( spellName + " (warn)", 30 );
+                            player.sendTitle("", ChatColor.RED + "Freeze Over does not work underwater!");
                         }
                     }
                 }

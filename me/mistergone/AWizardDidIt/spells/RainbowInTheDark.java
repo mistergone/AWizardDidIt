@@ -24,7 +24,7 @@ public class RainbowInTheDark extends MagicSpell {
             @Override
             public void run() {
                 if ( player.getWorld().getTime() < 13000 ) {
-                    player.sendMessage(ChatColor.YELLOW + "It is too early to use this spell!" );
+                    player.sendTitle("", ChatColor.YELLOW + "It is too early to use this spell!" );
                     return;
                 }
 

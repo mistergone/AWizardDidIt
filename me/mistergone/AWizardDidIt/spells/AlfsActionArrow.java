@@ -16,7 +16,7 @@ public class AlfsActionArrow extends MagicSpell {
 
     public AlfsActionArrow() {
         spellName = "Alf's Action Arrow";
-        cost = 10;
+        cost = 40;
         int throwCost = 1;
         reagents = new ArrayList<String>();
         reagents.add("ARROW");
@@ -37,9 +37,7 @@ public class AlfsActionArrow extends MagicSpell {
                     } else {
                         wizardPlayer.setSpellTimer( spellName, 20 );
                     }
-                    wizardPlayer.sendMsgWithCooldown( spellName,
-                            ChatColor.LIGHT_PURPLE + "You have invoked " + spellName + "!",
-                            5 );
+                    wizardPlayer.spellAlertWithCooldown( spellName, "",5 );
 
                     player.playSound(player.getLocation(), Sound.ENTITY_ARROW_SHOOT, .6F, .1F);
                     Vector v = new Vector();

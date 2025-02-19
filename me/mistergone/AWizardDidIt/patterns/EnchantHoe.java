@@ -77,10 +77,13 @@ public class EnchantHoe extends ToolPattern {
                 crops.put( Material.POTATO, Material.POTATOES );
                 crops.put( Material.WHEAT_SEEDS, Material.WHEAT );
                 crops.put( Material.BEETROOT_SEEDS, Material.BEETROOTS );
+                crops.put( Material.PUMPKIN_SEEDS, Material.PUMPKIN );
+                crops.put( Material.MELON_SEEDS , Material.MELON );
 
                 ItemStack offHand = playerInteractEvent.getPlayer().getInventory().getItemInOffHand();
 
-                Boolean targetFarm = playerInteractEvent.getClickedBlock().getType() == Material.FARMLAND;
+                Material targetType = playerInteractEvent.getClickedBlock().getType();
+                Boolean targetFarm =  targetType == Material.FARMLAND;
                 Boolean hasCrop = crops.keySet().contains( offHand.getType() );
                 Boolean targetCrop = crops.values().contains( playerInteractEvent.getClickedBlock().getType() );
 
@@ -110,7 +113,10 @@ public class EnchantHoe extends ToolPattern {
                             }
 
                             if ( belowAir && isFarmland && hasItems ) {
-                                block.getRelative( BlockFace.UP ).setType( crops.get( offHand.getType() ) ) ;
+                                Material newType = crops.get( offHand.getType() );
+                                if ( newType == Material.PUMPKIN ) newType = Material.PUMPKIN_STEM;
+                                if ( newType == Material.MELON ) newType = Material.MELON_STEM;
+                                block.getRelative( BlockFace.UP ).setType( newType ) ;
                                 if ( offHand.getAmount() > 1 ) {
                                     offHand.setAmount( offHand.getAmount() - 1 );
                                 } else if ( offHand.getAmount() == 1 ) {
@@ -122,6 +128,9 @@ public class EnchantHoe extends ToolPattern {
                                 block.breakNaturally();
                             }
 
+                        }
+                        if ( !isFarmland && !isCrop ) {
+                            break;
                         }
                         block = block.getRelative( newFace );
                     }

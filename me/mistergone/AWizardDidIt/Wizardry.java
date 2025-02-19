@@ -7,7 +7,6 @@ import me.mistergone.AWizardDidIt.signs.*;
 import me.mistergone.AWizardDidIt.signs.SortingChest;
 import me.mistergone.AWizardDidIt.spells.*;
 import org.bukkit.Material;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
@@ -20,6 +19,7 @@ public class Wizardry {
     private Map< UUID, WizardPlayer> wizardList;
     private Map< String, MagicSpell> spellList;
     private Map< Material, MagicPattern> patternList;
+    private Map< Material, CraftPattern> craftPatternList;
     private Map< String, MagicSign> signList;
     private ArrayList<String> reagentList;
     Map< String, ToolPattern> toolLoreMap;
@@ -30,6 +30,7 @@ public class Wizardry {
         this.spellList = new HashMap< String, MagicSpell>();
         this.patternList = new HashMap< Material, MagicPattern>();
         this.signList = new HashMap< String, MagicSign>();
+        this.craftPatternList = new HashMap< Material, CraftPattern>();
         this.toolLoreMap = new HashMap<>();
         this.weaponLoreMap = new HashMap<>();
         this.reagentList = new ArrayList<>();
@@ -37,6 +38,7 @@ public class Wizardry {
         this.addWeaponLore();
         this.addSpells();
         this.addPatterns();
+        this.addCraftPatterns();
         this.addSigns();
         getUnseenPM().loadUnseenProjectList();
     }
@@ -47,6 +49,10 @@ public class Wizardry {
 
     public MagicPattern getMagicPattern( Material key ) {
         return patternList.get( key );
+    }
+
+    public CraftPattern getCraftPattern( Material key ) {
+        return craftPatternList.get( key );
     }
 
     public MagicSpell getMagicSpell( String reagent ) {
@@ -113,7 +119,7 @@ public class Wizardry {
         spellRegistry.add( new XomirsQuiver() );
 
         for ( MagicSpell spell : spellRegistry ) {
-            for ( String reagent : spell.reagents ) {
+            for ( String reagent : spell.getReagents() ) {
                 this.spellList.put( reagent, spell );
                 this.reagentList.add( reagent );
             }
@@ -146,6 +152,18 @@ public class Wizardry {
             }
         }
 
+    }
+
+    private void addCraftPatterns() {
+        ArrayList<CraftPattern> craftPatternRegistry = new ArrayList<>();
+        craftPatternRegistry.add( new CraftWand() );
+
+        for ( CraftPattern craftPattern: craftPatternRegistry ) {
+            Material[] keys = craftPattern.getKeys();
+            for ( Material m : keys ) {
+                this.craftPatternList.put( m, craftPattern );
+            }
+        }
     }
 
     private void addSigns() {

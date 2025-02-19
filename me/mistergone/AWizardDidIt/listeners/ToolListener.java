@@ -38,6 +38,7 @@ public class ToolListener implements Listener {
                     if ( toolPattern != null ) {
                         try {
                             ToolFunction toolFunction = toolPattern.getToolFunction();
+                            if ( toolFunction == null ) return;
                             toolFunction.tool = main;
                             toolFunction.blockBreakEvent = e;
                             toolFunction.player = p;

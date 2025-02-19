@@ -62,14 +62,11 @@ public class LampLighter extends MagicSpell {
                             player.getInventory().setItemInOffHand( null );
                         }
 
-                        wizardPlayer.sendMsgWithCooldown( spellName,
-                                ChatColor.GOLD + "You have invoked Lamp Lighter! A torch has been placed in a dark spot.",
-                                5 );
+                        wizardPlayer.spellAlert( spellName, "");
                         SpecialEffects.flamesEffect( loc );
                     } else {
-                        wizardPlayer.sendMsgWithCooldown( spellName + " (Error)",
-                                ChatColor.RED + "Lamp Lighter failed! No valid torch spot was found in range!",
-                                1 );
+                        wizardPlayer.spellAlert( "", "");
+                        wizardPlayer.spellAlert( "", ChatColor.RED + "Lamp Lighter failed! No valid torch spot was found in range!" );
                     }
                 }
             }

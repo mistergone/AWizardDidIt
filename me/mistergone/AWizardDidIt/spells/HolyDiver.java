@@ -37,8 +37,7 @@ public class HolyDiver extends MagicSpell {
                   if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
 
                   if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                      player.sendMessage(ChatColor.BLUE + "You have invoked Holy Diver! You've been down too long in the midnight sea!");
-                      wizardPlayer.addMsgCooldown( spellName, 20 );
+                      wizardPlayer.spellAlert( spellName, "You've been down too long in the midnight sea!" );
                   }
 
                   // First, give the player a boost of speed

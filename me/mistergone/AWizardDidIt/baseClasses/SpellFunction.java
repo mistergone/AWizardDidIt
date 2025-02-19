@@ -3,6 +3,7 @@ package me.mistergone.AWizardDidIt.baseClasses;
 import me.mistergone.AWizardDidIt.baseClasses.MagicFunction;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Entity;
+import org.bukkit.entity.Item;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -11,6 +12,8 @@ public class SpellFunction extends MagicFunction {
     public Block clickedBlock;
     public Entity clickedEntity;
     public PlayerInteractEvent event;
+
+    public SpellFunction() {}
 
     public Boolean expendReagent() {
         ItemStack offhand = player.getInventory().getItemInOffHand();

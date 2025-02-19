@@ -5,6 +5,7 @@ import me.mistergone.AWizardDidIt.baseClasses.MagicSpell;
 import me.mistergone.AWizardDidIt.baseClasses.SpellFunction;
 import me.mistergone.AWizardDidIt.helpers.SpecialEffects;
 import org.bukkit.*;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.IronGolem;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +23,7 @@ public class Recyclotron extends MagicSpell {
         spellFunction = new SpellFunction() {
             @Override
             public void run() {
-                if ( event == null || !(clickedEntity instanceof IronGolem) ) return;
+                if ( clickedEntity == null || !(clickedEntity.getType() == EntityType.IRON_GOLEM ) ) return;
                 Location loc = clickedEntity.getLocation();
                 ItemStack i = new ItemStack(Material.IRON_INGOT);
                 Random rand = new Random();

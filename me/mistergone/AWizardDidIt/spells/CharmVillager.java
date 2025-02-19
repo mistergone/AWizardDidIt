@@ -23,7 +23,7 @@ public class CharmVillager extends MagicSpell {
 
     public CharmVillager() {
         spellName = "Charm Villager";
-        cost = 50;
+        cost = 100;
         int bribeCost = 1;
         reagents = new ArrayList<String>();
         reagents.add( "EMERALD" );
@@ -46,7 +46,7 @@ public class CharmVillager extends MagicSpell {
                       if (uses == max) {
                           recipe.setMaxUses(recipe.getMaxUses() + 5);
                           reagent.setAmount( reagent.getAmount() - bribeCost);
-                          player.sendMessage(ChatColor.AQUA + "You have charmed a villager!");
+                          wizardPlayer.spellAlert( spellName, "");
                           Location loc = villager.getLocation();loc.add(.5, 0, .5);
                           double theta = 0;
                           double radius = .2;
@@ -64,7 +64,7 @@ public class CharmVillager extends MagicSpell {
                       }
                   }
               } else if ( reagent.getAmount() < bribeCost ) {
-                  player.sendMessage( ChatColor.RED + "You don't have the emerald in your offhand needed to charm villagers." );
+                  player.sendTitle( "",ChatColor.RED + "You don't have the emeralds in your offhand needed to charm villagers." );
                   return;
               }
 

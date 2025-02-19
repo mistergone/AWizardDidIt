@@ -91,7 +91,7 @@ public class DamageListener implements Listener {
     }
 
     @EventHandler
-    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) {
+    public void onEntityDamageByEntity(EntityDamageByEntityEvent event) throws ClassNotFoundException, InstantiationException, IllegalAccessException {
         if ( event.getCause() == EntityDamageEvent.DamageCause.PROJECTILE ) {
             Projectile projectile = (Projectile) event.getDamager();
             if ( !( projectile.getShooter() instanceof Player ) ) return;

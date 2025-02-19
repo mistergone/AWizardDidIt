@@ -1,6 +1,5 @@
 package me.mistergone.AWizardDidIt.helpers;
 
-import com.mysql.fabric.xmlrpc.base.Array;
 import me.mistergone.AWizardDidIt.AWizardDidIt;
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
@@ -9,18 +8,18 @@ import org.bukkit.block.BlockFace;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.scheduler.BukkitTask;
+import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.Team;
 
 import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class WizardPlayer {
     Player player;
@@ -29,6 +28,7 @@ public class WizardPlayer {
     ArrayList<Inventory> wizardVaults;
     Map< String, Long > messageCooldowns;
     Map< String, Long > spellCooldowns;
+    Map< String, Long > transmuteCooldowns;
     BossBar wizardBar;
     AWizardDidIt plugin;
     BukkitTask wizardBarTimer;
@@ -43,11 +43,16 @@ public class WizardPlayer {
     long lastSaved;
 
     int wizardPower;
+    int wizardLevel;
+    int wizardExp;
+    int recentWizardExp;
+    long wizardExpCooldown;
 
     public WizardPlayer( Player p ) {
         this.player = p;
         this.activeSpells = new ArrayList<>();
         this.spellCooldowns = new HashMap<>();
+        this.transmuteCooldowns = new HashMap<>();
         this.messageCooldowns = new HashMap<>();
         this.deathItems = new ArrayList<>();
         this.wizardVaults = new ArrayList<>();
@@ -58,6 +63,10 @@ public class WizardPlayer {
         this.spellTimers = new HashMap<>();
         this.plugin = (AWizardDidIt)Bukkit.getServer().getPluginManager().getPlugin("AWizardDidIt");
         this.lastSaved = System.currentTimeMillis();
+        this.wizardLevel = 0;
+        this.wizardExp = 0;
+        this.recentWizardExp = 0;
+        this.wizardExpCooldown = 0;
         this.wizardToolUses = 0;
         this.lastKnownLocation = player.getLocation();
         this.lastDeathLocation = null;
@@ -167,6 +176,51 @@ public class WizardPlayer {
     }
 
     /**
+     * Send title and add cooldown
+     * @param key (String) A short string for the message "key"
+     * @param title (String) The title
+     * @param subtitle (String) The subtitle
+     * @param cooldown (long) The cooldown in seconds
+     * @return Boolean True if the message was sent, false if it's on cooldow
+     */
+    public Boolean sendTitleWithCooldown( String key, String title, String subtitle, long cooldown ) {
+        if ( !checkMsgCooldown( key ) ) {
+            player.sendTitle( title, subtitle, 5, 20 , 5 );
+            addMsgCooldown( key, cooldown );
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Alert player when a spell is cast
+     * @param spellname (String) spell name, displayed as Title
+     * @param message (String) message, for subtitle
+     */
+    public void spellAlert( String spellname, String message ) {
+        player.sendTitle( ChatColor.AQUA + spellname, ChatColor.DARK_AQUA + message, 5, 20, 5 );
+    }
+
+    /**
+     * Alert player when a spell is cast
+     * @param spellname (String) spell name, displayed as Title, used for key
+     * @param message (String) message, for subtitle
+     * @param cooldown (long) The cooldown in seconds
+     */
+    public Boolean spellAlertWithCooldown( String spellname, String message, long cooldown ) {
+        if ( !checkMsgCooldown( spellname ) ) {
+            player.sendTitle( ChatColor.AQUA + spellname + "!", ChatColor.DARK_AQUA + message, 5, 30, 5 );
+            addMsgCooldown( spellname, cooldown );
+            return true;
+        } else {
+            return false;
+        }
+
+
+    }
+
+    /**
      * Set a message cooldown for a spell
      * @param name The name (String) associated with the spell message
      * @param l The time (in seconds) to wait before sending the spell message again
@@ -211,6 +265,8 @@ public class WizardPlayer {
             return false;
         }
     }
+
+    /******** SPELL COOLDOWNS ***********/
 
     /**
      * Set a spell cooldown
@@ -258,7 +314,71 @@ public class WizardPlayer {
         }
     }
 
+    /********* TRANSMUTE COOLDOWNS **************/
+    /**
+     * Set a transmute cooldown
+     * @param name The name (String) of the transmute
+     * @param l The time (in seconds) to wait before the spell can be cast again
+     */
+    public void addTransmuteCooldown( String name, long l ) {
+        this.transmuteCooldowns.put(
+                name,
+                System.currentTimeMillis() + ( l * 1000 )
+        );
+    }
 
+    /**
+     * Check if a transmute is on cooldown.
+     * NOTE: This method will also remove the entry from the array if the cooldown has passed.
+     * @param name The name (String) of the transmute
+     * @return True if the transmute is on cooldown, false if it is not
+     */
+    public Boolean checkTransmuteCooldown( String name ) {
+        if ( this.transmuteCooldowns.containsKey( name ) ) {
+            long expiration = this.transmuteCooldowns.get(name);
+            if ( expiration < System.currentTimeMillis() ) {
+                this.transmuteCooldowns.remove( name );
+                return false;
+            } else {
+                return true;
+            }
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Remove a transmute cooldown
+     * @param name The name (String) of the transmute
+     * @return
+     */
+    public Boolean removeTransmuteCooldown( String name ) {
+        if ( this.transmuteCooldowns.containsKey( name ) ) {
+            this.transmuteCooldowns.remove( name );
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    /**
+     * Return all transmute cooldowns
+     * @return HashMap of the cooldowns
+     */
+    public Map<String, Long> getTransmuteCooldowns() {
+        return this.transmuteCooldowns;
+    }
+
+    public void sendTitle( String title, String subtitle ) {
+        ChatColor color = ChatColor.WHITE;
+        switch(title) {
+            case "Error!":
+                color = ChatColor.RED;
+                break;
+        }
+
+        this.player.sendTitle( color + title, subtitle );
+    }
 
 
     /**********##### Death items #####***********/
@@ -318,6 +438,7 @@ public class WizardPlayer {
      */
     public void showWizardBar() {
         resetWizardBar();
+
         this.wizardBar.setVisible( true );
         if ( this.wizardBarTimer != null  ) {
             this.wizardBarTimer.cancel();
@@ -356,9 +477,15 @@ public class WizardPlayer {
      * @return
      */
      public Boolean spendWizardPower( int amount, String spellName ) {
-         if ( wizardPower >= amount ) {
+         amount = (int) Math.floor( amount * ( .25 + this.wizardLevel / 100 * .75 ) );
+         if ( this.wizardLevel < 1 ) {
+             player.sendTitle("Error!" , ChatColor.DARK_RED + "You are not a wizard! ");
+             return false;
+         } else if ( wizardPower >= amount ) {
              wizardPower -= amount;
              showWizardBar();
+             // Wizards gain 1/10th of WP expenditures as Wizard Exp
+             addWizardExp( amount / 10 );
              checkLastSave();
              return true;
          } else {
@@ -436,10 +563,15 @@ public class WizardPlayer {
             playerDataConfig = new YamlConfiguration();
             try {
                 playerDataConfig.createSection("Wizard Power");
+                playerDataConfig.createSection("Wizard Exp");
+                playerDataConfig.createSection("Recent Wizard Exp");
+                playerDataConfig.createSection("Wizard Exp Cooldown");
+                playerDataConfig.createSection("Transmute Cooldowns");
                 playerDataConfig.createSection("Active Spells");
                 playerDataConfig.createSection("Death Items");
                 playerDataConfig.createSection("Wizard Vaults");
                 playerDataConfig.createSection("Last Death Location");
+                playerDataConfig.createSection("Last Saved");
             } catch (Exception ex) {
                 ex.printStackTrace();
             }
@@ -449,7 +581,11 @@ public class WizardPlayer {
 
          // Write data to file
         try {
-            playerDataConfig.set("Wizard Power", getWizardPower() );
+            playerDataConfig.set( "Wizard Power", getWizardPower() );
+            playerDataConfig.set( "Wizard Exp", getWizardExp() );
+            playerDataConfig.set( "Recent Wizard Exp", getRecentWizardExp() );
+            playerDataConfig.set( "Wizard Exp Cooldown", getWizardExpCooldown() );
+            playerDataConfig.set( "Transmute Cooldowns", getTransmuteCooldowns() );
             playerDataConfig.set( "Active Spells", getSpells() );
             playerDataConfig.set( "Death Items", getDeathItems() );
             playerDataConfig.set( "Wizard Vaults", getWizardVaultsAsItemStacks() );
@@ -479,12 +615,34 @@ public class WizardPlayer {
             try {
                 fileConfiguration.load( playerDataFile );
                 String power = fileConfiguration.getString( "Wizard Power");
+                String wizard_exp = fileConfiguration.getString( "Wizard Exp");
+                if ( wizard_exp == null ) wizard_exp = "0";
+                String recent_wizard_exp = fileConfiguration.getString( "Recent Wizard Exp");
+                if ( recent_wizard_exp == null ) recent_wizard_exp = "0";
+                String wizard_exp_cooldown = fileConfiguration.getString( "Wizard Exp Cooldown");
+                if ( wizard_exp_cooldown == null ) wizard_exp_cooldown = "0";
+                ConfigurationSection tCooldownsSect = fileConfiguration.getConfigurationSection("Transmute Cooldowns");
+                if ( tCooldownsSect != null ) {
+                    Set<String> transmuteCooldowns = tCooldownsSect.getKeys(false);
+                    for ( String t: transmuteCooldowns) {
+                        if ( t == null ) continue;
+                        Long cooldown = fileConfiguration.getLong( "Transmute Cooldowns." + t );
+                        addTransmuteCooldown( t, cooldown );
+                    }
+                }
                 List<String> activeSpells = fileConfiguration.getStringList( "Active Spells" );
                 List<ItemStack> list = (List<ItemStack>) fileConfiguration.getList("Death Items");
                 List<ItemStack> vaults = (List<ItemStack>) fileConfiguration.getList( "Wizard Vaults");
                 Location deathLoc = (Location) fileConfiguration.getLocation( "Last Death Location" );
                 try {
                     this.wizardPower = Integer.parseInt( power );
+                    this.wizardExp = Integer.parseInt( wizard_exp );
+                    this.wizardLevel = getWizardLevelByWizardExp( this.wizardExp );
+                    this.recentWizardExp = Integer.parseInt( recent_wizard_exp );
+                    this.wizardExpCooldown = Long.parseLong( wizard_exp_cooldown );
+                    if ( this.wizardExpCooldown == 0 ) {
+                        this.wizardExpCooldown = System.currentTimeMillis();
+                    }
                     this.setLastDeathLocation( deathLoc );
                     for ( String str: activeSpells ) {
                         this.addSpell( str );
@@ -580,5 +738,92 @@ public class WizardPlayer {
     public Location getLastDeathLocation() { return this.lastDeathLocation; }
 
     public void setLastDeathLocation( Location loc ) { this.lastDeathLocation = loc; }
+
+
+    /****** Wizard Exp Functions ********/
+
+    /**
+     * Get the player's current Wizard Power
+     * @return the player's current Wizard Power
+     */
+    public int getWizardLevel() {
+        return this.wizardLevel;
+    }
+
+    /**
+     * Get the player's current Wizard Exp
+     * @return the player's current Wizard Exp
+     */
+    public int getWizardExp() {
+        return this.wizardExp;
+    }
+
+    /**
+     * Get the player's recent Wizard Exp
+     * @return the player's recent Wizard Exp
+     */
+    public int getRecentWizardExp() {
+        return this.recentWizardExp;
+    }
+
+    /**
+     * Get the players Wizard Exp cooldown
+     * @return long representing the last cooldown timestamp
+     */
+    public long getWizardExpCooldown() {
+        return this.wizardExpCooldown;
+    }
+
+    /**
+     * Set the players Wizard Exp cooldown
+     */
+    public void setWizardExpCooldown( long timestamp) {
+        this.wizardExpCooldown = timestamp;
+    }
+
+
+    /**
+     * Set the player's current Wizard Power
+     */
+    public void setWizardLevel( int level ) {
+        if ( this.wizardLevel != level ) {
+            this.wizardLevel = level;
+        }
+    }
+
+    public static int getWizardLevelByWizardExp( int exp ) {
+        // Wizard Levels cost 10 times the Exp as regular Minecraft levels
+        int level = ExpHelper.getLevelBelow( exp / 10 );
+        // Level 1 represents 0 Wizard EXP, so we always add 1 level
+        return level + 1;
+    }
+
+    public void addWizardExp( int newExp ) {
+        if ( this.wizardLevel == 0 ) return;
+        checkWizardExpCooldownReset();
+        if ( this.recentWizardExp < 200 && this.recentWizardExp + newExp > 200 ) {
+            this.recentWizardExp = 200;
+        }
+        if ( this.recentWizardExp >= 200 && this.recentWizardExp < 300 ) {
+            newExp = 1;
+        }
+        this.wizardExp += newExp;
+        this.recentWizardExp += newExp;
+        if ( this.wizardExp > 449999 ) this.wizardExp = 449999;
+        int checkLevel = getWizardLevelByWizardExp( this.wizardExp );
+        if ( checkLevel != this.wizardLevel ) {
+            this.wizardLevel = checkLevel;
+            this.player.sendTitle("", "You have reached Wizard Level " + String.valueOf( checkLevel ) );
+        }
+        checkLastSave();
+    }
+
+    private void checkWizardExpCooldownReset() {
+        long cooldown = 24 * 60 * 60 * 1000; // 24 hours
+        if ( this.wizardExpCooldown + cooldown < System.currentTimeMillis() ) {
+            this.wizardExpCooldown = System.currentTimeMillis();
+            this.recentWizardExp = 0;
+        }
+    }
 
 }

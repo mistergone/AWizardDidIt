@@ -32,7 +32,7 @@ public class CloudRider extends MagicSpell {
         spellName = "Cloud Rider";
         cost = 100;
         int slowFallCost = 5;
-        int waveRiderCost = 10;
+        int waveRiderCost = 100;
 
         reagents = new ArrayList<String>();
         reagents.add("FEATHER");
@@ -51,10 +51,7 @@ public class CloudRider extends MagicSpell {
 
                     wizardPlayer.addSpell(spellName);
 
-                    if (wizardPlayer.checkMsgCooldown( spellName ) == false) {
-                        player.sendMessage( ChatColor.AQUA + "You have invoked Cloud Rider!" );
-                        wizardPlayer.addMsgCooldown(spellName, 30 );
-                    }
+                    wizardPlayer.spellAlert( spellName, "Swing your wand again to begin gliding!" );
 
                     player.playSound(player.getLocation(), Sound.BLOCK_BUBBLE_COLUMN_UPWARDS_INSIDE, 1.2F, 1.2F);
                     Location loc = player.getLocation();
@@ -89,7 +86,6 @@ public class CloudRider extends MagicSpell {
                     v.setZ(Math.cos(angle) * speed * sprinting * zFactor);
 
                     player.setVelocity(v);
-                    player.sendMessage(ChatColor.DARK_AQUA + "Swing your wand again to begin gliding!");
 
                 } else if (!player.isGliding() && !player.isSwimming() && !isInVehicle && wizardPlayer.getSpells().contains(spellName)) {
                     wizardPlayer.removeSpell("Cloud Rider");
@@ -99,7 +95,7 @@ public class CloudRider extends MagicSpell {
 
                     doStartingBurst( player );
 
-                    player.sendMessage(ChatColor.AQUA + "You are now gliding!");
+                    wizardPlayer.spellAlert( "", "You are now gliding!" );
 
                 } else if (!player.isOnGround() && !player.isGliding() && !isInVehicle && !wizardPlayer.getSpells().contains(spellName)
                         && !wizardPlayer.getSpells().contains(spellName + " (Gliding)") ) {
@@ -113,8 +109,8 @@ public class CloudRider extends MagicSpell {
                     if ( vehicle instanceof Boat ) {
                         if ( wizardPlayer.checkSpell( boatSpellName ) ) {
                             wizardPlayer.addSpell( boatSpellName + " - Jump" );
-                        } else  if ( wizardPlayer.spendWizardPower( cost, spellName )) {
-                            player.sendMessage(ChatColor.AQUA + "You have invoked " + boatSpellName +"!");
+                        } else if ( wizardPlayer.spendWizardPower( waveRiderCost, boatSpellName )) {
+                            wizardPlayer.spellAlert( boatSpellName, "");
                             doBoating( (Boat)vehicle, wizardPlayer );
                         }
 

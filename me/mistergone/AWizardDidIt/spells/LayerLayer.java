@@ -167,10 +167,7 @@ public class LayerLayer extends MagicSpell {
                             }
 
                             SpecialEffects.magicPoof( clickedBlock.getLocation() );
-                            if ( wizardPlayer.checkMsgCooldown( spellName ) == false ) {
-                                player.sendMessage(ChatColor.DARK_PURPLE + "You have invoked " + spellName + "!");
-                                wizardPlayer.addMsgCooldown( spellName, 5 );
-                            }
+                            wizardPlayer.spellAlert( spellName, "");
                         } else {
                             return;
                         }

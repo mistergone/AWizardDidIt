@@ -26,9 +26,7 @@ public class EnderPocket extends MagicSpell {
                 if ( !wizardPlayer.spendWizardPower( cost, spellName ) ) return;
 
                 player.openInventory( player.getEnderChest() );
-                wizardPlayer.sendMsgWithCooldown( spellName,
-                        ChatColor.GREEN + "You have invoked " + spellName + "!",
-                        10 );
+                wizardPlayer.spellAlertWithCooldown( spellName, "",10 );
 
             }
         };

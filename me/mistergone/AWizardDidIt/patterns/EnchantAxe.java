@@ -85,10 +85,13 @@ public class EnchantAxe extends ToolPattern {
                          choppedType != Material.MUSHROOM_STEM ) return;
 
                     Material leafType = null;
+                    Boolean shroomin = false;
                     if ( Tag.CRIMSON_STEMS.isTagged( choppedType ) ) {
                         leafType = Material.NETHER_WART_BLOCK;
+                        shroomin = true;
                     } else if ( Tag.WARPED_STEMS.isTagged( choppedType ) ) {
                         leafType = Material.WARPED_WART_BLOCK;
+                        shroomin = true;
                     } else if ( Tag.LOGS.isTagged( choppedType ) ) {
                         String leafString = choppedType.toString().substring( 0, choppedType.toString().length() -4 ) + "_LEAVES";
                         leafType = Material.valueOf( leafString );
@@ -133,7 +136,9 @@ public class EnchantAxe extends ToolPattern {
                                     } else if ( choppedType == Material.MUSHROOM_STEM &&
                                             ( checkType == Material.RED_MUSHROOM_BLOCK ||
                                               checkType == Material.BROWN_MUSHROOM_BLOCK ) ) {
-                                        leaves.add( blockCheck);
+                                        leaves.add(blockCheck);
+                                    } else if ( shroomin &&  checkType == Material.SHROOMLIGHT ) {
+                                        leaves.add(blockCheck);
                                     } else if ( leafType != null && checkType == leafType  ) {
                                         leaves.add( blockCheck );
                                     }

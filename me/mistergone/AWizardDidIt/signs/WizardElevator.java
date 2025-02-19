@@ -66,7 +66,6 @@ public class WizardElevator extends MagicSign {
                 // Stuck check - sometimes, the player gets stuck under a black, so we check
                 // to see if the player is possibly stuck, and teleport them if stuck\
                 if ( Math.round( p.getLocation().getY() ) == Math.round( wizardPlayer.getLastKnownLocation().getY() ) ) {
-                    Bukkit.getServer().broadcastMessage("Stuck: " + String.valueOf( Math.round( p.getLocation().getY() ) ) );
                     stuckCount.incrementAndGet();
                 } else {
                     stuckCount.set( 0 );
